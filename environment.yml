@@ -1,0 +1,22 @@
+name: compas_cadwork
+channels:
+    - conda-forge
+
+dependencies:
+   - python=3.9.10
+   - pip
+   - git
+   - compas>=1.17.5
+   - compas_fab>=0.27
+   - compas_occ>=0.7
+   - compas_cgal>=0.5
+   - pip:
+     - black
+     - compas_invocations
+     - flake8
+     - invoke
+     - isort
+     - pydocstyle
+     - pytest
+     - -e .
+
