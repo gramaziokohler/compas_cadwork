@@ -1,4 +1,7 @@
 from compas.artists import Artist
+from compas.colors import Color
+
+from element_controller import delete_elements
 
 
 class CadworkArtist(Artist):
@@ -17,7 +20,9 @@ class CadworkArtist(Artist):
         """
         self.DRAWN_ELEMENTS.append(element_id)
 
-    def clear(self):
+    @classmethod
+    def clear(cls):
         """Removes all elements tracked by the :class:`~compas_cadwork.artists.CadworkArtist` from the cadwork model."""
-        # TODO: remove all elements from scene
-        self.DRAWN_ELEMENTS = []
+        if cls.DRAWN_ELEMENTS:
+            delete_elements(cls.DRAWN_ELEMENTS)
+        cls.DRAWN_ELEMENTS = []
