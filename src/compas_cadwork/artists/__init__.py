@@ -17,8 +17,6 @@ CONTEXT = "cadwork"
 
 # TODO: remove
 PluginManager.DEBUG = True
-if CONTEXT not in Artist.AVAILABLE_CONTEXTS:
-    Artist.AVAILABLE_CONTEXTS.append(CONTEXT)
 
 
 @plugin(category="drawing-utils", pluggable_name="clear", requires=[CONTEXT])
@@ -36,4 +34,3 @@ def redraw_cadwork():
 @plugin(category="factories", requires=[CONTEXT])
 def register_artists():
     Artist.register(Text3d, Text3dInstrcutionArtist, context=CONTEXT)
-    return CONTEXT
