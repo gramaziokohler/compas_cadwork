@@ -3,9 +3,11 @@ from compas.plugins import PluginManager
 from compas.artists import Artist
 
 from monosashi.sequencer import Text3d
+from monosashi.sequencer import LinearDimension
 
 from .artist import CadworkArtist
 from .instructionartist import Text3dInstrcutionArtist
+from .instructionartist import LinearDimensionArtist
 
 __all__ = [
     "CadworkArtist",
@@ -34,3 +36,4 @@ def redraw_cadwork():
 @plugin(category="factories", requires=[CONTEXT])
 def register_artists():
     Artist.register(Text3d, Text3dInstrcutionArtist, context=CONTEXT)
+    Artist.register(LinearDimension, LinearDimensionArtist, context=CONTEXT)
