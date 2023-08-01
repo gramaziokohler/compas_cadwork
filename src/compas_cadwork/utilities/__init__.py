@@ -1,6 +1,8 @@
 import sys
+from typing import List
 
 import utility_controller as uc
+import bim_controller as bc
 
 
 def unload_module(module_name):
@@ -20,8 +22,23 @@ def get_filename() -> str:
     return uc.get_3d_file_name()
 
 
+def export_elements_to_ifc(element_ids: List[int], filepath: str):
+    """Exports elements to ifc file.
+
+    Parameters
+    ----------
+    element_ids : list(int)
+        List of element ids to export.
+    filepath : str
+        Path to the resulting ifc file.
+
+    """
+    bc.export_ifc(element_ids, filepath)
+
+
 __all__ = [
     "unload_module",
     "get_plugin_home",
     "get_filename",
+    "export_elements_to_ifc",
 ]

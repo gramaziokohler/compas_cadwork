@@ -1,6 +1,6 @@
-from monosashi.sequencer import Text3d
-from monosashi.sequencer import LinearDimension
-from monosashi.sequencer import Model3d
+from compas_monosashi.sequencer import Text3d
+from compas_monosashi.sequencer import LinearDimension
+from compas_monosashi.sequencer import Model3d
 
 from compas_cadwork.artists import CadworkArtist
 from compas_cadwork.conversions import point_to_cadwork
@@ -9,8 +9,6 @@ from compas_cadwork.conversions import vector_to_cadwork
 from compas.geometry import Vector
 from compas.geometry import Plane
 
-from element_controller import create_text_object
-from element_controller import create_line_points
 from dimension_controller import create_dimension
 from dimension_controller import set_text_size
 from dimension_controller import set_precision
@@ -18,6 +16,10 @@ from dimension_controller import add_segment
 from dimension_controller import set_text_color
 from dimension_controller import set_line_thickness
 from dimension_controller import set_default_anchor_length
+from element_controller import create_text_object
+from element_controller import create_line_points
+from element_controller import apply_transformation_coordinate
+from file_controller import import_element_light
 
 
 class Text3dInstrcutionArtist(CadworkArtist):
@@ -92,9 +94,23 @@ class LinearDimensionArtist(CadworkArtist):
 
 
 class Model3dArtist(CadworkArtist):
-    def __init__(self, model3d: Model3d) -> None:
+    def __init__(self, model3d: Model3d, **kwargs) -> None:
         super().__init__()
         self.model3d = model3d
 
     def draw(self):
-        return super().draw()
+        element_id = import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
+        old_loc = self.model3d.location
+        new_loc = self.model3d.t_location
+
+        # TODO: missing scaling..
+        apply_transformation_coordinate(
+            [element_id],
+            point_to_cadwork(old_loc.point),
+            vector_to_cadwork(old_loc.xaxis),
+            vector_to_cadwork(old_loc.yaxis),
+            point_to_cadwork(new_loc.point),
+            point_to_cadwork(new_loc.xaxis),
+            point_to_cadwork(new_loc.yaxis),
+        )
+
