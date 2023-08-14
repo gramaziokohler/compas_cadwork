@@ -1,8 +1,14 @@
 import sys
+from collections import defaultdict
 from typing import List
+from typing import Dict
 
 import utility_controller as uc
+import element_controller as ec
+import attribute_controller as ac
 import bim_controller as bc
+
+from compas_cadwork.datamodel import Element
 
 
 def unload_module(module_name):
@@ -36,9 +42,25 @@ def export_elements_to_ifc(element_ids: List[int], filepath: str):
     bc.export_ifc(element_ids, filepath)
 
 
+def get_building_subgroups() -> Dict[str, List]:
+    """Returns a dictionary mapping names of the available building subgroups to their elements.
+
+    Returns
+    -------
+    dict(str, list(int))
+        Dictionary of building subgroups and their elements.
+
+    """
+    groups_elements = defaultdict(list)
+    for element_id in ec.get_all_identifiable_element_ids():
+        groups_elements[ac.get_subgroup(element_id)].append(Element.from_id(element_id))
+    return groups_elements
+
+
 __all__ = [
     "unload_module",
     "get_plugin_home",
     "get_filename",
     "export_elements_to_ifc",
+    "get_building_subgroups",
 ]
