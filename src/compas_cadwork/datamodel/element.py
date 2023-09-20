@@ -10,6 +10,9 @@ from compas.geometry import Vector
 from compas.geometry import Point
 
 import cadwork  # noqa: F401
+from attribute_controller import get_subgroup
+from attribute_controller import get_group
+from attribute_controller import get_name
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
@@ -64,6 +67,10 @@ class Element:
     type: ElementType
 
     @property
+    def name(self) -> str:
+        return get_name(self.id)
+
+    @property
     def frame(self) -> Frame:
         p1 = Point(*get_p1(self.id))
         x_axis = Vector(*get_xl(self.id))
@@ -82,6 +89,14 @@ class Element:
     def length(self) -> float:
         return get_length(self.id)
 
+    @property
+    def group(self) -> str:
+        return get_group(self.id)
+
+    @property
+    def subgroup(self) -> str:
+        return get_subgroup(self.id)
+
     @classmethod
     def from_id(cls, element_id: int) -> Element:
         """Returns an Element object for the CADwork Element with the given ID"""
@@ -93,26 +108,3 @@ class Element:
         """Returns a generator containing Element objects for all currently activated Elements"""
         return (Element.from_id(e_id) for e_id in get_active_identifiable_element_ids())
 
-    @staticmethod
-    def test_func():
-        print("test func updated again!")
-
-
-    @staticmethod
-    def test_func2():
-        print("test func2 updated again!")
-
-
-    @staticmethod
-    def test_func3():
-        print("test func3 updated again!")
-
-
-    @staticmethod
-    def test_func4():
-        print("test func4 updated again!")
-
-
-    @staticmethod
-    def test_func5():
-        print("test func4 updated again!")
