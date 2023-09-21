@@ -31,8 +31,13 @@ def clear_cadwork():
 
 @plugin(category="drawing-utils", pluggable_name="redraw", requires=[CONTEXT])
 def redraw_cadwork():
-    """TODO: ?"""
-    pass
+    """Recrates all elements added with auto-refresh disabled.
+
+    This is necessary because elements that were added to cadwork document with auto-refresh disabled
+    are not automatically visible even after auto-refresh is enabled again.
+
+    """
+    CadworkArtist.redraw()
 
 
 @plugin(category="factories", requires=[CONTEXT])

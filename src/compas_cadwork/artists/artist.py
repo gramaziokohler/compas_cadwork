@@ -1,7 +1,8 @@
 from compas.artists import Artist
-from compas.colors import Color
 
 from element_controller import delete_elements
+from element_controller import recreate_elements
+from visualization_controller import refresh
 
 
 class CadworkArtist(Artist):
@@ -21,8 +22,15 @@ class CadworkArtist(Artist):
         self.DRAWN_ELEMENTS.append(element_id)
 
     @classmethod
+    def redraw(cls):
+        if cls.DRAWN_ELEMENTS:
+            recreate_elements(cls.DRAWN_ELEMENTS)
+        refresh()
+
+    @classmethod
     def clear(cls):
         """Removes all elements tracked by the :class:`~compas_cadwork.artists.CadworkArtist` from the cadwork model."""
         if cls.DRAWN_ELEMENTS:
             delete_elements(cls.DRAWN_ELEMENTS)
+            refresh()
         cls.DRAWN_ELEMENTS = []
