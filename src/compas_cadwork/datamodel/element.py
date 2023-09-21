@@ -22,6 +22,7 @@ from geometry_controller import get_yl
 from geometry_controller import get_length
 from geometry_controller import get_height
 from geometry_controller import get_width
+from bim_controller import get_ifc_guid
 
 
 class StrEnum(str, Enum):
@@ -96,6 +97,10 @@ class Element:
     @property
     def subgroup(self) -> str:
         return get_subgroup(self.id)
+
+    @property
+    def ifc_guid(self) -> str:
+        return get_ifc_guid(self.id)
 
     @classmethod
     def from_id(cls, element_id: int) -> Element:
