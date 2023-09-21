@@ -51,7 +51,7 @@ class Text3dInstrcutionArtist(CadworkArtist):
             self.text_instruction.text,
             point_to_cadwork(loc.point),
             vector_to_cadwork(loc.xaxis),
-            vector_to_cadwork(loc.normal),
+            vector_to_cadwork(loc.yaxis),
             self.text_instruction.size,
         )
         self.add_element(element_id)
@@ -81,7 +81,7 @@ class LinearDimensionArtist(CadworkArtist):
 
         """
         direction = Vector.from_start_end(self.linear_dimension.start, self.linear_dimension.end).unitized()  # why is this even needed?
-        text_plane_normal = self.linear_dimension.location.yaxis
+        text_plane_normal = self.linear_dimension.location.normal * -1.0
         text_plane_origin = self.linear_dimension.location.point
         element_id = create_dimension(
             vector_to_cadwork(direction),
