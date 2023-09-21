@@ -34,7 +34,7 @@ class Text3dInstrcutionArtist(CadworkArtist):
     """
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
-        super().__init__()
+        super().__init__(text_instruction)
         self.text_instruction = text_instruction
 
     def draw(self, *args, **kwargs):
@@ -68,7 +68,7 @@ class LinearDimensionArtist(CadworkArtist):
 
     """
     def __init__(self, linear_dimension: LinearDimension, **kwargs) -> None:
-        super().__init__()
+        super().__init__(linear_dimension)
         self.linear_dimension = linear_dimension
 
     def draw(self, *args, **kwargs):
@@ -95,7 +95,7 @@ class LinearDimensionArtist(CadworkArtist):
 
 class Model3dArtist(CadworkArtist):
     def __init__(self, model3d: Model3d, **kwargs) -> None:
-        super().__init__()
+        super().__init__(model3d)
         self.model3d = model3d
 
     def draw(self):
