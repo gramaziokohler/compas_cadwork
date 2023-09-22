@@ -102,7 +102,6 @@ def hide_elements(elements: List[Union[Element, int]]) -> None:
 
     """
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
-    print(f"hide elements: {element_ids}")
     vc.set_invisible(element_ids)
 
 
@@ -116,7 +115,6 @@ def lock_elements(elements: List[Union[Element, int]]) -> None:
 
     """
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
-    print(f"set_immutable: {element_ids}")
     vc.set_immutable(element_ids)
 
 
@@ -130,7 +128,6 @@ def unlock_elements(elements: List[Union[Element, int]]) -> None:
 
     """
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
-    print(f"set_mutable: {element_ids}")
     vc.set_mutable(element_ids)
 
 
@@ -149,7 +146,6 @@ def show_elements(elements: List[Union[Element, int]]) -> None:
 
     """
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
-    print(f"show elements: {element_ids}")
     vc.set_visible(element_ids)
 
 
