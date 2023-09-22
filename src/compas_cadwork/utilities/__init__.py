@@ -191,6 +191,10 @@ def remove_elements(elements: List[Union[Element, int]]) -> None:
     ec.delete_elements(element_ids)
 
 
+def save_project_file():
+    uc.save_3d_file_silently()
+
+
 __all__ = [
     "unload_module",
     "get_plugin_home",
@@ -210,4 +214,5 @@ __all__ = [
     "get_all_elements",
     "get_all_elements_with_attrib",
     "remove_elements",
+    "save_project_file",
 ]
