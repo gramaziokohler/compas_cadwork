@@ -1,25 +1,15 @@
-from compas_monosashi.sequencer import Text3d
+from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
+from compas_monosashi.sequencer import Text3d
+from dimension_controller import create_dimension
+from element_controller import apply_transformation_coordinate
+from element_controller import create_text_object
+from file_controller import import_element_light
 
 from compas_cadwork.artists import CadworkArtist
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
-
-from compas.geometry import Vector
-from compas.geometry import Plane
-
-from dimension_controller import create_dimension
-from dimension_controller import set_text_size
-from dimension_controller import set_precision
-from dimension_controller import add_segment
-from dimension_controller import set_text_color
-from dimension_controller import set_line_thickness
-from dimension_controller import set_default_anchor_length
-from element_controller import create_text_object
-from element_controller import create_line_points
-from element_controller import apply_transformation_coordinate
-from file_controller import import_element_light
 
 
 class Text3dInstrcutionArtist(CadworkArtist):
