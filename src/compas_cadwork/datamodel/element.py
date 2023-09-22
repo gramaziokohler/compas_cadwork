@@ -39,6 +39,7 @@ class ElementType(StrEnum):
     LINE = auto()
     INSTALLATION_ROUND = auto()
     INSTALLATION_STRAIGHT = auto()
+    OTHER = auto()
 
 
 ELEMENT_TYPE_MAP = {
@@ -106,7 +107,11 @@ class Element:
     def from_id(cls, element_id: int) -> Element:
         """Returns an Element object for the CADwork Element with the given ID"""
         type_description = get_element_type_description(element_id)
-        return Element(element_id, LOCAL_TYPE_MAP[type_description])
+        try:
+            type_ = LOCAL_TYPE_MAP[type_description]
+        except KeyError:
+            type_ = ElementType.OTHER
+        return Element(element_id, type_)
 
     @classmethod
     def from_selection(cls) -> Generator[Element]:
