@@ -169,6 +169,28 @@ def force_refresh() -> None:
     vc.refresh()
 
 
+def get_all_element_ids() -> None:
+    """Returns all element ids of the currently open cadwork document."""
+    return ec.get_all_identifiable_element_ids()
+
+
+def get_all_elements() -> None:
+    """Returns all element ids of the currently open cadwork document."""
+    for element_id in ec.get_all_identifiable_element_ids():
+        yield Element.from_id(element_id)
+
+
+def get_all_elements_with_attrib(attrib_number, attrib_value=None):
+    for element_id in ec.get_all_identifiable_element_ids():
+        if ac.get_user_attribute(element_id, attrib_number) == attrib_value:
+            yield Element.from_id(element_id)
+
+
+def remove_elements(elements: List[Union[Element, int]]) -> None:
+    element_ids = [element.id if isinstance(element, Element) else element for element in elements]
+    ec.delete_elements(element_ids)
+
+
 __all__ = [
     "unload_module",
     "get_plugin_home",
@@ -184,4 +206,8 @@ __all__ = [
     "disable_autorefresh",
     "enable_autorefresh",
     "force_refresh",
+    "get_all_element_ids",
+    "get_all_elements",
+    "get_all_elements_with_attrib",
+    "remove_elements",
 ]

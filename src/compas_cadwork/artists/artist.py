@@ -9,6 +9,8 @@ class CadworkArtist(Artist):
     """Base class for all of cadwork's Artists."""
 
     DRAWN_ELEMENTS = []
+    USER_ATTR_NUMBER = 666
+    USER_ATTR_VALUE = "COMPAS_CADWORK"
 
     def add_element(self, element_id):
         """Records the given element_id to track elements added by the :class:`~compas_cadwork.artists.CadworkArtist`.

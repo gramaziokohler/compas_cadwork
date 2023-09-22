@@ -2,6 +2,7 @@ from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
+from attribute_controller import set_user_attribute
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
 from element_controller import create_text_object
@@ -45,6 +46,7 @@ class Text3dInstrcutionArtist(CadworkArtist):
             self.text_instruction.size,
         )
         self.add_element(element_id)
+        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id
 
 
@@ -80,6 +82,7 @@ class LinearDimensionArtist(CadworkArtist):
             [point_to_cadwork(self.linear_dimension.start), point_to_cadwork(self.linear_dimension.end)],
         )
         self.add_element(element_id)
+        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id
 
 
@@ -90,6 +93,7 @@ class Model3dArtist(CadworkArtist):
 
     def draw(self):
         element_id = import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
+        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         old_loc = self.model3d.location
         new_loc = self.model3d.t_location
 
