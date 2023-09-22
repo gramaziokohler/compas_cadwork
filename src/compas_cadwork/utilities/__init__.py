@@ -42,7 +42,10 @@ def export_elements_to_ifc(element_ids: List[int], filepath: str):
         Path to the resulting ifc file.
 
     """
-    bc.export_ifc(element_ids, filepath)
+    try:
+        bc.export_ifc2x3_silently(element_ids, filepath)
+    except AttributeError:
+        bc.export_ifc(element_ids, filepath)
 
 
 def get_element_groups() -> Dict[str, List]:
