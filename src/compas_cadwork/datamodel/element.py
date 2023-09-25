@@ -74,10 +74,14 @@ class Element:
 
     @property
     def frame(self) -> Frame:
-        p1 = Point(*get_p1(self.id))
-        x_axis = Vector(*get_xl(self.id))
-        y_axis = Vector(*get_yl(self.id))
-        return Frame(p1, x_axis, y_axis)
+        try:
+            p1 = Point(*get_p1(self.id))
+            x_axis = Vector(*get_xl(self.id))
+            y_axis = Vector(*get_yl(self.id))
+            return Frame(p1, x_axis, y_axis)
+        except ZeroDivisionError:
+            # TODO: get to the bottom of this, sometimes one of the axes comes back as [0,0,0] in the meantime just don't crash
+            return Frame.worldXY()
 
     @property
     def width(self) -> float:
