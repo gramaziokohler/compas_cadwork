@@ -16,6 +16,7 @@ from attribute_controller import get_name
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
+from element_controller import get_element_cadwork_guid
 from geometry_controller import get_p1
 from geometry_controller import get_xl
 from geometry_controller import get_yl
@@ -23,6 +24,7 @@ from geometry_controller import get_length
 from geometry_controller import get_height
 from geometry_controller import get_width
 from bim_controller import get_ifc_guid
+from bim_controller import get_ifc_base64_guid
 
 
 class StrEnum(str, Enum):
@@ -103,6 +105,14 @@ class Element:
     def subgroup(self) -> str:
         return get_subgroup(self.id)
 
+    @property
+    def ifc_base64_guid(self) -> str:
+        return get_ifc_base64_guid(self.id)
+    
+    @property
+    def cadwork_guid(self) -> str:
+        return get_element_cadwork_guid(self.id)
+    
     @property
     def ifc_guid(self) -> str:
         return get_ifc_guid(self.id)

@@ -20,6 +20,42 @@ def unload_module(module_name):
     for module in modules:
         sys.modules.pop(module)
 
+def get_group(element: int) -> str:
+    """
+    [:information_source: Available for script filled attributes](#){.mark-text}
+
+    Args:
+        element (int): element ID
+
+    Returns:
+        str: group name
+    """
+    return ac.get_group(element)
+
+def get_subgroup(element: int) -> str:
+    """get subgroup
+
+    [:information_source: Available for script filled attributes](#){.mark-text}
+
+    Args:
+        element (int): element ID
+
+    Returns:
+        str: subgroup name
+    """
+    return ac.get_subgroup(element)
+
+def get_element_grouping_type() -> int:
+    """Get element grouping type
+
+    Returns:
+        element_grouping_type: grouping type
+    """
+    return ac.get_element_grouping_type()
+
+def get_active_element_ids() -> list:
+    """Returns the elemend ids of the active selection"""
+    return ec.get_active_identifiable_element_ids()
 
 def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
@@ -196,6 +232,9 @@ def save_project_file():
 
 
 __all__ = [
+    "get_group",
+    "get_subgroup",
+    "get_active_element_id",
     "unload_module",
     "get_plugin_home",
     "get_filename",
