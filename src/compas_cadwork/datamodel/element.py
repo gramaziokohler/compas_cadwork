@@ -13,6 +13,7 @@ import cadwork  # noqa: F401
 from attribute_controller import get_subgroup
 from attribute_controller import get_group
 from attribute_controller import get_name
+from attribute_controller import get_element_grouping_type
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
@@ -99,20 +100,19 @@ class Element:
 
     @property
     def group(self) -> str:
-        return get_group(self.id)
-
-    @property
-    def subgroup(self) -> str:
-        return get_subgroup(self.id)
+        if get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
+            return get_subgroup(self.id)
+        else:
+            return get_group(self.id)
 
     @property
     def ifc_base64_guid(self) -> str:
         return get_ifc_base64_guid(self.id)
-    
+
     @property
     def cadwork_guid(self) -> str:
         return get_element_cadwork_guid(self.id)
-    
+
     @property
     def ifc_guid(self) -> str:
         return get_ifc_guid(self.id)
