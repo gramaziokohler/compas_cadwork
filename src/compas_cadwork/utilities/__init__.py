@@ -14,6 +14,17 @@ import visualization_controller as vc
 from compas_cadwork.datamodel import Element
 
 
+def get_language() -> str:
+    """Returns the language of the currently running cadwork instance.
+
+    Returns
+    -------
+    str
+        Language of the currently running cadwork instance (e.g. "de", "en")
+
+    """
+    return uc.get_language()
+
 def unload_module(module_name):
     """Unloads all loaded moduels which start with the given `module_name`"""
     modules = list(filter(lambda m: m.startswith(module_name), sys.modules))
