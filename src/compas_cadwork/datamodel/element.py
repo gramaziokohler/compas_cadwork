@@ -14,9 +14,9 @@ from attribute_controller import get_subgroup
 from attribute_controller import get_group
 from attribute_controller import get_name
 from attribute_controller import get_element_grouping_type
+from attribute_controller import get_element_type
 from utility_controller import get_language
 from element_controller import get_element_type_description
-from element_controller import get_element_type
 from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
 from geometry_controller import get_p1
