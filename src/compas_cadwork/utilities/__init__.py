@@ -20,6 +20,17 @@ def unload_module(module_name):
     for module in modules:
         sys.modules.pop(module)
 
+def get_language() -> str:
+    """Returns the current language of the cadwork application.
+
+    Returns
+    -------
+    str
+        Language code of the cadwork application (e.g. "de", "fr", "it", "en").
+
+    """
+    return uc.get_language()
+
 def get_group(element: int) -> str:
     """
     [:information_source: Available for script filled attributes](#){.mark-text}
@@ -98,6 +109,9 @@ def get_element_groups() -> Dict[str, List]:
     )
     groups_elements = defaultdict(list)
     for element_id in ec.get_all_identifiable_element_ids():
+        group_name = get_grouping_name(element_id)
+        if group_name is None or group_name == "":
+            continue
         groups_elements[get_grouping_name(element_id)].append(Element.from_id(element_id))
     return groups_elements
 

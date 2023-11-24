@@ -14,6 +14,7 @@ from attribute_controller import get_subgroup
 from attribute_controller import get_group
 from attribute_controller import get_name
 from attribute_controller import get_element_grouping_type
+from attribute_controller import get_element_type
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
@@ -116,6 +117,10 @@ class Element:
     @property
     def ifc_guid(self) -> str:
         return get_ifc_guid(self.id)
+
+    @property
+    def is_wall(self) -> bool:
+        return get_element_type(self.id).is_framed_wall()
 
     @classmethod
     def from_id(cls, element_id: int) -> Element:
