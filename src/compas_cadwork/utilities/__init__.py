@@ -21,7 +21,14 @@ def unload_module(module_name):
         sys.modules.pop(module)
 
 def get_language() -> str:
-    """Returns the current language of the cadwork application."""
+    """Returns the current language of the cadwork application.
+
+    Returns
+    -------
+    str
+        Language code of the cadwork application (e.g. "de", "fr", "it", "en").
+
+    """
     return uc.get_language()
 
 def get_group(element: int) -> str:
