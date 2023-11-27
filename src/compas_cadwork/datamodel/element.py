@@ -14,7 +14,7 @@ from attribute_controller import get_subgroup
 from attribute_controller import get_group
 from attribute_controller import get_name
 from attribute_controller import get_element_grouping_type
-from attribute_controller import get_element_type
+from attribute_controller import is_framed_wall
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
@@ -68,7 +68,40 @@ LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[get_language()]
 
 @dataclass
 class Element:
-    """Represents a CADwork Element"""
+    """Represents a CADwork Element
+
+    Parameters
+    ----------
+    id : int
+        The ID of the Element
+    type : ElementType
+        The type of the Element
+
+
+    Attributes
+    ----------
+    name : str
+        The name of the Element
+    frame : Frame
+        The local coordinate system of the Element
+    width : float
+        The width of the Element
+    height : float
+        The height of the Element
+    length : float
+        The length of the Element
+    group : str
+        The group the Element belongs to. Either group or subgroup depending on the current grouping type.
+    ifc_base64_guid : str
+        The base64 IFC GUID of the Element
+    cadwork_guid : str
+        The CADwork GUID of the Element
+    ifc_guid : str
+        The IFC GUID of the Element. See also: ifc_base64_guid.
+    is_wall : bool
+        Whether the Element is a framed wall i.e. container for all other elements in the building group.
+
+    """
     id: int
     type: ElementType
 
@@ -120,11 +153,23 @@ class Element:
 
     @property
     def is_wall(self) -> bool:
-        return get_element_type(self.id).is_framed_wall()
+        return is_framed_wall(self.id)
 
     @classmethod
     def from_id(cls, element_id: int) -> Element:
-        """Returns an Element object for the CADwork Element with the given ID"""
+        """Returns an Element object for the CADwork Element with the given ID
+
+        Parameters
+        ----------
+        element_id : int
+            The ID of the Element
+
+        Returns
+        -------
+        Element
+            The Element object for the given ID
+
+        """
         type_description = get_element_type_description(element_id)
         try:
             type_ = LOCAL_TYPE_MAP[type_description]
@@ -134,6 +179,13 @@ class Element:
 
     @classmethod
     def from_selection(cls) -> Generator[Element]:
-        """Returns a generator containing Element objects for all currently activated Elements"""
+        """Returns a generator containing Element objects for all currently activated Elements
+
+        Returns
+        -------
+        Generator[Element]
+            A generator containing Element objects for all currently activated Elements
+
+        """
         return (Element.from_id(e_id) for e_id in get_active_identifiable_element_ids())
 
