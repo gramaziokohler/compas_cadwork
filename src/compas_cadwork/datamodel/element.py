@@ -67,6 +67,51 @@ LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[get_language()]
 
 
 @dataclass
+class ElementGroup:
+    """Represents a CADwork Element Group
+
+    Parameters
+    ----------
+    name : str
+        The name of the Element Group
+    elements : list
+        A list of Elements belonging to the Element Group
+
+    Attributes
+    ----------
+    name : str
+        The name of the Element Group
+    elements : list
+        A list of Elements belonging to the Element Group
+
+    """
+    name: str
+    elements: list = None
+    wall_frame_element: Element = None
+
+    def add_element(self, element: Element):
+        """Adds an Element to the Element Group
+
+        Parameters
+        ----------
+        element : Element
+            The Element to add to the Element Group
+
+        """
+        if self.elements is None:
+            self.elements = []
+        self.elements.append(element)
+        if element.is_wall:
+            self.wall_frame_element = element
+
+    @property
+    def ifc_guid(self):
+        if self.wall_frame_element is None:
+            return None
+        return self.wall_frame_element.ifc_base64_guid
+
+
+@dataclass
 class Element:
     """Represents a CADwork Element
 
