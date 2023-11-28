@@ -1,5 +1,3 @@
-import sys
-from collections import defaultdict
 from typing import List
 from typing import Dict
 from typing import Union
@@ -15,11 +13,6 @@ from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 
 
-def unload_module(module_name):
-    """Unloads all loaded moduels which start with the given `module_name`"""
-    modules = list(filter(lambda m: m.startswith(module_name), sys.modules))
-    for module in modules:
-        sys.modules.pop(module)
 
 def get_language() -> str:
     """Returns the current language of the cadwork application.
@@ -272,7 +265,6 @@ __all__ = [
     "get_group",
     "get_subgroup",
     "get_active_element_id",
-    "unload_module",
     "get_plugin_home",
     "get_filename",
     "export_elements_to_ifc",
