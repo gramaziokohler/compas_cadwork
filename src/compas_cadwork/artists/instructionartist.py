@@ -2,12 +2,15 @@ from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
+from compas_monosashi.sequencer import Text3d_Volume
 from attribute_controller import set_user_attribute
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
 from element_controller import create_text_object
 from element_controller import create_text_object_with_font
+from element_controller import create_text_object_with_options
 from file_controller import import_element_light
+import cadwork
 
 from compas_cadwork.artists import CadworkArtist
 from compas_cadwork.conversions import point_to_cadwork
@@ -15,7 +18,8 @@ from compas_cadwork.conversions import vector_to_cadwork
 
 import ctypes
 
-class Text3dInstrcutionArtist(CadworkArtist):
+
+class Text3dInstructionArtist(CadworkArtist):
     """Draws a 3d text instruction onto the view.
 
 
@@ -29,26 +33,6 @@ class Text3dInstrcutionArtist(CadworkArtist):
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
-
-    # def get_text_dimensions(self, text, points, font) -> None:
-    #     # 10pt is equal to 3.527mm
-    #     # https://github.com/wwwtyro/AegisLuna/blob/master/pyglet/font/win32query.py
-    #     class SIZE(ctypes.Structure):
-    #         _fields_ = [("cx", ctypes.c_long), ("cy", ctypes.c_long)]
-
-    #     pt_to_mm_ratio = 0.3527
-        
-    #     hdc = ctypes.windll.user32.GetDC(0)
-    #     hfont = ctypes.windll.gdi32.CreateFontA(-points, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, font)
-    #     hfont_old = ctypes.windll.gdi32.SelectObject(hdc, hfont)
-    #     size = SIZE(0, 0)
-    #     ctypes.windll.gdi32.GetTextExtentPoint32A(hdc, text.encode('cp1252'), len(text), ctypes.byref(size))
-    #     ctypes.windll.gdi32.SelectObject(hdc, hfont_old)
-    #     ctypes.windll.gdi32.DeleteObject(hfont)
-        
-    #     print("font size: ", (size.cx*pt_to_mm_ratio, size.cy*pt_to_mm_ratio))
-        
-    #     return (size.cx*pt_to_mm_ratio, size.cy*pt_to_mm_ratio)
     
     def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
@@ -74,6 +58,51 @@ class Text3dInstrcutionArtist(CadworkArtist):
         return element_id
 
 
+class Text3dVolumeInstructionArtist(CadworkArtist):
+    """Draws a 3d text volume instruction onto the view.
+
+
+    Parameters
+    ----------
+    text_volume_instruction : :class:`monosashi.sequencer`
+        The text instruction to draw.
+
+    """
+
+    def __init__(self, text_volume_instruction: Text3d_Volume, **kwargs) -> None:
+        super().__init__(text_volume_instruction)
+        self.text_volume_instruction = text_volume_instruction
+    
+    def draw(self, *args, **kwargs):
+        """Adds a text element with the text included in the provided text instruction.
+
+        Returns
+        -------
+        int
+            cadwork element ID of the added text.
+
+        """
+        text_options = cadwork.text_object_options()
+        text_options.set_color(5)
+        text_options.set_element_type(cadwork.volume)
+        text_options.set_text(self.text_volume_instruction.text)
+        text_options.set_height(100.0)
+        text_options.set_thickness(5.0)
+        
+        # font = "Times New Roman"
+        loc = self.text_volume_instruction.location
+        element_id = create_text_object_with_options(
+            self.text_volume_instruction.text,
+            point_to_cadwork(loc.point),
+            vector_to_cadwork(loc.xaxis),
+            vector_to_cadwork(loc.yaxis),
+            text_options
+        )
+        self.add_element(element_id)
+        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
+        return element_id
+    
+    
 class LinearDimensionArtist(CadworkArtist):
     """Draw a linear dimension instruction.
 

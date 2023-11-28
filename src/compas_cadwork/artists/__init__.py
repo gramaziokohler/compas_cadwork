@@ -7,13 +7,15 @@ from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 
 from .artist import CadworkArtist
-from .instructionartist import Text3dInstrcutionArtist
+from .instructionartist import Text3dInstructionArtist
+from .instructionartist import Text3dVolumeInstructionArtist
 from .instructionartist import LinearDimensionArtist
 from .instructionartist import Model3dArtist
 
 __all__ = [
     "CadworkArtist",
-    "Text3dInstrcutionArtist",
+    "Text3dInstructionArtist",
+    "Text3dVolumeInstructionArtist",
 ]
 
 
