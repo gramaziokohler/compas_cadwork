@@ -15,25 +15,6 @@ from compas_cadwork.artists import CadworkArtist
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
 
-import ctypes
-
-
-TEXT_TYPE_MAP = {
-            "line": cadwork.line,
-            "surface": cadwork.surface,
-            "volume": cadwork.volume
-            }
-
-
-BOUNDING_BOX_VERTICE_ORDER_MAP = {
-                "volume": {
-                    "start_vec_x": 5,
-                    "end_vec_x": 6,
-                    "start_vec_z": 6,
-                    "end_vec_z": 3
-                }
-            }
-
 
 class Text3dInstructionArtist(CadworkArtist):
     """Draws a 3d text volume instruction onto the view.
@@ -41,18 +22,22 @@ class Text3dInstructionArtist(CadworkArtist):
 
     Parameters
     ----------
-    text_instruction : :class:`monosashi.sequencer`
+    text_instruction : :class:`~monosashi.sequencer.Text3d`
         The text instruction to draw.
 
     """
+    TEXT_TYPE_MAP = {
+            "line": cadwork.line,
+            "surface": cadwork.surface,
+            "volume": cadwork.volume
+    }
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
     
-    def generate_translation_vectors_from_bounding_box_local(self, element_ids: list = None,
-                                                             geometry_type: str = "volume"):
-        
+    @staticmethod
+    def _generate_translation_vectors(element_id: int):
         """Generates translation vectors from a bounding box that shift a text
         or a box from the bottom left point of the object to the center point
         of the object.
@@ -62,57 +47,35 @@ class Text3dInstructionArtist(CadworkArtist):
         ----------
         element_ids : list
             The respective texts or boxes
-        input_geometry : string
-            Type of object
 
         Return
         ----------
         Cadwork Vector X and Z
             vx, vz
         """
-        
-        bb = get_bounding_box_vertices_local(element_ids[0], element_ids)
+        bb = get_bounding_box_vertices_local(element_id, [element_id])
 
-        start_vec_x = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]
-        end_vec_x = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]]
-        start_vec_z = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]]
-        end_vec_z = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]
+        # https://github.com/inconai/innosuisse_issue_collection/issues/137
+        start_vec_x = bb[5]
+        end_vec_x = bb[6]
+        start_vec_z = bb[6]
+        end_vec_z = bb[3]
         
-        vx = cadwork.point_3d(*start_vec_x) - cadwork.point_3d(*end_vec_x)
-        dx = cadwork.point_3d(*start_vec_x).distance(*end_vec_x)/2
+        vx = start_vec_x - end_vec_x
+        dx = start_vec_x.distance(end_vec_x) / 2.0
         
         vx = vx.normalized()
         vx = vx*dx*-1
 
-        vz = cadwork.point_3d(*end_vec_z) - cadwork.point_3d(*start_vec_z)
-        dz = cadwork.point_3d(*start_vec_z).distance(*end_vec_z)/2
+        vz = end_vec_z - start_vec_z
+        dz = start_vec_z.distance(end_vec_z) / 2.0
 
         vz = vz.normalized()
-        vz = vz*dz*-1
-
+        vz = vz * dz * -1  # write here why it has to be flipped
         return vx, vz
-
-    def shift_text_from_bottom_left_to_center(self, element_ids: list = [], geometry_type: str = "volume"):
-        vx, vz = self.generate_translation_vectors_from_bounding_box_local(element_ids, geometry_type)
-        move_element(element_ids, vx + vz)
     
-    def draw(self, color: int = 3, geometry_type: str = "volume", size: float = 100.,
-             thickness: float = 5., *args, **kwargs):
+    def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
-        Parameters
-        -------
-        color : int
-            Color of the text
-        geometry_type : Cadwork Element Type
-            Geometry Type of the text.
-            Options:        
-            1) "line"
-            2) "surface"
-            3) "volume"
-        size : float
-            size of the text in mm
-        thickness : float
-            Thickness of the text in mm
         
         Returns
         -------
@@ -121,17 +84,18 @@ class Text3dInstructionArtist(CadworkArtist):
 
         """
 
-        if geometry_type not in list(TEXT_TYPE_MAP.keys()):
-            ValueError(f"Unsupported geometry type in Text3dArtist: {geometry_type}")
+        if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
+            raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
+        
+        color = 5  # TODO: find a way to map compas colors to cadwork materials
         
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
-        text_options.set_element_type(TEXT_TYPE_MAP[geometry_type])
+        text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
         text_options.set_text(self.text_instruction.text)
-        text_options.set_height(size)
-        text_options.set_thickness(thickness)
+        text_options.set_height(self.text_instruction.size)
+        text_options.set_thickness(self.text_instruction.thickness)
         
-        # font = "Times New Roman"
         loc = self.text_instruction.location
         element_id = create_text_object_with_options(
             point_to_cadwork(loc.point),
@@ -140,7 +104,8 @@ class Text3dInstructionArtist(CadworkArtist):
             text_options
         )
         
-        self.shift_text_from_bottom_left_to_center([element_id], geometry_type)
+        vx, vz = self._generate_translation_vectors(element_id)
+        move_element([element_id], vx + vz)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id
