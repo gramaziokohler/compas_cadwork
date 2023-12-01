@@ -106,7 +106,7 @@ class Text3dInstructionArtist(CadworkArtist):
         vx, vz = self.generate_translation_vectors_from_bounding_box_local(element_ids)
         move_element(element_ids, vx + vz)
     
-    def draw(self, color: int = 5, geometry_type: str = "volume", height: float = 100.,
+    def draw(self, color: int = 3, geometry_type: str = "volume", height: float = 100.,
              thickness: float = 5., *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
         Parameters
