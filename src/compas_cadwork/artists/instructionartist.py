@@ -5,75 +5,112 @@ from compas_monosashi.sequencer import Text3d
 from attribute_controller import set_user_attribute
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
-from element_controller import create_text_object
-from element_controller import create_text_object_with_font
+from element_controller import create_text_object_with_options
+from element_controller import move_element
+from element_controller import get_bounding_box_vertices_local
 from file_controller import import_element_light
+import cadwork
 
 from compas_cadwork.artists import CadworkArtist
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
 
-import ctypes
 
-class Text3dInstrcutionArtist(CadworkArtist):
-    """Draws a 3d text instruction onto the view.
+class Text3dInstructionArtist(CadworkArtist):
+    """Draws a 3d text volume instruction onto the view.
 
 
     Parameters
     ----------
-    text_instruction : :class:`monosashi.sequencer`
+    text_instruction : :class:`~monosashi.sequencer.Text3d`
         The text instruction to draw.
 
     """
+    TEXT_TYPE_MAP = {
+            "line": cadwork.line,
+            "surface": cadwork.surface,
+            "volume": cadwork.volume
+    }
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
+    
+    @staticmethod
+    def _generate_translation_vectors(element_id: int):
+        """Generates translation vectors from a bounding box that shift a text
+        or a box from the bottom left point of the object to the center point
+        of the object.
 
-    # def get_text_dimensions(self, text, points, font) -> None:
-    #     # 10pt is equal to 3.527mm
-    #     # https://github.com/wwwtyro/AegisLuna/blob/master/pyglet/font/win32query.py
-    #     class SIZE(ctypes.Structure):
-    #         _fields_ = [("cx", ctypes.c_long), ("cy", ctypes.c_long)]
 
-    #     pt_to_mm_ratio = 0.3527
+        Parameters
+        ----------
+        element_ids : list
+            The respective texts or boxes
+
+        Return
+        ----------
+        Cadwork Vector X and Z
+            vx, vz
+        """
+        bb = get_bounding_box_vertices_local(element_id, [element_id])
+
+        # https://github.com/inconai/innosuisse_issue_collection/issues/137
+        start_vec_x = bb[5]
+        end_vec_x = bb[6]
+        start_vec_z = bb[6]
+        end_vec_z = bb[3]
         
-    #     hdc = ctypes.windll.user32.GetDC(0)
-    #     hfont = ctypes.windll.gdi32.CreateFontA(-points, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, font)
-    #     hfont_old = ctypes.windll.gdi32.SelectObject(hdc, hfont)
-    #     size = SIZE(0, 0)
-    #     ctypes.windll.gdi32.GetTextExtentPoint32A(hdc, text.encode('cp1252'), len(text), ctypes.byref(size))
-    #     ctypes.windll.gdi32.SelectObject(hdc, hfont_old)
-    #     ctypes.windll.gdi32.DeleteObject(hfont)
+        vx = start_vec_x - end_vec_x
+        dx = start_vec_x.distance(end_vec_x) / 2.0
         
-    #     print("font size: ", (size.cx*pt_to_mm_ratio, size.cy*pt_to_mm_ratio))
-        
-    #     return (size.cx*pt_to_mm_ratio, size.cy*pt_to_mm_ratio)
+        vx = vx.normalized()
+        vx = vx*dx*-1
+
+        vz = end_vec_z - start_vec_z
+        dz = start_vec_z.distance(end_vec_z) / 2.0
+
+        vz = vz.normalized()
+        vz = vz * dz * -1  # write here why it has to be flipped
+        return vx, vz
     
     def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
-
+        
         Returns
         -------
         int
             cadwork element ID of the added text.
 
         """
-        font = "Times New Roman"
+
+        if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
+            raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
+        
+        color = 5  # TODO: find a way to map compas colors to cadwork materials
+        
+        text_options = cadwork.text_object_options()
+        text_options.set_color(color)
+        text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
+        text_options.set_text(self.text_instruction.text)
+        text_options.set_height(self.text_instruction.size)
+        text_options.set_thickness(self.text_instruction.thickness)
+        
         loc = self.text_instruction.location
-        element_id = create_text_object_with_font(
-            self.text_instruction.text,
+        element_id = create_text_object_with_options(
             point_to_cadwork(loc.point),
             vector_to_cadwork(loc.xaxis),
             vector_to_cadwork(loc.yaxis),
-            self.text_instruction.size,
-            font 
+            text_options
         )
+        
+        vx, vz = self._generate_translation_vectors(element_id)
+        move_element([element_id], vx + vz)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id
-
-
+    
+    
 class LinearDimensionArtist(CadworkArtist):
     """Draw a linear dimension instruction.
 
