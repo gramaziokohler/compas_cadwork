@@ -2,12 +2,9 @@ from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
-from compas_monosashi.sequencer import Text3d_Volume
 from attribute_controller import set_user_attribute
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
-from element_controller import create_text_object
-from element_controller import create_text_object_with_font
 from element_controller import create_text_object_with_options
 from element_controller import move_element
 from element_controller import get_bounding_box_vertices_local
@@ -21,8 +18,31 @@ from compas_cadwork.conversions import vector_to_cadwork
 import ctypes
 
 
+TEXT_TYPE_MAP = {
+            "line": cadwork.line,
+            "surface": cadwork.surface,
+            "volume": cadwork.volume
+            }
+
+
+BOUNDING_BOX_VERTICE_ORDER_MAP = {
+                "Bounding Box": {
+                    "start_vec_x": 0,
+                    "end_vec_x": 3,
+                    "start_vec_z": 3,
+                    "end_vec_z": 2
+                    },
+                "3d text": {
+                    "start_vec_x": 5,
+                    "end_vec_x": 6,
+                    "start_vec_z": 6,
+                    "end_vec_z": 3
+                }
+            }
+
+
 class Text3dInstructionArtist(CadworkArtist):
-    """Draws a 3d text instruction onto the view.
+    """Draws a 3d text volume instruction onto the view.
 
 
     Parameters
@@ -35,45 +55,6 @@ class Text3dInstructionArtist(CadworkArtist):
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
-    
-    def draw(self, *args, **kwargs):
-        """Adds a text element with the text included in the provided text instruction.
-
-        Returns
-        -------
-        int
-            cadwork element ID of the added text.
-
-        """
-        font = "Times New Roman"
-        loc = self.text_instruction.location
-        element_id = create_text_object_with_font(
-            self.text_instruction.text,
-            point_to_cadwork(loc.point),
-            vector_to_cadwork(loc.xaxis),
-            vector_to_cadwork(loc.yaxis),
-            self.text_instruction.size,
-            font 
-        )
-        self.add_element(element_id)
-        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
-        return element_id
-
-
-class Text3dVolumeInstructionArtist(CadworkArtist):
-    """Draws a 3d text volume instruction onto the view.
-
-
-    Parameters
-    ----------
-    text_volume_instruction : :class:`monosashi.sequencer`
-        The text instruction to draw.
-
-    """
-
-    def __init__(self, text_volume_instruction: Text3d_Volume, **kwargs) -> None:
-        super().__init__(text_volume_instruction)
-        self.text_volume_instruction = text_volume_instruction
     
     def generate_translation_vectors_from_bounding_box_local(self, element_ids: list = [],
                                                              input_geometry: str = "3d text"):
@@ -100,69 +81,77 @@ class Text3dVolumeInstructionArtist(CadworkArtist):
 
         # as explained and diagrammed for some reason the bounding box vertices
         # are sorted differently for a 3d text or a 3d box
-        keys_start_end = {
-                "Bounding Box": {
-                    "start_vec_x": 0,
-                    "end_vec_x": 3,
-                    "start_vec_z": 3,
-                    "end_vec_z": 2
-                    },
-                "3d text": {
-                    "start_vec_x": 5,
-                    "end_vec_x": 6,
-                    "start_vec_z": 6,
-                    "end_vec_z": 3
-                }
-            }
-    
-        vx = cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["start_vec_x"]]) - cadwork.point_3d(
-            *bb_vl[keys_start_end[input_geometry]["end_vec_x"]])
-        dx = cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["start_vec_x"]]).distance(
-            cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["end_vec_x"]]))/2
+
+        vx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_x"]]) - cadwork.point_3d(
+            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_x"]])
+        dx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_x"]]).distance(
+            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_x"]]))/2
         
         vx = vx.normalized()
         vx = vx*dx*-1
 
-        vz = cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["end_vec_z"]]) - cadwork.point_3d(
-            *bb_vl[keys_start_end[input_geometry]["start_vec_z"]])
-        dz = cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["start_vec_z"]]).distance(
-            cadwork.point_3d(*bb_vl[keys_start_end[input_geometry]["end_vec_z"]]))/2
+        vz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_z"]]) - cadwork.point_3d(
+            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_z"]])
+        dz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_z"]]).distance(
+            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_z"]]))/2
 
         vz = vz.normalized()
         vz = vz*dz*-1
 
         return vx, vz
 
-    def shift_text_from_bottom_left_to_center(self, element_ids: list = []):
+    def shift_text_from_bottom_left_to_center(self, element_ids: list = [], geometry_type: str = None):
+        if not geometry_type == "volume":
+            return None
         vx, vz = self.generate_translation_vectors_from_bounding_box_local(element_ids)
         move_element(element_ids, vx + vz)
     
-    def draw(self, *args, **kwargs):
+    def draw(self, color: int = 5, geometry_type: str = "volume", height: float = 100.,
+             thickness: float = 5., *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
-
+        Parameters
+        -------
+        color : int
+            Color of the text
+        geometry_type : Cadwork Element Type
+            Geometry Type of the text.
+            Options:        
+            1) "line"
+            2) "surface"
+            3) "volume"
+        height : float
+            Height of the text in mm
+        thickness : float
+            Thickness of the text in mm
+        
         Returns
         -------
         int
             cadwork element ID of the added text.
 
         """
+
+        if geometry_type not in list(TEXT_TYPE_MAP.keys()):
+            print("ERROR: Geometry Type not defined.")
+            return None
+        
         text_options = cadwork.text_object_options()
-        text_options.set_color(5)
-        text_options.set_element_type(cadwork.volume)
-        text_options.set_text(self.text_volume_instruction.text)
-        text_options.set_height(50.0)
-        text_options.set_thickness(0.5)
+        text_options.set_color(color)
+        text_options.set_element_type(TEXT_TYPE_MAP[geometry_type])
+        text_options.set_text(self.text_instruction.text)
+        text_options.set_height(height)
+        text_options.set_thickness(thickness)
         
         # font = "Times New Roman"
-        loc = self.text_volume_instruction.location
+        loc = self.text_instruction.location
         element_id = create_text_object_with_options(
             point_to_cadwork(loc.point),
             vector_to_cadwork(loc.xaxis),
             vector_to_cadwork(loc.yaxis),
             text_options
         )
-            
-        self.shift_text_from_bottom_left_to_center([element_id])
+        
+        self.shift_text_from_bottom_left_to_center([element_id], geometry_type)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id

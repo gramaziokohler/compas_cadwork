@@ -3,20 +3,17 @@ from compas.plugins import PluginManager
 from compas.artists import Artist
 
 from compas_monosashi.sequencer import Text3d
-from compas_monosashi.sequencer import Text3d_Volume
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 
 from .artist import CadworkArtist
 from .instructionartist import Text3dInstructionArtist
-from .instructionartist import Text3dVolumeInstructionArtist
 from .instructionartist import LinearDimensionArtist
 from .instructionartist import Model3dArtist
 
 __all__ = [
     "CadworkArtist",
     "Text3dInstructionArtist",
-    "Text3dVolumeInstructionArtist",
     "LinearDimensionArtist",
     "Model3dArtist"
 ]
@@ -48,7 +45,5 @@ def redraw_cadwork():
 @plugin(category="factories", requires=[CONTEXT])
 def register_artists():
     Artist.register(Text3d, Text3dInstructionArtist, context=CONTEXT)
-    Artist.register(Text3d_Volume, Text3dVolumeInstructionArtist, context=CONTEXT)
     Artist.register(LinearDimension, LinearDimensionArtist, context=CONTEXT)
     Artist.register(Model3d, Model3dArtist, context=CONTEXT)
-
