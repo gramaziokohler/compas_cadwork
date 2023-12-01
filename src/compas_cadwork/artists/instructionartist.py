@@ -71,23 +71,21 @@ class Text3dInstructionArtist(CadworkArtist):
             vx, vz
         """
         
-        bb_vl = get_bounding_box_vertices_local(element_ids[0], element_ids)
+        bb = get_bounding_box_vertices_local(element_ids[0], element_ids)
 
-        # as explained and diagrammed for some reason the bounding box vertices
-        # are sorted differently for a 3d text or a 3d box
-
-        vx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]) - cadwork.point_3d(
-            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]])
-        dx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]).distance(
-            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]]))/2
+        start_vec_x = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]
+        end_vec_x = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]]
+        start_vec_z = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]]
+        end_vec_z = bb[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]
+        
+        vx = cadwork.point_3d(*start_vec_x) - cadwork.point_3d(*end_vec_x)
+        dx = cadwork.point_3d(*start_vec_x).distance(*end_vec_x)/2
         
         vx = vx.normalized()
         vx = vx*dx*-1
 
-        vz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]) - cadwork.point_3d(
-            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]])
-        dz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]]).distance(
-            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]))/2
+        vz = cadwork.point_3d(*end_vec_z) - cadwork.point_3d(*start_vec_z)
+        dz = cadwork.point_3d(*start_vec_z).distance(*end_vec_z)/2
 
         vz = vz.normalized()
         vz = vz*dz*-1
