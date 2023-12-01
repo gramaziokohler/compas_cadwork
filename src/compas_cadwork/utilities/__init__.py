@@ -1,5 +1,3 @@
-import sys
-from collections import defaultdict
 from typing import List
 from typing import Dict
 from typing import Union
@@ -12,13 +10,9 @@ import bim_controller as bc
 import visualization_controller as vc
 
 from compas_cadwork.datamodel import Element
+from compas_cadwork.datamodel import ElementGroup
 
 
-def unload_module(module_name):
-    """Unloads all loaded moduels which start with the given `module_name`"""
-    modules = list(filter(lambda m: m.startswith(module_name), sys.modules))
-    for module in modules:
-        sys.modules.pop(module)
 
 def get_language() -> str:
     """Returns the current language of the cadwork application.
@@ -95,26 +89,48 @@ def export_elements_to_ifc(element_ids: List[int], filepath: str):
         bc.export_ifc(element_ids, filepath)
 
 
-def get_element_groups() -> Dict[str, List]:
+def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
     """Returns a dictionary mapping names of the available building subgroups to their elements.
+
+    Parameters
+    ----------
+    is_wall_frame : bool, optional
+        If True, only wall groups which contain a wall frame elements are returned, otherwise all groups are returned.
 
     Returns
     -------
-    dict(str, list(int))
-        Dictionary of building subgroups and their elements.
+    dict(str, :class:`~compas_cadwork.datamodel.ElementGroup`)
+        Dictionary of building group names mapped to an instance of ElementGroup.
 
     """
-    get_grouping_name = (
-        ac.get_subgroup if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup else ac.get_group
-    )
-    groups_elements = defaultdict(list)
+    get_grouping_name = _get_grouping_func()
+
+    groups_elements = {}
     for element_id in ec.get_all_identifiable_element_ids():
         group_name = get_grouping_name(element_id)
-        if group_name is None or group_name == "":
+
+        if not group_name:
             continue
-        groups_elements[get_grouping_name(element_id)].append(Element.from_id(element_id))
+
+        if group_name not in groups_elements:
+            groups_elements[group_name] = ElementGroup(group_name)
+        groups_elements[group_name].add_element(Element.from_id(element_id))
+
+    if is_wall_frame:
+        _remove_wallless_groups(groups_elements)
+
     return groups_elements
 
+def _get_grouping_func() -> callable:
+    if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
+        return ac.get_subgroup
+    else:
+        return ac.get_group
+
+def _remove_wallless_groups(groups: Dict[str, ElementGroup]) -> None:
+    to_remove = (group for group in groups.values() if group.wall_frame_element is None)
+    for group in to_remove:
+        del groups[group.name]
 
 def activate_elements(elements: List[Union[Element, int]]) -> None:
     """Activates the given elements in the cadwork viewport.
@@ -249,7 +265,6 @@ __all__ = [
     "get_group",
     "get_subgroup",
     "get_active_element_id",
-    "unload_module",
     "get_plugin_home",
     "get_filename",
     "export_elements_to_ifc",
