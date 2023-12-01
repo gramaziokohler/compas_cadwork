@@ -26,13 +26,7 @@ TEXT_TYPE_MAP = {
 
 
 BOUNDING_BOX_VERTICE_ORDER_MAP = {
-                "Bounding Box": {
-                    "start_vec_x": 0,
-                    "end_vec_x": 3,
-                    "start_vec_z": 3,
-                    "end_vec_z": 2
-                    },
-                "3d text": {
+                "volume": {
                     "start_vec_x": 5,
                     "end_vec_x": 6,
                     "start_vec_z": 6,
@@ -56,8 +50,8 @@ class Text3dInstructionArtist(CadworkArtist):
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
     
-    def generate_translation_vectors_from_bounding_box_local(self, element_ids: list = [],
-                                                             input_geometry: str = "3d text"):
+    def generate_translation_vectors_from_bounding_box_local(self, element_ids: list = None,
+                                                             geometry_type: str = "volume"):
         
         """Generates translation vectors from a bounding box that shift a text
         or a box from the bottom left point of the object to the center point
@@ -82,31 +76,29 @@ class Text3dInstructionArtist(CadworkArtist):
         # as explained and diagrammed for some reason the bounding box vertices
         # are sorted differently for a 3d text or a 3d box
 
-        vx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_x"]]) - cadwork.point_3d(
-            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_x"]])
-        dx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_x"]]).distance(
-            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_x"]]))/2
+        vx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]) - cadwork.point_3d(
+            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]])
+        dx = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_x"]]).distance(
+            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_x"]]))/2
         
         vx = vx.normalized()
         vx = vx*dx*-1
 
-        vz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_z"]]) - cadwork.point_3d(
-            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_z"]])
-        dz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["start_vec_z"]]).distance(
-            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[input_geometry]["end_vec_z"]]))/2
+        vz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]) - cadwork.point_3d(
+            *bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]])
+        dz = cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["start_vec_z"]]).distance(
+            cadwork.point_3d(*bb_vl[BOUNDING_BOX_VERTICE_ORDER_MAP[geometry_type]["end_vec_z"]]))/2
 
         vz = vz.normalized()
         vz = vz*dz*-1
 
         return vx, vz
 
-    def shift_text_from_bottom_left_to_center(self, element_ids: list = [], geometry_type: str = None):
-        if not geometry_type == "volume":
-            return None
-        vx, vz = self.generate_translation_vectors_from_bounding_box_local(element_ids)
+    def shift_text_from_bottom_left_to_center(self, element_ids: list = [], geometry_type: str = "volume"):
+        vx, vz = self.generate_translation_vectors_from_bounding_box_local(element_ids, geometry_type)
         move_element(element_ids, vx + vz)
     
-    def draw(self, color: int = 3, geometry_type: str = "volume", height: float = 100.,
+    def draw(self, color: int = 3, geometry_type: str = "volume", size: float = 100.,
              thickness: float = 5., *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
         Parameters
@@ -119,8 +111,8 @@ class Text3dInstructionArtist(CadworkArtist):
             1) "line"
             2) "surface"
             3) "volume"
-        height : float
-            Height of the text in mm
+        size : float
+            size of the text in mm
         thickness : float
             Thickness of the text in mm
         
@@ -132,14 +124,13 @@ class Text3dInstructionArtist(CadworkArtist):
         """
 
         if geometry_type not in list(TEXT_TYPE_MAP.keys()):
-            print("ERROR: Geometry Type not defined.")
-            return None
+            ValueError(f"Unsupported geometry type in Text3dArtist: {geometry_type}")
         
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
         text_options.set_element_type(TEXT_TYPE_MAP[geometry_type])
         text_options.set_text(self.text_instruction.text)
-        text_options.set_height(height)
+        text_options.set_height(size)
         text_options.set_thickness(thickness)
         
         # font = "Times New Roman"
