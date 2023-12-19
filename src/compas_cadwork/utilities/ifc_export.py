@@ -11,7 +11,15 @@ from compas_cadwork.datamodel import ElementGroupingType
 
 @dataclass
 class IFCExportSettings:
-    """
+    """Represents settings for the ifc export.
+
+    Attributes
+    ----------
+    grouping_type : :class:`ElementGroupingType`, optional
+        Which element grouping type should be considered when exporting (e.g. group, subgroup)
+    export_cover_geometry : bool, optional
+        True if cover geometry should be exported, False otherwise.
+
     """
     grouping_type: ElementGroupingType = ElementGroupingType.NONE
     export_cover_geometry: bool = False
