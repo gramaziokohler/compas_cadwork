@@ -12,7 +12,7 @@ from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 
 from .ifc_export import export_elements_to_ifc
-from .ifc_export import IFCExportSetting
+from .ifc_export import IFCExportSettings
 
 
 def get_language() -> str:
@@ -246,7 +246,7 @@ def save_project_file():
 
 
 __all__ = [
-    "IFCExportSetting",
+    "IFCExportSettings",
     "get_group",
     "get_subgroup",
     "get_active_element_id",
