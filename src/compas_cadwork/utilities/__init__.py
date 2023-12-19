@@ -6,12 +6,13 @@ import cadwork
 import utility_controller as uc
 import element_controller as ec
 import attribute_controller as ac
-import bim_controller as bc
 import visualization_controller as vc
 
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 
+from .ifc_export import export_elements_to_ifc
+from .ifc_export import IFCExportSetting
 
 
 def get_language() -> str:
@@ -70,23 +71,6 @@ def get_plugin_home() -> str:
 def get_filename() -> str:
     """Returns the name of the currently open cadwork document."""
     return uc.get_3d_file_name()
-
-
-def export_elements_to_ifc(element_ids: List[int], filepath: str):
-    """Exports elements to ifc file.
-
-    Parameters
-    ----------
-    element_ids : list(int)
-        List of element ids to export.
-    filepath : str
-        Path to the resulting ifc file.
-
-    """
-    try:
-        bc.export_ifc2x3_silently(element_ids, filepath)
-    except AttributeError:
-        bc.export_ifc(element_ids, filepath)
 
 
 def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
@@ -262,6 +246,7 @@ def save_project_file():
 
 
 __all__ = [
+    "IFCExportSetting",
     "get_group",
     "get_subgroup",
     "get_active_element_id",
