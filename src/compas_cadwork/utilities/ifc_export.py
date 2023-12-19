@@ -28,7 +28,7 @@ class IFCExportSettings:
         options = cadwork.ifc_options()
         aggregation = options.get_ifc_options_aggregation()
         aggregation.set_export_cover_geometry(self.export_cover_geometry)
-        aggregation.set_element_aggregation_attribute(self.grouping_type.value)
+        aggregation.set_element_aggregation_attribute(self.grouping_type.to_cadwork())
 
 
 def export_elements_to_ifc(element_ids: List[int], filepath: str, settings: IFCExportSettings = None) -> None:

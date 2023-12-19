@@ -41,6 +41,9 @@ class ElementGroupingType(IntEnum):
     SUBGROUP = 2
     NONE = 3
 
+    def to_cadwork(self):
+        return cadwork.element_grouping_type(self.value)
+
 
 class ElementType(StrEnum):
     """CADWork Element type"""
