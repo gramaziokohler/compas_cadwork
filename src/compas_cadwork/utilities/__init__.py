@@ -13,7 +13,6 @@ from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 
 
-
 def get_language() -> str:
     """Returns the current language of the cadwork application.
 
@@ -24,6 +23,7 @@ def get_language() -> str:
 
     """
     return uc.get_language()
+
 
 def get_group(element: int) -> str:
     """
@@ -36,6 +36,7 @@ def get_group(element: int) -> str:
         str: group name
     """
     return ac.get_group(element)
+
 
 def get_subgroup(element: int) -> str:
     """get subgroup
@@ -50,6 +51,7 @@ def get_subgroup(element: int) -> str:
     """
     return ac.get_subgroup(element)
 
+
 def get_element_grouping_type() -> int:
     """Get element grouping type
 
@@ -58,9 +60,11 @@ def get_element_grouping_type() -> int:
     """
     return ac.get_element_grouping_type()
 
+
 def get_active_element_ids() -> list:
     """Returns the elemend ids of the active selection"""
     return ec.get_active_identifiable_element_ids()
+
 
 def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
@@ -121,16 +125,19 @@ def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
 
     return groups_elements
 
+
 def _get_grouping_func() -> callable:
     if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
         return ac.get_subgroup
     else:
         return ac.get_group
 
+
 def _remove_wallless_groups(groups: Dict[str, ElementGroup]) -> None:
     to_remove = (group for group in groups.values() if group.wall_frame_element is None)
     for group in to_remove:
         del groups[group.name]
+
 
 def activate_elements(elements: List[Union[Element, int]]) -> None:
     """Activates the given elements in the cadwork viewport.

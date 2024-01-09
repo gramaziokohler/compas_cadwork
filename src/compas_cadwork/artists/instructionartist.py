@@ -26,16 +26,13 @@ class Text3dInstructionArtist(CadworkArtist):
         The text instruction to draw.
 
     """
-    TEXT_TYPE_MAP = {
-            "line": cadwork.line,
-            "surface": cadwork.surface,
-            "volume": cadwork.volume
-    }
+
+    TEXT_TYPE_MAP = {"line": cadwork.line, "surface": cadwork.surface, "volume": cadwork.volume}
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
-    
+
     @staticmethod
     def _generate_translation_vectors(element_id: int):
         """Generates translation vectors from a bounding box that shift a text
@@ -60,12 +57,12 @@ class Text3dInstructionArtist(CadworkArtist):
         end_vec_x = bb[6]
         start_vec_z = bb[6]
         end_vec_z = bb[3]
-        
+
         vx = start_vec_x - end_vec_x
         dx = start_vec_x.distance(end_vec_x) / 2.0
-        
+
         vx = vx.normalized()
-        vx = vx*dx*-1
+        vx = vx * dx * -1
 
         vz = end_vec_z - start_vec_z
         dz = start_vec_z.distance(end_vec_z) / 2.0
@@ -73,10 +70,10 @@ class Text3dInstructionArtist(CadworkArtist):
         vz = vz.normalized()
         vz = vz * dz * -1  # write here why it has to be flipped
         return vx, vz
-    
+
     def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
-        
+
         Returns
         -------
         int
@@ -86,31 +83,28 @@ class Text3dInstructionArtist(CadworkArtist):
 
         if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
             raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
-        
+
         color = 5  # TODO: find a way to map compas colors to cadwork materials
-        
+
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
         text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
         text_options.set_text(self.text_instruction.text)
         text_options.set_height(self.text_instruction.size)
         text_options.set_thickness(self.text_instruction.thickness)
-        
+
         loc = self.text_instruction.location
         element_id = create_text_object_with_options(
-            point_to_cadwork(loc.point),
-            vector_to_cadwork(loc.xaxis),
-            vector_to_cadwork(loc.yaxis),
-            text_options
+            point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
-        
+
         vx, vz = self._generate_translation_vectors(element_id)
         move_element([element_id], vx + vz)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         return element_id
-    
-    
+
+
 class LinearDimensionArtist(CadworkArtist):
     """Draw a linear dimension instruction.
 
@@ -120,6 +114,7 @@ class LinearDimensionArtist(CadworkArtist):
         The linear dimension to draw.
 
     """
+
     def __init__(self, linear_dimension: LinearDimension, **kwargs) -> None:
         super().__init__(linear_dimension)
         self.linear_dimension = linear_dimension
@@ -133,7 +128,9 @@ class LinearDimensionArtist(CadworkArtist):
             cadwork element ID of the added dimension.
 
         """
-        direction = Vector.from_start_end(self.linear_dimension.start, self.linear_dimension.end).unitized()  # why is this even needed?
+        direction = Vector.from_start_end(
+            self.linear_dimension.start, self.linear_dimension.end
+        ).unitized()  # why is this even needed?
         text_plane_normal = self.linear_dimension.location.normal * -1.0
         text_plane_origin = self.linear_dimension.location.point
         element_id = create_dimension(
@@ -168,4 +165,3 @@ class Model3dArtist(CadworkArtist):
             point_to_cadwork(new_loc.xaxis),
             point_to_cadwork(new_loc.yaxis),
         )
-
