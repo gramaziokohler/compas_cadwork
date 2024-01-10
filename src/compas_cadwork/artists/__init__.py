@@ -11,12 +11,7 @@ from .instructionartist import Text3dInstructionArtist
 from .instructionartist import LinearDimensionArtist
 from .instructionartist import Model3dArtist
 
-__all__ = [
-    "CadworkArtist",
-    "Text3dInstructionArtist",
-    "LinearDimensionArtist",
-    "Model3dArtist"
-]
+__all__ = ["CadworkArtist", "Text3dInstructionArtist", "LinearDimensionArtist", "Model3dArtist"]
 
 
 CONTEXT = "cadwork"

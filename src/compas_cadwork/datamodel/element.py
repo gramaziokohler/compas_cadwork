@@ -31,11 +31,13 @@ from bim_controller import get_ifc_base64_guid
 
 class StrEnum(str, Enum):
     """Why do *I* have to do this?"""
+
     pass
 
 
 class ElementType(StrEnum):
     """CADWork Element type"""
+
     BEAM = auto()  # Stab
     PLATE = auto()  # Platte
     SURFACE = auto()
@@ -47,16 +49,16 @@ class ElementType(StrEnum):
 
 
 ELEMENT_TYPE_MAP = {
-    "de":{
+    "de": {
         "Stab": ElementType.BEAM,
         "Platte": ElementType.PLATE,
         "Achse": ElementType.SHAFT,
         "Linie": ElementType.LINE,
         "Installation rechteckig": ElementType.INSTALLATION_STRAIGHT,
         "Fläche": ElementType.SURFACE,
-        "Installation rund": ElementType.INSTALLATION_ROUND
+        "Installation rund": ElementType.INSTALLATION_ROUND,
     },
-    "en":{
+    "en": {
         "Beam": ElementType.BEAM,
         "Plate": ElementType.PLATE,
     },
@@ -85,6 +87,7 @@ class ElementGroup:
         A list of Elements belonging to the Element Group
 
     """
+
     name: str
     elements: list = None
     wall_frame_element: Element = None
@@ -147,6 +150,7 @@ class Element:
         Whether the Element is a framed wall i.e. container for all other elements in the building group.
 
     """
+
     id: int
     type: ElementType
 
@@ -162,7 +166,8 @@ class Element:
             y_axis = Vector(*get_yl(self.id))
             return Frame(p1, x_axis, y_axis)
         except ZeroDivisionError:
-            # TODO: get to the bottom of this, sometimes one of the axes comes back as [0,0,0] in the meantime just don't crash
+            # TODO: get to the bottom of this:
+            # sometimes one of the axes comes back as [0,0,0] in the meantime just don't crash
             return Frame.worldXY()
 
     @property
@@ -233,4 +238,3 @@ class Element:
 
         """
         return (Element.from_id(e_id) for e_id in get_active_identifiable_element_ids())
-
