@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import auto
 from enum import Enum
+from enum import IntEnum
 from typing import Generator
 
 from compas.geometry import Frame
@@ -33,6 +34,16 @@ class StrEnum(str, Enum):
     """Why do *I* have to do this?"""
 
     pass
+
+
+class ElementGroupingType(IntEnum):
+    """CADWork Element Grouping Type"""
+    GROUP = 1
+    SUBGROUP = 2
+    NONE = 3
+
+    def to_cadwork(self):
+        return cadwork.element_grouping_type(self.value)
 
 
 class ElementType(StrEnum):
