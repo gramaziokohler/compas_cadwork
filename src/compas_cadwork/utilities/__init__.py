@@ -13,6 +13,9 @@ import geometry_controller as gc
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 
+from .ifc_export import export_elements_to_ifc
+from .ifc_export import IFCExportSettings
+
 def get_all_identifiable_element_ids():
     """Returns all identifiable elements in the cadwork document"""
     return ec.get_all_identifiable_element_ids()
@@ -134,7 +137,9 @@ def get_all_ifc_walls():
         if is_ifc_wall(element_id):
             if group_name not in groups_elements:
                 groups_elements[group_name] = [element_id]
-
+        else:
+            continue
+        
     return groups_elements
     
 def _get_grouping_func() -> callable:
@@ -143,10 +148,11 @@ def _get_grouping_func() -> callable:
     else:
         return ac.get_group
 
-def is_ifc_wall(element: int) -> bool:
-    """ToDo Documentation
+def is_ifc_wall(element_id: int) -> bool:
+    """Checks if the element_id is a ifc wall or not.
     """
-    return bc.get_ifc2x3_element_type(element)
+    return cadwork.ifc_2x3_element_type.is_ifc_wall(
+        bc.get_ifc2x3_element_type(element_id))
     
 def get_element_vertices_centroid(element: int) -> list:
     """get centroid of BREP vertices of element
@@ -416,9 +422,10 @@ def save_project_file():
 
 
 __all__ = [
+    "IFCExportSettings",
     "get_group",
     "get_subgroup",
-    "get_active_element_id",
+    "get_active_element_ids",
     "get_plugin_home",
     "get_filename",
     "export_elements_to_ifc",
