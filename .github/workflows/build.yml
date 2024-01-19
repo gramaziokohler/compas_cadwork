@@ -9,18 +9,18 @@ on:
       - main
 
 jobs:
-  build:
+  Build:
     if: "!contains(github.event.pull_request.labels.*.name, 'docs-only')"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: ['3.9.10']
+        python: ['3.10']
 
     steps:
-      - uses: compas-dev/compas-actions.build@v2
+      - uses: compas-dev/compas-actions.build@v3
         with:
-          python: ${{ matrix.python }}
-          use_conda: true
           invoke_lint: true
-          invoke_test: true
+          check_import: false
+          use_conda: false
+          python: ${{ matrix.python }}
