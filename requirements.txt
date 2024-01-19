@@ -1,2 +1,2 @@
-compas
+compas==2.0.0beta2, <3
 cwapi3d
