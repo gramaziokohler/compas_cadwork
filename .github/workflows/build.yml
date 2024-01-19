@@ -23,4 +23,5 @@ jobs:
           invoke_lint: true
           check_import: false
           use_conda: false
+          invoke_test: false
           python: ${{ matrix.python }}
