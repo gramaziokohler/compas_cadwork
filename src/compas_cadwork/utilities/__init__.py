@@ -134,7 +134,7 @@ def get_all_ifc_walls():
         if not group_name:
             continue
         
-        if is_ifc_wall(element_id):
+        if is_wall(element_id):
             if group_name not in groups_elements:
                 groups_elements[group_name] = [element_id]
         else:
@@ -148,11 +148,10 @@ def _get_grouping_func() -> callable:
     else:
         return ac.get_group
 
-def is_ifc_wall(element_id: int) -> bool:
+def is_wall(element_id: int) -> bool:
     """Checks if the element_id is a ifc wall or not.
     """
-    return cadwork.ifc_2x3_element_type.is_ifc_wall(
-        bc.get_ifc2x3_element_type(element_id))
+    return ac.is_wall(element_id)
     
 def get_element_vertices_centroid(element: int) -> list:
     """get centroid of BREP vertices of element
