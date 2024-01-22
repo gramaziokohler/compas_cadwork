@@ -213,7 +213,7 @@ def get_element_vertices_centroid(element: int):
         element (int): element ID
 
     Returns:
-        List[point_3d]
+        List[float, float, float]
     """
     vertices = gc.get_element_vertices(element)
     p = len(vertices)
@@ -283,28 +283,9 @@ def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
     return uc.get_plugin_path()
 
-
 def get_filename() -> str:
     """Returns the name of the currently open cadwork document."""
     return uc.get_3d_file_name()
-
-
-def export_elements_to_ifc(element_ids: List[int], filepath: str):
-    """Exports elements to ifc file.
-
-    Parameters
-    ----------
-    element_ids : list(int)
-        List of element ids to export.
-    filepath : str
-        Path to the resulting ifc file.
-
-    """
-    try:
-        bc.export_ifc2x3_silently(element_ids, filepath)
-    except AttributeError:
-        bc.export_ifc(element_ids, filepath)
-
 
 def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
     """Returns a dictionary mapping names of the available building subgroups to their elements.
@@ -417,13 +398,6 @@ def unlock_elements(elements: List[Union[Element, int]]) -> None:
 def show_all_elements() -> None:
     """Shows all elements in the cadwork viewport."""
     vc.show_all_elements()
-
-
-def set_visible(element_ids: list):
-    vc.set_visible(element_ids)
-
-def set_invisible(element_ids: list):
-    vc.set_invisible(element_ids)
     
 def show_elements(elements: List[Union[Element, int]]) -> None:
     """Shows the given elements in the cadwork viewport.
