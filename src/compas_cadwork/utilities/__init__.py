@@ -1,5 +1,4 @@
 from typing import List
-from typing import Literal
 from typing import Dict
 from typing import Union
 
@@ -68,7 +67,9 @@ def show_view(view_spec: ViewType):
 
 def get_all_identifiable_element_ids():
     """get all identifiable element ids
-    Args:
+    
+    Parameters
+    ----------
 
     Returns:
         List[int]
@@ -77,7 +78,9 @@ def get_all_identifiable_element_ids():
 
 def set_active(element_ids: list):
     """set active
-    Args:
+    
+    Parameters
+    ----------
         element_id_list ( List[int]): element_id_list
 
     Returns:
@@ -87,7 +90,9 @@ def set_active(element_ids: list):
  
 def set_inactive(element_ids: list):
     """set inactive
-    Args:
+    
+    Parameters
+    ----------
         element_id_list ( List[int]): element_id_list
 
     Returns:
@@ -95,39 +100,47 @@ def set_inactive(element_ids: list):
     """
     vc.set_inactive(element_ids)
 
-def get_xl(elment_id: int):
+def get_xl(element_id: int):
     """get xl
-    Args:
+    
+    Parameters
+    ----------
         element_id ( int): element_id
 
     Returns:
         point_3delement XL vector
     """
-    return gc.get_xl(elment_id)
+    return Element.from_id(element_id).frame.xaxis
 
-def get_yl(elment_id: int):
+def get_yl(element_id: int):
     """get yl
-    Args:
+    
+    Parameters
+    ----------
         element_id ( int): element_id
 
     Returns:
         point_3delement YL vector
     """
-    return gc.get_yl(elment_id)
+    return Element.from_id(element_id).frame.yaxis
 
-def get_zl(elment_id: int):
+def get_zl(element_id: int):
     """get zl
-    Args:
+    
+    Parameters
+    ----------
         element_id ( int): element_id
 
     Returns:
         point_3delement ZL vector
     """
-    return gc.get_zl(elment_id)
+    return Element.from_id(element_id).frame.zaxis
 
 def zoom_active_elements():
     """zoom active elements
-    Args:
+    
+    Parameters
+    ----------
 
     Returns:
         None
@@ -136,7 +149,9 @@ def zoom_active_elements():
 
 def get_camera_data():
     """get camera data
-    Args:
+    
+    Parameters
+    ----------
 
     Returns:
         camera_datacamera data
@@ -180,7 +195,9 @@ def _get_grouping_func() -> callable:
 
 def is_framed_wall(element_id: int):
     """is framed wall
-    Args:
+    
+    Parameters
+    ----------
         element_id ( int): element_id
 
     Returns:
@@ -191,7 +208,8 @@ def is_framed_wall(element_id: int):
 def get_element_vertices_centroid(element: int):
     """get centroid of BREP vertices of element
 
-    Args:
+    Parameters
+    ----------
         element (int): element ID
 
     Returns:
@@ -217,7 +235,8 @@ def get_group(element: int) -> str:
     """
     [:information_source: Available for script filled attributes](#){.mark-text}
 
-    Args:
+    Parameters
+    ----------
         element (int): element ID
 
     Returns:
@@ -230,7 +249,8 @@ def get_subgroup(element: int) -> str:
 
     [:information_source: Available for script filled attributes](#){.mark-text}
 
-    Args:
+    Parameters
+    ----------
         element (int): element ID
 
     Returns:
@@ -239,15 +259,24 @@ def get_subgroup(element: int) -> str:
     return ac.get_subgroup(element)
 
 def get_element_grouping_type() -> int:
-    """Get element grouping type
+    """get element grouping type
+    
+    Parameters
+    ----------
 
     Returns:
-        element_grouping_type: grouping type
+        element_grouping_type
     """
     return ac.get_element_grouping_type()
 
-def get_active_element_ids() -> list:
-    """Returns the elemend ids of the active selection"""
+def get_active_identifiable_element_ids() -> List[int]:
+    """get active identifiable element ids
+    Parameters
+    ----------
+
+    Returns:
+        List[int]
+    """
     return ec.get_active_identifiable_element_ids()
 
 def get_plugin_home() -> str:
@@ -459,7 +488,7 @@ __all__ = [
     "IFCExportSettings",
     "get_group",
     "get_subgroup",
-    "get_active_element_ids",
+    "get_active_identifiable_element_ids",
     "get_plugin_home",
     "get_filename",
     "export_elements_to_ifc",
