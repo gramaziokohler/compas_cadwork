@@ -1,6 +1,9 @@
 from typing import List
+from typing import Literal
 from typing import Dict
 from typing import Union
+
+from enum import auto
 
 import cadwork
 import utility_controller as uc
@@ -12,105 +15,132 @@ import geometry_controller as gc
 
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
+from compas_cadwork.datamodel.element import StrEnum
 
 from .ifc_export import export_elements_to_ifc
 from .ifc_export import IFCExportSettings
 
+
+class ViewType(StrEnum):
+    """CADWork Camera type"""
+
+    NEGATIVE_X = auto()
+    NEGATIVE_Y = auto()
+    NEGATIVE_Z = auto()
+    POSITIVE_X = auto()
+    POSITIVE_Y = auto()
+    POSITIVE_Z = auto()
+    STANDARD_AXO = auto()
+
+
+def show_view(view_spec: ViewType):
+    """Sets a cadwork view.
+    
+    Parameters
+    ----------
+    view_spec : ViewType
+        
+    Examples
+    --------
+    show_view(ViewType.NEGATIVE_X)
+    
+    Returns:
+        None
+    """
+    
+    func_map = {
+        ViewType.NEGATIVE_X: vc.show_view_negative_x,
+        ViewType.NEGATIVE_Y: vc.show_view_negative_y,
+        ViewType.NEGATIVE_Z: vc.show_view_negative_z,
+        ViewType.POSITIVE_X: vc.show_view_positive_x,
+        ViewType.POSITIVE_Y: vc.show_view_positive_y,
+        ViewType.POSITIVE_Z: vc.show_view_positive_z,
+        ViewType.STANDARD_AXO: vc.show_view_standard_axo,
+    }
+    
+    func = func_map.get(view_spec)
+
+    if callable(func):
+        func()
+    else:
+        raise ValueError(f"Unknown camera view: {view_spec}")
+
+
 def get_all_identifiable_element_ids():
-    """Returns all identifiable elements in the cadwork document"""
+    """get all identifiable element ids
+    Args:
+
+    Returns:
+        List[int]
+    """
     return ec.get_all_identifiable_element_ids()
 
 def set_active(element_ids: list):
-    """Activates the given elements in the cadwork viewport.
-
-    Parameters
-    ----------
-    elements : list(:class:`compas_cadwork.datamodel.Element` or int)
-        List of elements or element ids to activate.
-
-    """
-    vc.set_active(element_ids)
-    
-def set_inactive(element_ids: list):
-    """Deactivates the given elements in the cadwork viewport.
-
-    Parameters
-    ----------
-    elements : list(:class:`compas_cadwork.datamodel.Element` or int)
-        List of elements or element ids to activate.
-
-    """
-    vc.set_inactive(element_ids)
-    
-def get_xl(elment_id: int):
-    """get local X vector
-
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
+    """set active
     Args:
-        element (int): element ID
+        element_id_list ( List[int]): element_id_list
 
     Returns:
-        point_3d: point_3d (x,y,z)
+        None
+    """
+    vc.set_active(element_ids)
+ 
+def set_inactive(element_ids: list):
+    """set inactive
+    Args:
+        element_id_list ( List[int]): element_id_list
+
+    Returns:
+        None
+    """
+    vc.set_inactive(element_ids)
+
+def get_xl(elment_id: int):
+    """get xl
+    Args:
+        element_id ( int): element_id
+
+    Returns:
+        point_3delement XL vector
     """
     return gc.get_xl(elment_id)
 
 def get_yl(elment_id: int):
-    """get local Y vector
-
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
+    """get yl
     Args:
-        element (int): element ID
+        element_id ( int): element_id
 
     Returns:
-        point_3d: point_3d (x,y,z)
+        point_3delement YL vector
     """
     return gc.get_yl(elment_id)
 
 def get_zl(elment_id: int):
-    """get local Z vector
-
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
+    """get zl
     Args:
-        element (int): element ID
+        element_id ( int): element_id
 
     Returns:
-        point_3d: point_3d (x,y,z)
+        point_3delement ZL vector
     """
     return gc.get_zl(elment_id)
 
 def zoom_active_elements():
-    """Zooms to active cadwork elements."""
+    """zoom active elements
+    Args:
+
+    Returns:
+        None
+    """
     vc.zoom_active_elements()
 
-def show_view(view_specification: str):
-    """Sets a cadwork view.
-    
-    Args:
-        view_specification (string): e.g. negative_x
-
-    """
-    if view_specification == "negative_x":
-        return vc.show_view_negative_x()
-    elif view_specification == "negative_y":
-        return vc.show_view_negative_y()
-    elif view_specification == "negative_z":
-        return vc.show_view_negative_z()
-    elif view_specification == "positive_x":
-        return vc.show_view_positive_x()
-    elif view_specification == "positive_y":
-        return vc.show_view_positive_y()
-    elif view_specification == "positive_z":
-        return vc.show_view_positive_z()
-    elif view_specification == "standard_axo":
-        return vc.show_view_standard_axo()
-    else:
-        return None
-    
 def get_camera_data():
-    """Returns camera object"""
+    """get camera data
+    Args:
+
+    Returns:
+        camera_datacamera data
+    """
     return vc.get_camera_data()
 
 def get_all_ifc_walls():
@@ -134,7 +164,7 @@ def get_all_ifc_walls():
         if not group_name:
             continue
         
-        if is_wall(element_id):
+        if is_framed_wall(element_id):
             if group_name not in groups_elements:
                 groups_elements[group_name] = [element_id]
         else:
@@ -148,12 +178,17 @@ def _get_grouping_func() -> callable:
     else:
         return ac.get_group
 
-def is_wall(element_id: int) -> bool:
-    """Checks if the element_id is a ifc wall or not.
+def is_framed_wall(element_id: int):
+    """is framed wall
+    Args:
+        element_id ( int): element_id
+
+    Returns:
+        boolis element wall
     """
-    return ac.is_wall(element_id)
+    return ac.is_framed_wall(element_id)
     
-def get_element_vertices_centroid(element: int) -> list:
+def get_element_vertices_centroid(element: int):
     """get centroid of BREP vertices of element
 
     Args:

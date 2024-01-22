@@ -32,7 +32,6 @@ from bim_controller import get_ifc_base64_guid
 
 class StrEnum(str, Enum):
     """Why do *I* have to do this?"""
-
     pass
 
 
