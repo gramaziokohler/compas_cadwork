@@ -2,6 +2,8 @@ from typing import List
 from typing import Dict
 from typing import Union
 
+from enum import auto
+
 import cadwork
 import utility_controller as uc
 import element_controller as ec
@@ -10,9 +12,102 @@ import visualization_controller as vc
 
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
+from compas_cadwork.datamodel.element import StrEnum
 
 from .ifc_export import export_elements_to_ifc
 from .ifc_export import IFCExportSettings
+
+
+class CameraView(StrEnum):
+    """The view direction to which cadwork camera should be set in viewport.
+
+    These coinside with the standard axes.
+
+    Attributes
+    ----------
+    NEGATIVE_X : literal(CameraView.NEGATIVE_X)
+        Negative X.
+    NEGATIVE_Y : literal(CameraView.NEGATIVE_Y)
+        Negative Y.
+    NEGATIVE_Z : literal(CameraView.NEGATIVE_Z)
+        Negative Z.
+    POSITIVE_X : literal(CameraView.POSITIVE_X)
+        Positive X.
+    POSITIVE_Y : literal(CameraView.POSITIVE_Y)
+        Positive Y.
+    POSITIVE_Z : literal(CameraView.POSITIVE_Z)
+        Positive Z.
+    STANDARD_AXO : literal(CameraView.STANDARD_AXO)
+        Standard Axonometric view.
+
+    """
+
+    NEGATIVE_X = auto()
+    NEGATIVE_Y = auto()
+    NEGATIVE_Z = auto()
+    POSITIVE_X = auto()
+    POSITIVE_Y = auto()
+    POSITIVE_Z = auto()
+    STANDARD_AXO = auto()
+
+
+def set_camera_view(view: CameraView):
+    """Sets the cadwork viewport to the given view.
+
+    Parameters
+    ----------
+    view : :class:`CameraView`
+        The view to set.
+
+    Examples
+    --------
+    set_camera_view(CameraView.NEGATIVE_X)
+
+    Returns
+    -------
+    None
+
+    """
+    func_map = {
+        CameraView.NEGATIVE_X: vc.show_view_negative_x,
+        CameraView.NEGATIVE_Y: vc.show_view_negative_y,
+        CameraView.NEGATIVE_Z: vc.show_view_negative_z,
+        CameraView.POSITIVE_X: vc.show_view_positive_x,
+        CameraView.POSITIVE_Y: vc.show_view_positive_y,
+        CameraView.POSITIVE_Z: vc.show_view_positive_z,
+        CameraView.STANDARD_AXO: vc.show_view_standard_axo,
+    }
+
+    func = func_map.get(view)
+
+    if callable(func):
+        func()
+    else:
+        raise ValueError(f"Unknown camera view: {view}")
+
+
+def zoom_active_elements():
+    """zoom active elements
+
+    Parameters
+    ----------
+
+    Returns:
+        None
+    """
+    vc.zoom_active_elements()
+
+
+def get_active_elements() -> list[Element]:
+    """Returns the currently selected elements in the cadwork viewport.
+
+    Returns
+    -------
+    list(:class:`compas_cadwork.datamodel.Element`)
+        List of currently selected elements.
+
+    """
+    return [Element.from_id(e_id) for e_id in ec.get_active_identifiable_element_ids()]
 
 
 def get_language() -> str:
@@ -27,45 +122,16 @@ def get_language() -> str:
     return uc.get_language()
 
 
-def get_group(element: int) -> str:
-    """
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
-    Args:
-        element (int): element ID
-
-    Returns:
-        str: group name
-    """
-    return ac.get_group(element)
-
-
-def get_subgroup(element: int) -> str:
-    """get subgroup
-
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
-    Args:
-        element (int): element ID
-
-    Returns:
-        str: subgroup name
-    """
-    return ac.get_subgroup(element)
-
-
 def get_element_grouping_type() -> int:
-    """Get element grouping type
+    """get element grouping type
+
+    Parameters
+    ----------
 
     Returns:
-        element_grouping_type: grouping type
+        element_grouping_type
     """
     return ac.get_element_grouping_type()
-
-
-def get_active_element_ids() -> list:
-    """Returns the elemend ids of the active selection"""
-    return ec.get_active_identifiable_element_ids()
 
 
 def get_plugin_home() -> str:
@@ -257,9 +323,9 @@ __all__ = [
     "IFCExportSettings",
     "get_group",
     "get_subgroup",
-    "get_active_element_id",
     "get_plugin_home",
     "get_filename",
+    "get_active_elements",
     "export_elements_to_ifc",
     "get_element_groups",
     "activate_elements",
