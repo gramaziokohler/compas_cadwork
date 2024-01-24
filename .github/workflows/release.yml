@@ -6,24 +6,27 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  Build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ['3.8', '3.9', '3.10']
+        os: [ubuntu-latest]
+        python: ['3.10']
 
     steps:
-      - uses: compas-dev/compas-actions.build@v2
+      - uses: compas-dev/compas-actions.build@v3
         with:
+          invoke_lint: true
+          check_import: false
+          use_conda: false
+          invoke_test: false
           python: ${{ matrix.python }}
-          test_lint: true
 
   Publish:
-    needs: build
+    needs: Build
     runs-on: ubuntu-latest
     steps:
       - uses: compas-dev/compas-actions.publish@v2
         with:
-          pypi_token: ${{ secrets.PYPI }}
+          publish_to_pypi: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
