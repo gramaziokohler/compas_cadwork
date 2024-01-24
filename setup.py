@@ -11,11 +11,11 @@ from setuptools import setup
 from setuptools import find_packages
 
 
-here = path.abspath(path.dirname(__file__))
+HERE = path.abspath(path.dirname(__file__))
 
 
 def read(*names, **kwargs):
-    return io.open(path.join(here, *names), encoding=kwargs.get("encoding", "utf8")).read()
+    return io.open(path.join(HERE, *names), encoding=kwargs.get("encoding", "utf8")).read()
 
 about = {}
 exec(read("src", "compas_cadwork", "__version__.py"), about)
@@ -32,6 +32,8 @@ setup(
     author=about["__author__"],
     author_email=about["__author_email__"],
     url=about["__url__"],
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
