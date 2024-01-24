@@ -37,6 +37,7 @@ class StrEnum(str, Enum):
 
 class ElementGroupingType(IntEnum):
     """CADWork Element Grouping Type"""
+
     GROUP = 1
     SUBGROUP = 2
     NONE = 3

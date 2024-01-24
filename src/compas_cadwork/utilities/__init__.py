@@ -34,19 +34,19 @@ class ViewType(StrEnum):
 
 def show_view(view_spec: ViewType):
     """Sets a cadwork view.
-    
+
     Parameters
     ----------
     view_spec : ViewType
-        
+
     Examples
     --------
     show_view(ViewType.NEGATIVE_X)
-    
+
     Returns:
         None
     """
-    
+
     func_map = {
         ViewType.NEGATIVE_X: vc.show_view_negative_x,
         ViewType.NEGATIVE_Y: vc.show_view_negative_y,
@@ -56,7 +56,7 @@ def show_view(view_spec: ViewType):
         ViewType.POSITIVE_Z: vc.show_view_positive_z,
         ViewType.STANDARD_AXO: vc.show_view_standard_axo,
     }
-    
+
     func = func_map.get(view_spec)
 
     if callable(func):
@@ -67,7 +67,7 @@ def show_view(view_spec: ViewType):
 
 def get_all_identifiable_element_ids():
     """get all identifiable element ids
-    
+
     Parameters
     ----------
 
@@ -78,7 +78,7 @@ def get_all_identifiable_element_ids():
 
 def set_active(element_ids: list):
     """set active
-    
+
     Parameters
     ----------
         element_id_list ( List[int]): element_id_list
@@ -87,10 +87,10 @@ def set_active(element_ids: list):
         None
     """
     vc.set_active(element_ids)
- 
+
 def set_inactive(element_ids: list):
     """set inactive
-    
+
     Parameters
     ----------
         element_id_list ( List[int]): element_id_list
@@ -102,7 +102,7 @@ def set_inactive(element_ids: list):
 
 def get_xl(element_id: int):
     """get xl
-    
+
     Parameters
     ----------
         element_id ( int): element_id
@@ -114,7 +114,7 @@ def get_xl(element_id: int):
 
 def get_yl(element_id: int):
     """get yl
-    
+
     Parameters
     ----------
         element_id ( int): element_id
@@ -126,7 +126,7 @@ def get_yl(element_id: int):
 
 def get_zl(element_id: int):
     """get zl
-    
+
     Parameters
     ----------
         element_id ( int): element_id
@@ -138,7 +138,7 @@ def get_zl(element_id: int):
 
 def zoom_active_elements():
     """zoom active elements
-    
+
     Parameters
     ----------
 
@@ -149,7 +149,7 @@ def zoom_active_elements():
 
 def get_camera_data():
     """get camera data
-    
+
     Parameters
     ----------
 
@@ -163,7 +163,7 @@ def get_all_ifc_walls():
 
     Parameters
     ----------
-    
+
     Returns
     -------
     dict(str, :class:`~compas_cadwork.datamodel.ElementGroup`)
@@ -175,18 +175,18 @@ def get_all_ifc_walls():
     groups_elements = {}
     for element_id in ec.get_all_identifiable_element_ids():
         group_name = get_grouping_name(element_id)
-        
+
         if not group_name:
             continue
-        
+
         if is_framed_wall(element_id):
             if group_name not in groups_elements:
                 groups_elements[group_name] = [element_id]
         else:
             continue
-        
+
     return groups_elements
-    
+
 def _get_grouping_func() -> callable:
     if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
         return ac.get_subgroup
@@ -195,7 +195,7 @@ def _get_grouping_func() -> callable:
 
 def is_framed_wall(element_id: int):
     """is framed wall
-    
+
     Parameters
     ----------
         element_id ( int): element_id
@@ -204,7 +204,7 @@ def is_framed_wall(element_id: int):
         boolis element wall
     """
     return ac.is_framed_wall(element_id)
-    
+
 def get_element_vertices_centroid(element: int):
     """get centroid of BREP vertices of element
 
@@ -260,7 +260,7 @@ def get_subgroup(element: int) -> str:
 
 def get_element_grouping_type() -> int:
     """get element grouping type
-    
+
     Parameters
     ----------
 
@@ -398,7 +398,7 @@ def unlock_elements(elements: List[Union[Element, int]]) -> None:
 def show_all_elements() -> None:
     """Shows all elements in the cadwork viewport."""
     vc.show_all_elements()
-    
+
 def show_elements(elements: List[Union[Element, int]]) -> None:
     """Shows the given elements in the cadwork viewport.
 
