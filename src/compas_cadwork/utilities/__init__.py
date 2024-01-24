@@ -8,9 +8,7 @@ import cadwork
 import utility_controller as uc
 import element_controller as ec
 import attribute_controller as ac
-import bim_controller as bc
 import visualization_controller as vc
-import geometry_controller as gc
 
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
@@ -20,8 +18,29 @@ from .ifc_export import export_elements_to_ifc
 from .ifc_export import IFCExportSettings
 
 
-class ViewType(StrEnum):
-    """CADWork Camera type"""
+class CameraView(StrEnum):
+    """The view direction to which cadwork camera should be set in viewport.
+
+    These coinside with the standard axes.
+
+    Attributes
+    ----------
+    NEGATIVE_X : literal(CameraView.NEGATIVE_X)
+        Negative X.
+    NEGATIVE_Y : literal(CameraView.NEGATIVE_Y)
+        Negative Y.
+    NEGATIVE_Z : literal(CameraView.NEGATIVE_Z)
+        Negative Z.
+    POSITIVE_X : literal(CameraView.POSITIVE_X)
+        Positive X.
+    POSITIVE_Y : literal(CameraView.POSITIVE_Y)
+        Positive Y.
+    POSITIVE_Z : literal(CameraView.POSITIVE_Z)
+        Positive Z.
+    STANDARD_AXO : literal(CameraView.STANDARD_AXO)
+        Standard Axonometric view.
+
+    """
 
     NEGATIVE_X = auto()
     NEGATIVE_Y = auto()
@@ -32,109 +51,40 @@ class ViewType(StrEnum):
     STANDARD_AXO = auto()
 
 
-def show_view(view_spec: ViewType):
-    """Sets a cadwork view.
+def set_camera_view(view: CameraView):
+    """Sets the cadwork viewport to the given view.
 
     Parameters
     ----------
-    view_spec : ViewType
+    view : :class:`CameraView`
+        The view to set.
 
     Examples
     --------
-    show_view(ViewType.NEGATIVE_X)
+    set_camera_view(CameraView.NEGATIVE_X)
 
-    Returns:
-        None
+    Returns
+    -------
+    None
+
     """
-
     func_map = {
-        ViewType.NEGATIVE_X: vc.show_view_negative_x,
-        ViewType.NEGATIVE_Y: vc.show_view_negative_y,
-        ViewType.NEGATIVE_Z: vc.show_view_negative_z,
-        ViewType.POSITIVE_X: vc.show_view_positive_x,
-        ViewType.POSITIVE_Y: vc.show_view_positive_y,
-        ViewType.POSITIVE_Z: vc.show_view_positive_z,
-        ViewType.STANDARD_AXO: vc.show_view_standard_axo,
+        CameraView.NEGATIVE_X: vc.show_view_negative_x,
+        CameraView.NEGATIVE_Y: vc.show_view_negative_y,
+        CameraView.NEGATIVE_Z: vc.show_view_negative_z,
+        CameraView.POSITIVE_X: vc.show_view_positive_x,
+        CameraView.POSITIVE_Y: vc.show_view_positive_y,
+        CameraView.POSITIVE_Z: vc.show_view_positive_z,
+        CameraView.STANDARD_AXO: vc.show_view_standard_axo,
     }
 
-    func = func_map.get(view_spec)
+    func = func_map.get(view)
 
     if callable(func):
         func()
     else:
-        raise ValueError(f"Unknown camera view: {view_spec}")
+        raise ValueError(f"Unknown camera view: {view}")
 
-
-def get_all_identifiable_element_ids():
-    """get all identifiable element ids
-
-    Parameters
-    ----------
-
-    Returns:
-        List[int]
-    """
-    return ec.get_all_identifiable_element_ids()
-
-def set_active(element_ids: list):
-    """set active
-
-    Parameters
-    ----------
-        element_id_list ( List[int]): element_id_list
-
-    Returns:
-        None
-    """
-    vc.set_active(element_ids)
-
-def set_inactive(element_ids: list):
-    """set inactive
-
-    Parameters
-    ----------
-        element_id_list ( List[int]): element_id_list
-
-    Returns:
-        None
-    """
-    vc.set_inactive(element_ids)
-
-def get_xl(element_id: int):
-    """get xl
-
-    Parameters
-    ----------
-        element_id ( int): element_id
-
-    Returns:
-        point_3delement XL vector
-    """
-    return Element.from_id(element_id).frame.xaxis
-
-def get_yl(element_id: int):
-    """get yl
-
-    Parameters
-    ----------
-        element_id ( int): element_id
-
-    Returns:
-        point_3delement YL vector
-    """
-    return Element.from_id(element_id).frame.yaxis
-
-def get_zl(element_id: int):
-    """get zl
-
-    Parameters
-    ----------
-        element_id ( int): element_id
-
-    Returns:
-        point_3delement ZL vector
-    """
-    return Element.from_id(element_id).frame.zaxis
 
 def zoom_active_elements():
     """zoom active elements
@@ -147,78 +97,18 @@ def zoom_active_elements():
     """
     vc.zoom_active_elements()
 
-def get_camera_data():
-    """get camera data
 
-    Parameters
-    ----------
-
-    Returns:
-        camera_datacamera data
-    """
-    return vc.get_camera_data()
-
-def get_all_ifc_walls():
-    """Returns a dictionary mapping names of the available building subgroups to their elements.
-
-    Parameters
-    ----------
+def get_active_elements() -> list[Element]:
+    """Returns the currently selected elements in the cadwork viewport.
 
     Returns
     -------
-    dict(str, :class:`~compas_cadwork.datamodel.ElementGroup`)
-        Dictionary of building group names mapped to an instance of ElementGroup.
+    list(:class:`compas_cadwork.datamodel.Element`)
+        List of currently selected elements.
 
     """
-    get_grouping_name = _get_grouping_func()
+    return [Element.from_id(e_id) for e_id in ec.get_active_identifiable_element_ids()]
 
-    groups_elements = {}
-    for element_id in ec.get_all_identifiable_element_ids():
-        group_name = get_grouping_name(element_id)
-
-        if not group_name:
-            continue
-
-        if is_framed_wall(element_id):
-            if group_name not in groups_elements:
-                groups_elements[group_name] = [element_id]
-        else:
-            continue
-
-    return groups_elements
-
-def _get_grouping_func() -> callable:
-    if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
-        return ac.get_subgroup
-    else:
-        return ac.get_group
-
-def is_framed_wall(element_id: int):
-    """is framed wall
-
-    Parameters
-    ----------
-        element_id ( int): element_id
-
-    Returns:
-        boolis element wall
-    """
-    return ac.is_framed_wall(element_id)
-
-def get_element_vertices_centroid(element: int):
-    """get centroid of BREP vertices of element
-
-    Parameters
-    ----------
-        element (int): element ID
-
-    Returns:
-        List[float, float, float]
-    """
-    vertices = gc.get_element_vertices(element)
-    p = len(vertices)
-    x, y, z = zip(*vertices)
-    return [sum(x) / p, sum(y) / p, sum(z) / p]
 
 def get_language() -> str:
     """Returns the current language of the cadwork application.
@@ -231,32 +121,6 @@ def get_language() -> str:
     """
     return uc.get_language()
 
-def get_group(element: int) -> str:
-    """
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
-    Parameters
-    ----------
-        element (int): element ID
-
-    Returns:
-        str: group name
-    """
-    return ac.get_group(element)
-
-def get_subgroup(element: int) -> str:
-    """get subgroup
-
-    [:information_source: Available for script filled attributes](#){.mark-text}
-
-    Parameters
-    ----------
-        element (int): element ID
-
-    Returns:
-        str: subgroup name
-    """
-    return ac.get_subgroup(element)
 
 def get_element_grouping_type() -> int:
     """get element grouping type
@@ -269,23 +133,16 @@ def get_element_grouping_type() -> int:
     """
     return ac.get_element_grouping_type()
 
-def get_active_identifiable_element_ids() -> List[int]:
-    """get active identifiable element ids
-    Parameters
-    ----------
-
-    Returns:
-        List[int]
-    """
-    return ec.get_active_identifiable_element_ids()
 
 def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
     return uc.get_plugin_path()
 
+
 def get_filename() -> str:
     """Returns the name of the currently open cadwork document."""
     return uc.get_3d_file_name()
+
 
 def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
     """Returns a dictionary mapping names of the available building subgroups to their elements.
@@ -319,16 +176,19 @@ def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
 
     return groups_elements
 
+
 def _get_grouping_func() -> callable:
     if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
         return ac.get_subgroup
     else:
         return ac.get_group
 
+
 def _remove_wallless_groups(groups: Dict[str, ElementGroup]) -> None:
     to_remove = (group for group in groups.values() if group.wall_frame_element is None)
     for group in to_remove:
         del groups[group.name]
+
 
 def activate_elements(elements: List[Union[Element, int]]) -> None:
     """Activates the given elements in the cadwork viewport.
@@ -399,6 +259,7 @@ def show_all_elements() -> None:
     """Shows all elements in the cadwork viewport."""
     vc.show_all_elements()
 
+
 def show_elements(elements: List[Union[Element, int]]) -> None:
     """Shows the given elements in the cadwork viewport.
 
@@ -462,9 +323,9 @@ __all__ = [
     "IFCExportSettings",
     "get_group",
     "get_subgroup",
-    "get_active_identifiable_element_ids",
     "get_plugin_home",
     "get_filename",
+    "get_active_elements",
     "export_elements_to_ifc",
     "get_element_groups",
     "activate_elements",
