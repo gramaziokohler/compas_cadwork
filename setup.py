@@ -8,41 +8,36 @@ import io
 from os import path
 
 from setuptools import setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+from setuptools import find_packages
 
 
 here = path.abspath(path.dirname(__file__))
 
 
 def read(*names, **kwargs):
-    return io.open(
-        path.join(here, *names),
-        encoding=kwargs.get("encoding", "utf8")
-    ).read()
+    return io.open(path.join(here, *names), encoding=kwargs.get("encoding", "utf8")).read()
 
+about = {}
+exec(read("src", "compas_cadwork", "__version__.py"), about)
 
 long_description = read("README.md")
 requirements = read("requirements.txt").split("\n")
 optional_requirements = {}
 
 setup(
-    name="compas_cadwork",
-    version="0.1.0",
-    description="",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/gramaziokohler/compas_cadwork",
-    author="",
-    author_email="",
+    name=about["__title__"],
+    version=about["__version__"],
+    license=about["__license__"],
+    description=about["__description__"],
+    author=about["__author__"],
+    author_email=about["__author_email__"],
+    url=about["__url__"],
     license="MIT license",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Scientific/Engineering",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: Unix",
-        "Operating System :: POSIX",
         "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
@@ -53,7 +48,7 @@ setup(
     ],
     keywords=[],
     project_urls={},
-    packages=["compas_cadwork"],
+    packages=find_packages("src"),
     package_dir={"": "src"},
     package_data={},
     data_files=[],
