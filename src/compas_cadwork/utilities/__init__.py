@@ -321,6 +321,7 @@ def save_project_file():
 
 __all__ = [
     "IFCExportSettings",
+    "set_camera_view",
     "get_group",
     "get_subgroup",
     "get_plugin_home",
@@ -342,4 +343,5 @@ __all__ = [
     "get_all_elements_with_attrib",
     "remove_elements",
     "save_project_file",
+    "zoom_active_elements",
 ]
