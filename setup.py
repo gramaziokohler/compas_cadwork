@@ -32,7 +32,6 @@ setup(
     author=about["__author__"],
     author_email=about["__author_email__"],
     url=about["__url__"],
-    license="MIT license",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
