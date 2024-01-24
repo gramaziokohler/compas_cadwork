@@ -1,2 +1,2 @@
 compas==2.0.0alpha2
-cwapi3d
+cwapi3d>=30.319
