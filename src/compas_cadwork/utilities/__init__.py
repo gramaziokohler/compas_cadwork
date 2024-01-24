@@ -14,6 +14,7 @@ from compas_cadwork.datamodel import ElementGroup
 from .ifc_export import export_elements_to_ifc
 from .ifc_export import IFCExportSettings
 
+
 def get_language() -> str:
     """Returns the current language of the cadwork application.
 

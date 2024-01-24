@@ -21,6 +21,7 @@ class IFCExportSettings:
         True if cover geometry should be exported, False otherwise.
 
     """
+
     grouping_type: ElementGroupingType = ElementGroupingType.NONE
     export_cover_geometry: bool = False
 
