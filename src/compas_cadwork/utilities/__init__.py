@@ -144,7 +144,7 @@ def get_filename() -> str:
     return uc.get_3d_file_name()
 
 
-def get_element_groups(is_wall_frame=True) -> dict[str, ElementGroup]:
+def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
     """Returns a dictionary mapping names of the available building subgroups to their elements.
 
     Parameters
@@ -185,7 +185,7 @@ def _get_grouping_func() -> callable:
 
 
 def _remove_wallless_groups(groups: Dict[str, ElementGroup]) -> None:
-    to_remove = (group for group in groups.values() if group.wall_frame_element is None)
+    to_remove = [group for group in groups.values() if group.wall_frame_element is None]
     for group in to_remove:
         del groups[group.name]
 
