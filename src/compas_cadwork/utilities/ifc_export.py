@@ -49,6 +49,7 @@ class IFCExporter:
     Sets the required global settings for the export and restores them after the export.
 
     """
+
     def __init__(self, settings: IFCExportSettings = None) -> None:
         self.settings = settings or IFCExportSettings()
         self._translate_local_frame = None
@@ -88,6 +89,3 @@ class IFCExporter:
     def cleanup(self):
         """Restores any global settings that were changed during the export."""
         set_use_of_global_coordinates(self._translate_local_frame)
-
-
-
