@@ -1,6 +1,7 @@
 from typing import List
 from typing import Dict
 from typing import Union
+from typing import Generator
 
 from enum import auto
 
@@ -14,7 +15,7 @@ from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 from compas_cadwork.datamodel.element import StrEnum
 
-from .ifc_export import export_elements_to_ifc
+from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
 
 
@@ -298,7 +299,7 @@ def get_all_element_ids() -> None:
     return ec.get_all_identifiable_element_ids()
 
 
-def get_all_elements() -> None:
+def get_all_elements() -> Generator[Element, None, None]:
     """Returns all element ids of the currently open cadwork document."""
     for element_id in ec.get_all_identifiable_element_ids():
         yield Element.from_id(element_id)
@@ -320,6 +321,7 @@ def save_project_file():
 
 
 __all__ = [
+    "IFCExporter",
     "IFCExportSettings",
     "set_camera_view",
     "get_group",
@@ -327,7 +329,6 @@ __all__ = [
     "get_plugin_home",
     "get_filename",
     "get_active_elements",
-    "export_elements_to_ifc",
     "get_element_groups",
     "activate_elements",
     "hide_elements",
