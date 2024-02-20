@@ -324,8 +324,6 @@ __all__ = [
     "IFCExporter",
     "IFCExportSettings",
     "set_camera_view",
-    "get_group",
-    "get_subgroup",
     "get_plugin_home",
     "get_filename",
     "get_active_elements",
