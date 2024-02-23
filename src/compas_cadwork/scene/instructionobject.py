@@ -11,12 +11,12 @@ from element_controller import get_bounding_box_vertices_local
 from file_controller import import_element_light
 import cadwork
 
-from compas_cadwork.artists import CadworkArtist
+from compas_cadwork.scene import CadworkSceneObject
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
 
 
-class Text3dInstructionArtist(CadworkArtist):
+class Text3dSceneObject(CadworkSceneObject):
     """Draws a 3d text volume instruction onto the view.
 
 
@@ -105,7 +105,7 @@ class Text3dInstructionArtist(CadworkArtist):
         return element_id
 
 
-class LinearDimensionArtist(CadworkArtist):
+class LinearDimensionSceneObject(CadworkSceneObject):
     """Draw a linear dimension instruction.
 
     Parameters
@@ -144,7 +144,7 @@ class LinearDimensionArtist(CadworkArtist):
         return element_id
 
 
-class Model3dArtist(CadworkArtist):
+class Model3dSceneObject(CadworkSceneObject):
     def __init__(self, model3d: Model3d, **kwargs) -> None:
         super().__init__(model3d)
         self.model3d = model3d
