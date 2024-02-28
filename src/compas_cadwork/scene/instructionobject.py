@@ -102,7 +102,7 @@ class Text3dSceneObject(CadworkSceneObject):
         move_element([element_id], vx + vz)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
-        return element_id
+        return [element_id]
 
 
 class LinearDimensionSceneObject(CadworkSceneObject):
@@ -141,10 +141,12 @@ class LinearDimensionSceneObject(CadworkSceneObject):
         )
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
-        return element_id
+        return [element_id]
 
 
 class Model3dSceneObject(CadworkSceneObject):
+    """TODO: This is incomplete, complete."""
+
     def __init__(self, model3d: Model3d, **kwargs) -> None:
         super().__init__(model3d)
         self.model3d = model3d

@@ -1,6 +1,6 @@
 from compas.plugins import plugin
 from compas.plugins import PluginManager
-from compas.scene import Scene
+from compas.scene import register
 
 from compas_monosashi.sequencer import Text3d
 from compas_monosashi.sequencer import LinearDimension
@@ -26,17 +26,17 @@ PluginManager.DEBUG = True
 
 
 @plugin(category="drawing-utils", requires=[CONTEXT])
-def clear():
+def clear(*args, **kwargs):
     CadworkSceneObject.clear()
 
 
 @plugin(category="drawing-utils", requires=[CONTEXT])
-def after_draw(drawn_element_ids):
+def after_draw(*args, **kwargs):
     CadworkSceneObject.refresh()
 
 
 @plugin(category="factories", requires=[CONTEXT])
 def register_scene_objects():
-    Scene.register(Text3d, Text3dSceneObject, context=CONTEXT)
-    Scene.register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
-    Scene.register(Model3d, Model3dSceneObject, context=CONTEXT)
+    register(Text3d, Text3dSceneObject, context=CONTEXT)
+    register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
+    register(Model3d, Model3dSceneObject, context=CONTEXT)

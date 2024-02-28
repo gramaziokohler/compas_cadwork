@@ -30,7 +30,7 @@ class CadworkSceneObject(SceneObject):
         refresh()
 
     @classmethod
-    def clear(cls):
+    def clear(cls, *args, **kwargs):
         """Removes all elements tracked by the :class:`~compas_cadwork.artists.CadworkArtist` from the cadwork model."""
         if cls.DRAWN_ELEMENTS:
             delete_elements(cls.DRAWN_ELEMENTS)
