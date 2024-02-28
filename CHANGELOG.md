@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Fixed `RuntimeError` when calling `get_element_groups`.
 * Fixed `IFCExportSettings` are ignored.
+* Made all `Artist`s `SceneObjects` to support COMPAS 2.x.
 
 ### Removed
 
