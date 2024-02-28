@@ -49,4 +49,4 @@ __all__ = [
     "__version__",
 ]
 
-__all_plugins__ = ["compas_cadwork.artists"]
+__all_plugins__ = ["compas_cadwork.scene"]

@@ -1,2 +1,2 @@
-compas==2.0.0alpha2
-cwapi3d>=30.319
+compas>=2.0, <3.0
+cwapi3d>=30.319.1
