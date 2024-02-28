@@ -17,6 +17,8 @@ from compas_cadwork.datamodel.element import StrEnum
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
+from .events import NewElementEventPublisher
+from .events import ElementDelta
 
 
 class CameraView(StrEnum):
@@ -343,4 +345,6 @@ __all__ = [
     "remove_elements",
     "save_project_file",
     "zoom_active_elements",
+    "NewElementEventPublisher",
+    "ElementDelta",
 ]
