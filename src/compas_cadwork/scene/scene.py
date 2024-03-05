@@ -1,12 +1,12 @@
-from compas.artists import Artist
+from compas.scene import SceneObject
 
 from element_controller import delete_elements
 from element_controller import recreate_elements
 from visualization_controller import refresh
 
 
-class CadworkArtist(Artist):
-    """Base class for all of cadwork's Artists."""
+class CadworkSceneObject(SceneObject):
+    """Base class for all of cadwork's SceneObject."""
 
     DRAWN_ELEMENTS = []
     USER_ATTR_NUMBER = 666
@@ -24,13 +24,13 @@ class CadworkArtist(Artist):
         self.DRAWN_ELEMENTS.append(element_id)
 
     @classmethod
-    def redraw(cls):
+    def refresh(cls):
         if cls.DRAWN_ELEMENTS:
             recreate_elements(cls.DRAWN_ELEMENTS)
         refresh()
 
     @classmethod
-    def clear(cls):
+    def clear(cls, *args, **kwargs):
         """Removes all elements tracked by the :class:`~compas_cadwork.artists.CadworkArtist` from the cadwork model."""
         if cls.DRAWN_ELEMENTS:
             delete_elements(cls.DRAWN_ELEMENTS)
