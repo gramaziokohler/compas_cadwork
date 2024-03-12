@@ -5,6 +5,7 @@ from . import get_all_element_ids
 
 class ElementDelta:
     """Helper for detecting changes in the available element collection"""
+
     def __init__(self):
         self._known_element_ids = set(get_all_element_ids())
 
