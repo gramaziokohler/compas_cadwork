@@ -27,14 +27,53 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    TEXT_TYPE_MAP = {"line": cadwork.line, "surface": cadwork.surface, "volume": cadwork.volume}
+    TEXT_TYPE_MAP = {"line": cadwork.line, "surface": cadwork.surface, "volume": cadwork.volume,
+                     "raster": cadwork.raster}
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
 
     @staticmethod
-    def _generate_translation_vectors(element_id: int):
+    def _generate_translation_vectors_raster(element_id: int):
+        """Generates translation vectors from a bounding box that shift a text
+        or a box from the bottom left point of the object to the center point
+        of the object.
+
+
+        Parameters
+        ----------
+        element_ids : list
+            The respective texts or boxes
+
+        Return
+        ----------
+        Cadwork Vector X and Z
+            vx, vz
+        """
+        bb = get_bounding_box_vertices_local(element_id, [element_id])
+
+        # https://github.com/inconai/innosuisse_issue_collection/issues/137
+        start_vec_x = bb[0]
+        end_vec_x = bb[1]
+        start_vec_z = bb[0]
+        end_vec_z = bb[2]
+
+        vx = start_vec_x - end_vec_x
+        dx = start_vec_x.distance(end_vec_x) / 2.0
+
+        vx = vx.normalized()
+        vx = vx * dx * -1
+
+        vz = start_vec_z - end_vec_z
+        dz = start_vec_z.distance(end_vec_z) / 2.0
+
+        vz = vz.normalized()
+        vz = vz * dz * -1  # write here why it has to be flipped
+        return vx, vz
+
+    @staticmethod
+    def _generate_translation_vectors_volume(element_id: int):
         """Generates translation vectors from a bounding box that shift a text
         or a box from the bottom left point of the object to the center point
         of the object.
@@ -91,14 +130,16 @@ class Text3dSceneObject(CadworkSceneObject):
         text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
         text_options.set_text(self.text_instruction.text)
         text_options.set_height(self.text_instruction.size)
-        text_options.set_thickness(self.text_instruction.thickness)
+
+        if self.text_instruction.geometry_type == "volume":
+            text_options.set_thickness(self.text_instruction.thickness)
 
         loc = self.text_instruction.location
         element_id = create_text_object_with_options(
             point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
 
-        vx, vz = self._generate_translation_vectors(element_id)
+        vx, vz = self._generate_translation_vectors_raster(element_id)
         move_element([element_id], vx + vz)
         self.add_element(element_id)
         set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
