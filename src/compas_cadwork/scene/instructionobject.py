@@ -27,8 +27,12 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    TEXT_TYPE_MAP = {"line": cadwork.line, "surface": cadwork.surface, "volume": cadwork.volume,
-                     "raster": cadwork.raster}
+    TEXT_TYPE_MAP = {
+        "line": cadwork.line,
+        "surface": cadwork.surface,
+        "volume": cadwork.volume,
+        "raster": cadwork.raster,
+    }
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
