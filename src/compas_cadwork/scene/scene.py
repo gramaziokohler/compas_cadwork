@@ -4,15 +4,15 @@ from element_controller import delete_elements
 from element_controller import recreate_elements
 from visualization_controller import refresh
 
+from compas_cadwork.datamodel import Element
+
 
 class CadworkSceneObject(SceneObject):
     """Base class for all of cadwork's SceneObject."""
 
     DRAWN_ELEMENTS = []
-    USER_ATTR_NUMBER = 666
-    USER_ATTR_VALUE = "COMPAS_CADWORK"
 
-    def add_element(self, element_id):
+    def add_element(self, element_id) -> Element:
         """Records the given element_id to track elements added by the :class:`~compas_cadwork.artists.CadworkArtist`.
 
         Parameters
@@ -22,6 +22,7 @@ class CadworkSceneObject(SceneObject):
 
         """
         self.DRAWN_ELEMENTS.append(element_id)
+        return Element.from_id(element_id)
 
     @classmethod
     def refresh(cls):
