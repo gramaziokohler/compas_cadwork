@@ -48,8 +48,8 @@ class Text3dSceneObject(CadworkSceneObject):
 
         Return
         -------
-        Cadwork Vector X and Z
-            vx, vz
+        tuple(cadwork.point_3d, cadwork.point_3d)
+            Translation vectors in x and z direction.
         """
         bb = get_bounding_box_vertices_local(element_id, [element_id])
 
