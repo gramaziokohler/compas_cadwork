@@ -67,13 +67,13 @@ class Text3dSceneObject(CadworkSceneObject):
         dx = start_vec_x.distance(end_vec_x) / 2.0
 
         vx = vx.normalized()
-        vx = vx * dx * -1
+        vx = vx * dx * 1
 
         vz = start_vec_z - end_vec_z
         dz = start_vec_z.distance(end_vec_z) / 2.0
 
         vz = vz.normalized()
-        vz = vz * dz * -1  # write here why it has to be flipped
+        vz = vz * dz * 1  # write here why it has to be flipped
         return vx, vz
 
     @staticmethod
