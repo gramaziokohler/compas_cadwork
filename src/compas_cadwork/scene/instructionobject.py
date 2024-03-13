@@ -43,11 +43,11 @@ class Text3dSceneObject(CadworkSceneObject):
 
         Parameters
         ----------
-        element_ids : list
-            The respective texts or boxes
+        element_ids : int
+            Cadwork element id of the text object.
 
         Return
-        ----------
+        -------
         Cadwork Vector X and Z
             vx, vz
         """
