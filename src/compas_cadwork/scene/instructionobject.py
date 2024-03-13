@@ -41,7 +41,6 @@ class Text3dSceneObject(CadworkSceneObject):
         or a box from the bottom left point of the object to the center point
         of the object.
 
-
         Parameters
         ----------
         element_ids : list
