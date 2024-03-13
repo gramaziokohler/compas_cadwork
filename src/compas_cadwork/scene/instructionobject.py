@@ -85,7 +85,7 @@ class Text3dSceneObject(CadworkSceneObject):
         if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
             raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
 
-        color = 5  # TODO: find a way to map compas colors to cadwork materials
+        color = 112  # TODO: find a way to map compas colors to cadwork materials
 
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
