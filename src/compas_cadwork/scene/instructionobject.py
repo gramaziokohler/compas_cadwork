@@ -27,7 +27,9 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    TEXT_TYPE_MAP = {"line": cadwork.line, "surface": cadwork.surface, "volume": cadwork.volume}
+    TEXT_TYPE_MAP = {
+        "raster": cadwork.raster,
+    }
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
@@ -39,36 +41,35 @@ class Text3dSceneObject(CadworkSceneObject):
         or a box from the bottom left point of the object to the center point
         of the object.
 
-
         Parameters
         ----------
-        element_ids : list
-            The respective texts or boxes
+        element_ids : int
+            Cadwork element id of the text object.
 
         Return
-        ----------
-        Cadwork Vector X and Z
-            vx, vz
+        -------
+        tuple(cadwork.point_3d, cadwork.point_3d)
+            Translation vectors in x and z direction.
         """
         bb = get_bounding_box_vertices_local(element_id, [element_id])
 
         # https://github.com/inconai/innosuisse_issue_collection/issues/137
-        start_vec_x = bb[5]
-        end_vec_x = bb[6]
-        start_vec_z = bb[6]
-        end_vec_z = bb[3]
+        start_vec_x = bb[0]
+        end_vec_x = bb[1]
+        start_vec_z = bb[0]
+        end_vec_z = bb[2]
 
         vx = start_vec_x - end_vec_x
         dx = start_vec_x.distance(end_vec_x) / 2.0
 
         vx = vx.normalized()
-        vx = vx * dx * -1
+        vx = vx * dx
 
-        vz = end_vec_z - start_vec_z
+        vz = start_vec_z - end_vec_z
         dz = start_vec_z.distance(end_vec_z) / 2.0
 
         vz = vz.normalized()
-        vz = vz * dz * -1  # write here why it has to be flipped
+        vz = vz * dz
         return vx, vz
 
     def draw(self, *args, **kwargs):
@@ -84,14 +85,16 @@ class Text3dSceneObject(CadworkSceneObject):
         if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
             raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
 
-        color = 5  # TODO: find a way to map compas colors to cadwork materials
+        color = 112  # TODO: find a way to map compas colors to cadwork materials
 
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
         text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
         text_options.set_text(self.text_instruction.text)
         text_options.set_height(self.text_instruction.size)
-        text_options.set_thickness(self.text_instruction.thickness)
+
+        if self.text_instruction.geometry_type == "volume":
+            text_options.set_thickness(self.text_instruction.thickness)
 
         loc = self.text_instruction.location
         element_id = create_text_object_with_options(
