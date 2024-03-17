@@ -5,6 +5,7 @@ from enum import auto
 from enum import Enum
 from enum import IntEnum
 from typing import Generator
+from typing import Optional
 
 from compas.geometry import Frame
 from compas.geometry import Vector
@@ -16,10 +17,15 @@ from attribute_controller import get_group
 from attribute_controller import get_name
 from attribute_controller import get_element_grouping_type
 from attribute_controller import is_framed_wall
+from attribute_controller import get_element_type
+from attribute_controller import set_user_attribute
+from attribute_controller import get_user_attribute
+from attribute_controller import delete_user_attribute
 from utility_controller import get_language
 from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
+from element_controller import delete_elements
 from geometry_controller import get_p1
 from geometry_controller import get_xl
 from geometry_controller import get_yl
@@ -28,6 +34,10 @@ from geometry_controller import get_height
 from geometry_controller import get_width
 from bim_controller import get_ifc_guid
 from bim_controller import get_ifc_base64_guid
+
+
+# These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
+ATTR_INSTRUCTION_ID = 666
 
 
 class StrEnum(str, Enum):
@@ -82,7 +92,7 @@ LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[get_language()]
 
 @dataclass
 class ElementGroup:
-    """Represents a CADwork Element Group
+    """Represents a cadwork Element Group
 
     Parameters
     ----------
@@ -128,7 +138,7 @@ class ElementGroup:
 
 @dataclass
 class Element:
-    """Represents a CADwork Element
+    """Represents a cadwork Element
 
     Parameters
     ----------
@@ -155,7 +165,7 @@ class Element:
     ifc_base64_guid : str
         The base64 IFC GUID of the Element
     cadwork_guid : str
-        The CADwork GUID of the Element
+        The cadwork GUID of the Element
     ifc_guid : str
         The IFC GUID of the Element. See also: ifc_base64_guid.
     is_wall : bool
@@ -217,9 +227,18 @@ class Element:
     def is_wall(self) -> bool:
         return is_framed_wall(self.id)
 
+    @property
+    def is_linear_dimension(self) -> bool:
+        type_ = get_element_type(self.id)
+        return type_.is_dimension()
+
+    @property
+    def is_instruction(self) -> bool:
+        return get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
+
     @classmethod
     def from_id(cls, element_id: int) -> Element:
-        """Returns an Element object for the CADwork Element with the given ID
+        """Returns an Element object for the cadwork Element with the given ID
 
         Parameters
         ----------
@@ -250,3 +269,62 @@ class Element:
 
         """
         return (Element.from_id(e_id) for e_id in get_active_identifiable_element_ids())
+
+    def set_attribute(self, name, value):
+        """Sets an attribute on the Element
+
+        Parameters
+        ----------
+        name : str
+            The name of the attribute
+        value : str
+            The value of the attribute
+
+        """
+        set_user_attribute([self.id], name, value)
+
+    def remove_attribute(self, name):
+        """Removes an attribute from the Element
+
+        Parameters
+        ----------
+        name : str
+            The name of the attribute
+
+        """
+        delete_user_attribute([self.id], name)
+
+    def set_is_instruction(self, value: bool, instruction_id: Optional[str] = None):
+        """Sets the is_instruction attribute on the Element
+
+        Parameters
+        ----------
+        value : bool
+            If True, this Element will be flagged as an instruction element by setting the appropriate attribute.
+            If False, the attribute will be removed.
+        instruction_id : str
+            The ID of the instruction. This is required when setting is_instruction to True.
+
+        """
+        if value and instruction_id is None:
+            raise ValueError("Instruction ID must be provided when setting is_instruction to True")
+
+        if value:
+            self.set_attribute(ATTR_INSTRUCTION_ID, instruction_id)
+        else:
+            self.remove_attribute(ATTR_INSTRUCTION_ID)
+
+    def get_instruction_id(self) -> Optional[str]:
+        """Returns the instruction ID of the Element
+
+        Returns
+        -------
+        str, optional
+            The instruction ID of the Element
+
+        """
+        return get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
+
+    def remove(self):
+        """Removes the Element from the cadwork file"""
+        delete_elements([self.id])

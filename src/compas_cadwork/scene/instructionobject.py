@@ -2,7 +2,7 @@ from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
-from attribute_controller import set_user_attribute
+
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
 from element_controller import create_text_object_with_options
@@ -103,8 +103,9 @@ class Text3dSceneObject(CadworkSceneObject):
 
         vx, vz = self._generate_translation_vectors(element_id)
         move_element([element_id], vx + vz)
-        self.add_element(element_id)
-        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
+
+        element = self.add_element(element_id)
+        element.set_is_instruction(True, self.text_instruction.id)
         return [element_id]
 
 
@@ -142,8 +143,8 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             point_to_cadwork(text_plane_origin),
             [point_to_cadwork(self.linear_dimension.start), point_to_cadwork(self.linear_dimension.end)],
         )
-        self.add_element(element_id)
-        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
+        element = self.add_element(element_id)
+        element.set_is_instruction(True, self.linear_dimension.id)
         return [element_id]
 
 
@@ -156,7 +157,6 @@ class Model3dSceneObject(CadworkSceneObject):
 
     def draw(self):
         element_id = import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
-        set_user_attribute([element_id], self.USER_ATTR_NUMBER, self.USER_ATTR_VALUE)
         old_loc = self.model3d.location
         new_loc = self.model3d.t_location
 
@@ -170,3 +170,6 @@ class Model3dSceneObject(CadworkSceneObject):
             point_to_cadwork(new_loc.xaxis),
             point_to_cadwork(new_loc.yaxis),
         )
+        element = self.add_element(element_id)
+        element.set_is_instruction(True, self.model3d.id)
+        return [element_id]

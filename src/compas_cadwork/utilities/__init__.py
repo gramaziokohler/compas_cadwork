@@ -1,5 +1,6 @@
 from typing import List
 from typing import Dict
+from typing import Tuple
 from typing import Union
 from typing import Generator
 
@@ -10,10 +11,14 @@ import utility_controller as uc
 import element_controller as ec
 import attribute_controller as ac
 import visualization_controller as vc
+import dimension_controller as dc
 
+from compas.geometry import Point
+from compas.geometry import Vector
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 from compas_cadwork.datamodel.element import StrEnum
+from compas_cadwork.conversions import point_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
@@ -294,15 +299,42 @@ def force_refresh() -> None:
     vc.refresh()
 
 
-def get_all_element_ids() -> None:
-    """Returns all element ids of the currently open cadwork document."""
-    return ec.get_all_identifiable_element_ids()
+def get_all_element_ids(include_instructions: bool = False) -> Generator[int, None, None]:
+    """Returns all element ids of the currently open cadwork document.
+
+    Parameters
+    ----------
+    include_instructions : bool, optional
+        If True, also include instruction elements in the result.
+
+    Returns
+    -------
+    generator(int)
+        Generator of element ids.
+
+    """
+    for element in get_all_elements(include_instructions):
+        yield element.id
 
 
-def get_all_elements() -> Generator[Element, None, None]:
-    """Returns all element ids of the currently open cadwork document."""
+def get_all_elements(include_instructions: bool = False) -> Generator[Element, None, None]:
+    """Returns all element ids of the currently open cadwork document.
+
+    Parameters
+    ----------
+    include_instructions : bool, optional
+        If True, also include instruction elements in the result.
+
+    Returns
+    -------
+    generator(:class:`compas_cadwork.datamodel.Element`)
+        Generator of elements.
+
+    """
     for element_id in ec.get_all_identifiable_element_ids():
-        yield Element.from_id(element_id)
+        element = Element.from_id(element_id)
+        if include_instructions or not element.is_instruction:
+            yield element
 
 
 def get_all_elements_with_attrib(attrib_number, attrib_value=None):
@@ -318,6 +350,34 @@ def remove_elements(elements: List[Union[Element, int]]) -> None:
 
 def save_project_file():
     uc.save_3d_file_silently()
+
+
+def get_dimension_data(element: Union[int, Element]) -> Tuple[List[Point], Vector, float]:
+    """Get linear dimension by its element id or Element object.
+
+    TODO: Return a LinearDimension object instead of a tuple once it's out of monosashi.
+    TODO: Not doing it now to avoid circular dependency.
+
+    Parameters
+    ----------
+    element : int or :class:`Element`
+        The element id or Element object.
+
+    Returns
+    -------
+    tuple
+        A tuple of (points, text_normal, distance).
+
+    """
+    element_id = element.id if isinstance(element, Element) else element
+    points = dc.get_dimension_points(element_id)
+    points = [point_to_compas(p) for p in points]
+
+    # TODO: get this from the dimension object when the call is available
+    text_normal = Vector(0, 1, 0)
+    distance = 0
+
+    return points, text_normal, distance
 
 
 __all__ = [
@@ -343,4 +403,5 @@ __all__ = [
     "remove_elements",
     "save_project_file",
     "zoom_active_elements",
+    "get_dimension_data",
 ]
