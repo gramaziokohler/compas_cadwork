@@ -92,7 +92,7 @@ LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[get_language()]
 
 @dataclass
 class ElementGroup:
-    """Represents a CADwork Element Group
+    """Represents a cadwork Element Group
 
     Parameters
     ----------
@@ -138,7 +138,7 @@ class ElementGroup:
 
 @dataclass
 class Element:
-    """Represents a CADwork Element
+    """Represents a cadwork Element
 
     Parameters
     ----------
@@ -165,7 +165,7 @@ class Element:
     ifc_base64_guid : str
         The base64 IFC GUID of the Element
     cadwork_guid : str
-        The CADwork GUID of the Element
+        The cadwork GUID of the Element
     ifc_guid : str
         The IFC GUID of the Element. See also: ifc_base64_guid.
     is_wall : bool
@@ -238,7 +238,7 @@ class Element:
 
     @classmethod
     def from_id(cls, element_id: int) -> Element:
-        """Returns an Element object for the CADwork Element with the given ID
+        """Returns an Element object for the cadwork Element with the given ID
 
         Parameters
         ----------
@@ -326,5 +326,5 @@ class Element:
         return get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
 
     def remove(self):
-        """Removes the Element from the CADwork file"""
+        """Removes the Element from the cadwork file"""
         delete_elements([self.id])
