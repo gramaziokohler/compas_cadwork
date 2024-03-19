@@ -6,6 +6,7 @@ from enum import Enum
 from enum import IntEnum
 from typing import Generator
 from typing import Optional
+from typing import List
 
 from compas.geometry import Frame
 from compas.geometry import Vector
@@ -16,6 +17,7 @@ from attribute_controller import get_subgroup
 from attribute_controller import get_group
 from attribute_controller import get_name
 from attribute_controller import get_element_grouping_type
+from attribute_controller import is_drilling
 from attribute_controller import is_framed_wall
 from attribute_controller import get_element_type
 from attribute_controller import set_user_attribute
@@ -26,6 +28,7 @@ from element_controller import get_element_type_description
 from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
 from element_controller import delete_elements
+from element_controller import get_elements_in_contact
 from geometry_controller import get_p1
 from geometry_controller import get_xl
 from geometry_controller import get_yl
@@ -170,6 +173,8 @@ class Element:
         The IFC GUID of the Element. See also: ifc_base64_guid.
     is_wall : bool
         Whether the Element is a framed wall i.e. container for all other elements in the building group.
+    is_drilling : bool
+        Whether the Element is a drilling hole
 
     """
 
@@ -233,8 +238,16 @@ class Element:
         return type_.is_dimension()
 
     @property
+    def is_drilling(self) -> bool:
+        return is_drilling(self.id)
+
+    @property
     def is_instruction(self) -> bool:
         return get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
+
+    def is_beam(self) -> bool:
+        type_ = get_element_type(self.id)
+        return type_.is_rectangular_beam()
 
     @classmethod
     def from_id(cls, element_id: int) -> Element:
@@ -324,6 +337,10 @@ class Element:
 
         """
         return get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
+
+    def get_elements_in_contact(self) -> List[Element]:
+        """Returns a list of elements in contact with the current element"""
+        return [Element.from_id(e_id) for e_id in get_elements_in_contact(self.id)]
 
     def remove(self):
         """Removes the Element from the cadwork file"""
