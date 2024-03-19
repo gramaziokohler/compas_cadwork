@@ -22,3 +22,7 @@ class ElementDelta:
         removed_ids = self._known_element_ids - current_ids
         self._known_element_ids = current_ids
         return [Element.from_id(id) for id in new_ids], [Element.from_id(id) for id in removed_ids]
+
+    def reset(self):
+        """Reset the known element ids"""
+        self._known_element_ids = set(get_all_element_ids())
