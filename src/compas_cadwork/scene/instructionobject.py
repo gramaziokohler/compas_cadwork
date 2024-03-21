@@ -100,9 +100,9 @@ class Text3dSceneObject(CadworkSceneObject):
         element_id = create_text_object_with_options(
             point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
-
-        vx, vz = self._generate_translation_vectors(element_id)
-        move_element([element_id], vx + vz)
+        if self.text_instruction.centered:
+            vx, vz = self._generate_translation_vectors(element_id)
+            move_element([element_id], vx + vz)
 
         element = self.add_element(element_id)
         element.set_is_instruction(True, self.text_instruction.id)
