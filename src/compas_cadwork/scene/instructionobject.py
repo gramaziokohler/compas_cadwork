@@ -27,10 +27,6 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    TEXT_TYPE_MAP = {
-        "raster": cadwork.raster,
-    }
-
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
         self.text_instruction = text_instruction
@@ -82,19 +78,13 @@ class Text3dSceneObject(CadworkSceneObject):
 
         """
 
-        if self.text_instruction.geometry_type not in self.TEXT_TYPE_MAP:
-            raise ValueError(f"Unsupported geometry type in Text3dArtist: {self.text_instruction.geometry_type}")
-
         color = 112  # TODO: find a way to map compas colors to cadwork materials
 
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
-        text_options.set_element_type(self.TEXT_TYPE_MAP[self.text_instruction.geometry_type])
+        text_options.set_element_type(cadwork.raster)
         text_options.set_text(self.text_instruction.text)
         text_options.set_height(self.text_instruction.size)
-
-        if self.text_instruction.geometry_type == "volume":
-            text_options.set_thickness(self.text_instruction.thickness)
 
         loc = self.text_instruction.location
         element_id = create_text_object_with_options(
