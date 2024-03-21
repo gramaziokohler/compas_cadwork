@@ -139,9 +139,12 @@ def get_element_grouping_type() -> int:
     """
     return ac.get_element_grouping_type()
 
-def get_bounding_box_from_cadwork_object(element_id: int) -> list:
+
+def get_bounding_box_from_cadwork_object(element: Union[int, Element]) -> list:
     """Returns a vertices of the elements bounding box"""
+    element_id = element.id if isinstance(element, Element) else element
     return ec.get_bounding_box_vertices_local(element_id, [element_id])
+
 
 def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
