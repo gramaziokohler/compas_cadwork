@@ -28,5 +28,7 @@ jobs:
     steps:
       - uses: compas-dev/compas-actions.publish@v2
         with:
+          bdist_wheel: true
+          sdist: true
           publish_to_pypi: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
