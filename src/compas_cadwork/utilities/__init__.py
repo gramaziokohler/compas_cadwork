@@ -140,10 +140,22 @@ def get_element_grouping_type() -> int:
     return ac.get_element_grouping_type()
 
 
-def get_bounding_box_from_cadwork_object(element: Union[int, Element]) -> list:
-    """Returns a vertices of the elements bounding box"""
+def get_bounding_box_from_cadwork_object(element: Union[int, Element]) -> List[Point]:
+    """Returns the 8 vertices of an elements bounding box.
+
+    Parameters
+    ----------
+    element : int or :class:`compas_cadwork.datamodel.Element`
+        The element id or Element object.
+
+    Returns
+    -------
+    list(:class:`compas.geometry.Point`)
+
+    """
     element_id = element.id if isinstance(element, Element) else element
-    return ec.get_bounding_box_vertices_local(element_id, [element_id])
+    bbox = ec.get_bounding_box_vertices_local(element_id, [element_id])
+    return [point_to_compas(p) for p in bbox]
 
 
 def get_plugin_home() -> str:
