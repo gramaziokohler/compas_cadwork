@@ -3,7 +3,6 @@ import os
 from dataclasses import dataclass
 from typing import List
 
-import cadwork
 from bim_controller import export_ifc2x3_silently_with_options
 from bim_controller import get_ifc_options
 from utility_controller import get_use_of_global_coordinates
