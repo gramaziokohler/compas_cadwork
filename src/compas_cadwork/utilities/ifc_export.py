@@ -5,6 +5,7 @@ from typing import List
 
 import cadwork
 from bim_controller import export_ifc2x3_silently_with_options
+from bim_controller import get_ifc_options
 from utility_controller import get_use_of_global_coordinates
 from utility_controller import set_use_of_global_coordinates
 
@@ -35,7 +36,7 @@ class IFCExportSettings:
     translate_local_frame: bool = False
 
     def get_ifc_options(self):
-        options = cadwork.ifc_options()
+        options = get_ifc_options()
         aggregation = options.get_ifc_options_aggregation()
         aggregation.set_export_cover_geometry(self.export_cover_geometry)
         aggregation.set_element_aggregation_attribute(self.grouping_type.to_cadwork())
