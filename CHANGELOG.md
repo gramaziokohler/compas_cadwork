@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Now getting dimension orientation from API.
+* IFC export options are read from file defaults.
+* `Text3dSceneObject` checks `Text3d.centered` attribute.
+
 ### Removed
 
 
