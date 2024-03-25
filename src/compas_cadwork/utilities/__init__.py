@@ -390,10 +390,8 @@ def get_dimension_data(element: Union[int, Element]) -> Tuple[List[Point], Vecto
     element_id = element.id if isinstance(element, Element) else element
     points = dc.get_dimension_points(element_id)
     points = [point_to_compas(p) for p in points]
-
-    # TODO: get this from the dimension object when the call is available
-    text_normal = Vector(0, 1, 0)
-    distance = 0
+    text_normal = Vector(*dc.get_plane_normal(element_id))
+    distance = dc.get_segment_distance(element_id, 0)  # TODO: there's more but we cannot quite store them yet
 
     return points, text_normal, distance
 
