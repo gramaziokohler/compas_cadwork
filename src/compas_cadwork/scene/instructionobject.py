@@ -126,7 +126,8 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             self.linear_dimension.start, self.linear_dimension.end
         ).unitized()  # why is this even needed?
         text_plane_normal = self.linear_dimension.location.normal * -1.0
-        text_plane_origin = self.linear_dimension.location.point
+        text_plane_origin = self.linear_dimension.location.point.copy()
+        text_plane_origin.z += self.linear_dimension.offset
         element_id = create_dimension(
             vector_to_cadwork(direction),
             vector_to_cadwork(text_plane_normal),
