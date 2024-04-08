@@ -18,7 +18,7 @@ from compas.geometry import Vector
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 from compas_cadwork.datamodel.element import StrEnum
-from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import point_to_compas, vector_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
@@ -384,16 +384,19 @@ def get_dimension_data(element: Union[int, Element]) -> Tuple[List[Point], Vecto
     Returns
     -------
     tuple
-        A tuple of (points, text_normal, distance).
+        A tuple of (points, xaxis, text_normal, distances).
 
     """
+    distances = []
     element_id = element.id if isinstance(element, Element) else element
     points = dc.get_dimension_points(element_id)
     points = [point_to_compas(p) for p in points]
     text_normal = Vector(*dc.get_plane_normal(element_id))
-    distance = dc.get_segment_distance(element_id, 0)  # TODO: there's more but we cannot quite store them yet
+    for i in range(dc.get_segment_count(element_id)):
+        distances.append(dc.get_segment_distance(element_id, i))
+    xaxis = vector_to_compas(dc.get_plane_xl(element_id))
 
-    return points, text_normal, distance
+    return points, xaxis, text_normal, distances
 
 
 __all__ = [
