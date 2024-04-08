@@ -44,8 +44,8 @@ class Text3dSceneObject(CadworkSceneObject):
 
         Return
         -------
-        tuple(cadwork.point_3d, cadwork.point_3d)
-            Translation vectors in x and z direction.
+        tuple(cadwork.point_3d, cadwork.point_3d, cadwork.point_3d)
+            Translation vectors in x, y and z direction.
         """
         bb = get_bounding_box_vertices_local(element_id, [element_id])
 
@@ -66,7 +66,13 @@ class Text3dSceneObject(CadworkSceneObject):
 
         vz = vz.normalized()
         vz = vz * dz
-        return vx, vz
+
+        # shift text in vy so it doesnt intersect with geometry
+        vy = vz.cross(vx)
+        vy = vy.normalized()
+        vy = vy * 5
+
+        return vx, vy, vz
 
     def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
@@ -91,8 +97,8 @@ class Text3dSceneObject(CadworkSceneObject):
             point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
         if self.text_instruction.centered:
-            vx, vz = self._generate_translation_vectors(element_id)
-            move_element([element_id], vx + vz)
+            vx, vy, vz = self._generate_translation_vectors(element_id)
+            move_element([element_id], vx + vy + vz)
 
         element = self.add_element(element_id)
         element.set_is_instruction(True, self.text_instruction.id)
