@@ -44,7 +44,7 @@ class Text3dSceneObject(CadworkSceneObject):
 
         Return
         -------
-        triple(cadwork.point_3d, cadwork.point_3d, cadwork.point_3d)
+        tuple(cadwork.point_3d, cadwork.point_3d, cadwork.point_3d)
             Translation vectors in x, y and z direction.
         """
         bb = get_bounding_box_vertices_local(element_id, [element_id])
