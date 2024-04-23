@@ -1,19 +1,18 @@
+import cadwork
 from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
-
 from dimension_controller import create_dimension
 from element_controller import apply_transformation_coordinate
 from element_controller import create_text_object_with_options
-from element_controller import move_element
 from element_controller import get_bounding_box_vertices_local
+from element_controller import move_element
 from file_controller import import_element_light
-import cadwork
 
-from compas_cadwork.scene import CadworkSceneObject
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
+from compas_cadwork.scene import CadworkSceneObject
 
 
 class Text3dSceneObject(CadworkSceneObject):
@@ -128,9 +127,11 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             cadwork element ID of the added dimension.
 
         """
+
         direction = Vector.from_start_end(
             self.linear_dimension.start, self.linear_dimension.end
         ).unitized()  # why is this even needed?
+
         text_plane_normal = self.linear_dimension.location.normal * -1.0
         text_plane_origin = self.linear_dimension.location.point.copy()
         text_plane_origin.z += self.linear_dimension.offset

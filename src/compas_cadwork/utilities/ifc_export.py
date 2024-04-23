@@ -10,7 +10,6 @@ from utility_controller import set_use_of_global_coordinates
 
 from compas_cadwork.datamodel import ElementGroupingType
 
-
 LOG = logging.getLogger(__name__)
 
 
