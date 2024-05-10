@@ -11,18 +11,16 @@ import utility_controller as uc
 import element_controller as ec
 import attribute_controller as ac
 import visualization_controller as vc
-import dimension_controller as dc
 
 from compas.geometry import Point
-from compas.geometry import Vector
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
 from compas_cadwork.datamodel.element import StrEnum
 from compas_cadwork.conversions import point_to_compas
-from compas_cadwork.conversions import vector_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
+from .dimensions import get_dimension_data
 
 
 class CameraView(StrEnum):
@@ -370,34 +368,6 @@ def remove_elements(elements: List[Union[Element, int]]) -> None:
 def save_project_file():
     uc.save_3d_file_silently()
 
-
-def get_dimension_data(element: Union[int, Element]) -> Tuple[List[Point], Vector, float]:
-    """Get linear dimension by its element id or Element object.
-
-    TODO: Return a LinearDimension object instead of a tuple once it's out of monosashi.
-    TODO: Not doing it now to avoid circular dependency.
-
-    Parameters
-    ----------
-    element : int or :class:`Element`
-        The element id or Element object.
-
-    Returns
-    -------
-    tuple
-        A tuple of (points, xaxis, text_normal, distances).
-
-    """
-    distances = []
-    element_id = element.id if isinstance(element, Element) else element
-    points = dc.get_dimension_points(element_id)
-    points = [point_to_compas(p) for p in points]
-    text_normal = Vector(*dc.get_plane_normal(element_id))
-    for i in range(dc.get_segment_count(element_id)):
-        distances.append(dc.get_segment_distance(element_id, i))
-    xaxis = vector_to_compas(dc.get_plane_xl(element_id))
-
-    return points, xaxis, text_normal, distances
 
 
 __all__ = [
