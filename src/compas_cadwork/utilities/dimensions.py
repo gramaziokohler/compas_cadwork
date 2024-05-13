@@ -64,19 +64,20 @@ def _dimension_frame(points, xaxis, text_normal):
 def _dimension_from_segment(start, end, ref_frame):
     # project dimension points to start plane
     plane = Plane.from_frame(ref_frame)
-    start_closest = closest_point_on_plane(start, plane)
-    end_closest = closest_point_on_plane(end, plane)
+    start_closest = Point(*closest_point_on_plane(start, plane))
+    end_closest = Point(*closest_point_on_plane(end, plane))
     return Frame(start_closest, ref_frame.xaxis, ref_frame.yaxis), start_closest, end_closest
 
 def get_dimension_data(element: Union[int, Element]) -> Tuple[Frame, Point, Point]:
-        points, xaxis, text_normal, distances = _get_dimension_element(element)
-        assert len(points) == len(distances)
+    points, xaxis, text_normal, distances = _get_dimension_element(element)
+    assert len(points) == len(distances)
 
-        ref_frame = _dimension_frame(points, xaxis, text_normal)
-        dimensions = []
-        for (d_start, d_end), (p_start, p_end) in zip(pairwise(distances), pairwise(points)):
-            start = p_start + ref_frame.yaxis * d_start
-            end = p_end + ref_frame.yaxis * d_end
-            if start.distance_to_point(end) < DimTolerance.LOW_PRECISION:
-                continue
-            dimensions.append(_dimension_from_segment(start, end, ref_frame))
+    ref_frame = _dimension_frame(points, xaxis, text_normal)
+    dimensions = []
+    for (d_start, d_end), (p_start, p_end) in zip(pairwise(distances), pairwise(points)):
+        start = p_start + ref_frame.yaxis * d_start
+        end = p_end + ref_frame.yaxis * d_end
+        if start.distance_to_point(end) < DimTolerance.LOW_PRECISION:
+            continue
+        dimensions.append(_dimension_from_segment(start, end, ref_frame))
+    return dimensions
