@@ -1,6 +1,5 @@
 from typing import List
 from typing import Dict
-from typing import Tuple
 from typing import Union
 from typing import Generator
 
@@ -367,7 +366,6 @@ def remove_elements(elements: List[Union[Element, int]]) -> None:
 
 def save_project_file():
     uc.save_3d_file_silently()
-
 
 
 __all__ = [

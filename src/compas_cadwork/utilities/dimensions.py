@@ -53,12 +53,14 @@ def _shift_anchor_points_to_line(points, distances, ref_frame):
     new_frame = Frame(new_anchors[0], ref_frame.xaxis, ref_frame.yaxis)
     return new_anchors, new_frame
 
+
 def _are_anchors_above_line(points, ref_frame):
     """Check if the anchors of the dimension are above the line."""
     # TODO: not sure how to implement this yet.
     # the points received from get_dimension_points are the anchor points
     # the actual line has no representation except the absolute value distance..
     return True
+
 
 def get_dimension_data(element: Union[int, Element]) -> Tuple[Frame, List[Point]]:
     """Get linear dimension by its element id or Element object.
