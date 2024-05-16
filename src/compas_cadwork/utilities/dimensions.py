@@ -6,9 +6,7 @@ import dimension_controller as dc
 
 from compas.geometry import Frame
 from compas.geometry import Point
-from compas.geometry import Plane
 from compas.geometry import Vector
-from compas.geometry import closest_point_on_plane
 
 from compas_cadwork.datamodel import Element
 from compas_cadwork.conversions import point_to_compas
@@ -16,17 +14,18 @@ from compas_cadwork.conversions import vector_to_compas
 
 
 def _get_dimension_element(element: Union[int, Element]) -> Tuple[List[Point], Vector, float]:
-    distances = []
     element_id = element.id if isinstance(element, Element) else element
     points = dc.get_dimension_points(element_id)
     points = [point_to_compas(p) for p in points]
     text_normal = Vector(*dc.get_plane_normal(element_id))
     seg_count = dc.get_segment_count(element_id)
+    distances = []
+    directions = []
     for i in range(seg_count):
         distances.append(dc.get_segment_distance(element_id, i))
+        directions.append(vector_to_compas(dc.get_segment_direction(element_id, i)))
     xaxis = vector_to_compas(dc.get_plane_xl(element_id))
-
-    return points, xaxis, text_normal, distances
+    return points, xaxis, text_normal, distances, directions
 
 
 def _frame_from_dim(points, xaxis, text_normal):
@@ -37,29 +36,13 @@ def _frame_from_dim(points, xaxis, text_normal):
     return ref_frame
 
 
-def _shift_anchor_points_to_line(points, distances, ref_frame):
-    plane = Plane.from_frame(ref_frame)
-
-    if _are_anchors_above_line(points, ref_frame):
-        direction = ref_frame.yaxis
-    else:
-        direction = -ref_frame.yaxis
-
+def _shift_anchor_points_to_line(points, distances, ref_frame, directions):
     new_anchors = []
-    for point, distance in zip(points, distances):
+    for point, distance, direction in zip(points, distances, directions):
         point = point + direction * distance
-        point = Point(*closest_point_on_plane(point, plane))
         new_anchors.append(point)
     new_frame = Frame(new_anchors[0], ref_frame.xaxis, ref_frame.yaxis)
     return new_anchors, new_frame
-
-
-def _are_anchors_above_line(points, ref_frame):
-    """Check if the anchors of the dimension are above the line."""
-    # TODO: not sure how to implement this yet.
-    # the points received from get_dimension_points are the anchor points
-    # the actual line has no representation except the absolute value distance..
-    return True
 
 
 def get_dimension_data(element: Union[int, Element]) -> Tuple[Frame, List[Point]]:
@@ -79,7 +62,7 @@ def get_dimension_data(element: Union[int, Element]) -> Tuple[Frame, List[Point]
         A tuple of (points, xaxis, text_normal, distances).
 
     """
-    points, xaxis, text_normal, distances = _get_dimension_element(element)
+    points, xaxis, text_normal, distances, directions = _get_dimension_element(element)
     ref_frame = _frame_from_dim(points, xaxis, text_normal)
-    new_anchors, new_frame = _shift_anchor_points_to_line(points, distances, ref_frame)
+    new_anchors, new_frame = _shift_anchor_points_to_line(points, distances, ref_frame, directions)
     return new_frame, new_anchors
