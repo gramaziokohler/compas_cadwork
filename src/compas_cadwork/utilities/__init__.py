@@ -23,6 +23,7 @@ from compas_cadwork.conversions import vector_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
+from .csv_export import CSVExporter
 
 
 class CameraView(StrEnum):
@@ -402,6 +403,7 @@ def get_dimension_data(element: Union[int, Element]) -> Tuple[List[Point], Vecto
 
 __all__ = [
     "IFCExporter",
+    "CSVExporter",
     "IFCExportSettings",
     "set_camera_view",
     "get_plugin_home",
