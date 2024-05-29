@@ -1,7 +1,8 @@
 from compas.scene import SceneObject
-
 from element_controller import delete_elements
 from element_controller import recreate_elements
+from utility_controller import get_user_color
+from visualization_controller import get_rgb_from_cadwork_color_id
 from visualization_controller import refresh
 
 from compas_cadwork.datamodel import Element
@@ -23,6 +24,12 @@ class CadworkSceneObject(SceneObject):
         """
         self.DRAWN_ELEMENTS.append(element_id)
         return Element.from_id(element_id)
+
+    @classmethod
+    def get_color(cls, color_id: int) -> tuple[int, list[int]]:
+        cadwork_color_id = get_user_color(color_id)
+        rgb_color = get_rgb_from_cadwork_color_id(cadwork_color_id)
+        return cadwork_color_id, [rgb_color.r, rgb_color.g, rgb_color.b]
 
     @classmethod
     def refresh(cls):
