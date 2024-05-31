@@ -1,4 +1,5 @@
 import json
+import os
 
 import cadwork
 from compas.geometry import Vector
@@ -17,6 +18,31 @@ from file_controller import import_element_light
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.scene import CadworkSceneObject
+from compas_cadwork.utilities import get_plugin_home
+
+
+def load_color_profiles(instruction_type: str):
+    """
+    Load color profiles from the JSON file.
+    """
+
+    INI_DIR = os.path.join(get_plugin_home(), "ini_files/")
+    COLOR_PROFILES_FILE = os.path.join(INI_DIR, "project_profile_data_base.json")
+
+    try:
+        with open(COLOR_PROFILES_FILE, "r") as f:
+            data = json.load(f)
+
+            # Navigate through the dictionary structure to find the 'TEXT_INSTRUCTION'
+            colors_instructions = data["PROJECT_NAME"]["COLOR_PROFILES"]["COLORS_INSTRUCTIONS"]
+
+            for instruction in colors_instructions:
+                if instruction_type in instruction:
+                    return instruction[instruction_type]
+            return None
+    except KeyError as e:
+        print(f"KeyError: {e}")
+        return None
 
 
 class Text3dSceneObject(CadworkSceneObject):
@@ -29,10 +55,6 @@ class Text3dSceneObject(CadworkSceneObject):
         The text instruction to draw.
 
     """
-
-    COLOR_PROFILES_FILE = (
-        r"C:\Users\mhelmrei\Documents\projects\monosashi\src\monosashi_cadwork\view\data\project_profile_data_base.json"
-    )
 
     def __init__(self, text_instruction: Text3d, **kwargs) -> None:
         super().__init__(text_instruction)
@@ -81,42 +103,6 @@ class Text3dSceneObject(CadworkSceneObject):
 
         return vx, vy, vz
 
-    def apply_color_profiles(self, data, instruction_type: str):
-        """
-        Apply color profiles to the UI based on the loaded data.
-
-        Parameters
-        ----------
-        data : dict
-            The loaded color profile data.
-        """
-        if (
-            "PROJECT_NAME" in data
-            and "COLOR_PROFILES" in data["PROJECT_NAME"]
-            and "COLORS_INSTRUCTIONS" in data["PROJECT_NAME"]["COLOR_PROFILES"]
-        ):
-            return data["PROJECT_NAME"]["COLOR_PROFILES"]["COLORS_INSTRUCTIONS"][instruction_type]
-
-    @classmethod
-    def load_color_profiles(cls, instruction_type: str):
-        """
-        Load color profiles from the JSON file.
-        """
-        try:
-            with open(Text3dSceneObject.COLOR_PROFILES_FILE, "r") as f:
-                data = json.load(f)
-
-                # Navigate through the dictionary structure to find the 'TEXT_INSTRUCTION'
-                colors_instructions = data["PROJECT_NAME"]["COLOR_PROFILES"]["COLORS_INSTRUCTIONS"]
-
-                for instruction in colors_instructions:
-                    if instruction_type in instruction:
-                        return instruction[instruction_type]
-                return None
-        except KeyError as e:
-            print(f"KeyError: {e}")
-            return None
-
     def draw(self, *args, **kwargs):
         """Adds a text element with the text included in the provided text instruction.
 
@@ -126,7 +112,8 @@ class Text3dSceneObject(CadworkSceneObject):
             cadwork element ID of the added text.
 
         """
-        color = self.load_color_profiles("TEXT_INSTRUCTION")[1]
+        color = load_color_profiles("TEXT_INSTRUCTION")[1]
+        print("color: ", color)
 
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
@@ -184,7 +171,7 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             point_to_cadwork(text_plane_origin),
             [point_to_cadwork(point) for point in self.linear_dimension.points],
         )
-        color = Text3dSceneObject.load_color_profiles("LINEAR_DIM_INSTRUCTION")[1]
+        color = load_color_profiles("LINEAR_DIM_INSTRUCTION")[1]
         set_text_color([element_id], color)
         set_line_color([element_id], color)
 
