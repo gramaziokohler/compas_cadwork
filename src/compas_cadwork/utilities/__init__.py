@@ -353,6 +353,67 @@ def get_all_elements(include_instructions: bool = False) -> Generator[Element, N
             yield element
 
 
+def get_all_building_group_ids():
+    """
+    Get all building group IDs that are framed walls.
+
+    This function retrieves all identifiable element IDs and filters them to return
+    only those that are framed walls.
+
+    Returns
+    -------
+    list of int
+        A list of element IDs that are framed walls.
+    """
+    element_ids = ec.get_all_identifiable_element_ids()
+    wall_element_ids = [element_id for element_id in element_ids if ac.is_framed_wall(element_id)]
+    return wall_element_ids
+
+
+def get_subgroup_or_group_name_from_element_id(element_id: int):
+    grouping_type = cadwork.element_grouping_type.group.value
+
+    if grouping_type == 2:
+        return ac.get_group(element_id)
+    elif grouping_type == 1:
+        return ac.get_subgroup(element_id)
+
+
+def get_element_id_from_subgroup_or_group_name(element_name: str):
+    """
+    Get the element ID from a subgroup or group name.
+
+    This function iterates through all building group IDs and checks if the
+    provided element name matches the name of a group or subgroup, based on
+    the grouping type.
+
+    Parameters
+    ----------
+    element_name : str
+        The name of the element (group or subgroup) to search for.
+
+    Returns
+    -------
+    int or None
+        The ID of the element if found, otherwise None.
+    """
+    grouping_type = cadwork.element_grouping_type.group.value
+    wall_element_ids = get_all_building_group_ids()
+
+    for element_id in wall_element_ids:
+        if grouping_type == 2:
+            name = ac.get_group(element_id)
+        elif grouping_type == 1:
+            name = ac.get_subgroup(element_id)
+        else:
+            continue
+
+        if element_name == name:
+            return element_id
+
+    return None
+
+
 def get_all_elements_with_attrib(attrib_number, attrib_value=None):
     for element_id in ec.get_all_identifiable_element_ids():
         if ac.get_user_attribute(element_id, attrib_number) == attrib_value:
@@ -362,6 +423,23 @@ def get_all_elements_with_attrib(attrib_number, attrib_value=None):
 def remove_elements(elements: List[Union[Element, int]]) -> None:
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
     ec.delete_elements(element_ids)
+
+
+def is_element_in_contact(element_id_1, element_id_2):
+    return ec.check_if_elements_are_in_contact(element_id_1, element_id_2)
+
+
+def init_element_contact_tree():
+    element_ids = get_all_building_group_ids()
+    contact_tree = {}
+    for i, element_id_1 in enumerate(element_ids):
+        contacts = []
+        for j, element_id_2 in enumerate(element_ids):
+            if i != j:
+                if is_element_in_contact(element_id_1, element_id_2):
+                    contacts.append(element_id_2)
+        contact_tree[element_id_1] = contacts
+    return contact_tree
 
 
 def save_project_file():
@@ -393,4 +471,8 @@ __all__ = [
     "zoom_active_elements",
     "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
+    "init_element_contact_tree",
+    "is_element_in_contact",
+    "get_element_id_from_subgroup_or_group_name",
+    "get_all_building_group_ids",
 ]

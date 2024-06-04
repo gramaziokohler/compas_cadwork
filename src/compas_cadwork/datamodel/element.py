@@ -1,43 +1,39 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import auto
 from enum import Enum
 from enum import IntEnum
+from enum import auto
 from typing import Generator
 from typing import Optional
-from typing import List
-
-from compas.geometry import Frame
-from compas.geometry import Vector
-from compas.geometry import Point
 
 import cadwork  # noqa: F401
-from attribute_controller import get_subgroup
+from attribute_controller import delete_user_attribute
+from attribute_controller import get_element_grouping_type
+from attribute_controller import get_element_type
 from attribute_controller import get_group
 from attribute_controller import get_name
-from attribute_controller import get_element_grouping_type
+from attribute_controller import get_subgroup
+from attribute_controller import get_user_attribute
 from attribute_controller import is_drilling
 from attribute_controller import is_framed_wall
-from attribute_controller import get_element_type
 from attribute_controller import set_user_attribute
-from attribute_controller import get_user_attribute
-from attribute_controller import delete_user_attribute
-from utility_controller import get_language
-from element_controller import get_element_type_description
+from bim_controller import get_ifc_base64_guid
+from bim_controller import get_ifc_guid
+from compas.geometry import Frame
+from compas.geometry import Point
+from compas.geometry import Vector
+from element_controller import delete_elements
 from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
-from element_controller import delete_elements
-from element_controller import get_elements_in_contact
+from element_controller import get_element_type_description
+from geometry_controller import get_height
+from geometry_controller import get_length
 from geometry_controller import get_p1
+from geometry_controller import get_width
 from geometry_controller import get_xl
 from geometry_controller import get_yl
-from geometry_controller import get_length
-from geometry_controller import get_height
-from geometry_controller import get_width
-from bim_controller import get_ifc_guid
-from bim_controller import get_ifc_base64_guid
-
+from utility_controller import get_language
 
 # These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
 ATTR_INSTRUCTION_ID = 666
@@ -337,10 +333,6 @@ class Element:
 
         """
         return get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
-
-    def get_elements_in_contact(self) -> List[Element]:
-        """Returns a list of elements in contact with the current element"""
-        return [Element.from_id(e_id) for e_id in get_elements_in_contact(self.id)]
 
     def remove(self):
         """Removes the Element from the cadwork file"""
