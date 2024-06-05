@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Exporting now with ifc4 and bimwood property set (true).
+
 ### Removed
 
 
