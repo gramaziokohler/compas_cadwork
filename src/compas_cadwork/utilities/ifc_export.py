@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from typing import List
 
-from bim_controller import export_ifc2x3_silently_with_options
+from bim_controller import export_ifc4_silently_with_options
 from bim_controller import get_ifc_options
 from utility_controller import get_use_of_global_coordinates
 from utility_controller import set_use_of_global_coordinates
@@ -39,6 +39,9 @@ class IFCExportSettings:
         aggregation.set_export_cover_geometry(self.export_cover_geometry)
         aggregation.set_element_aggregation_attribute(self.grouping_type.to_cadwork())
         aggregation.set_consider_element_aggregation(self.grouping_type != ElementGroupingType.NONE)
+
+        properties = options.get_ifc_options_properties()
+        properties.set_export_bim_wood_property(True)
         return options
 
 
@@ -71,10 +74,10 @@ class IFCExporter:
         options = self.settings.get_ifc_options()
         try:
             LOG.debug(
-                f"""export_ifc2x3_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})"""
+                f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})"""
             )
-            success = export_ifc2x3_silently_with_options(element_ids, filepath, options)
-            LOG.debug(f"export_ifc2x3_silently_with_options: {success}")
+            success = export_ifc4_silently_with_options(element_ids, filepath, options)
+            LOG.debug(f"export_ifc4_silently_with_options: {success}")
         except Exception as ex:
             LOG.exception(f"Failed to export elements to ifc. {str(ex)}")
         finally:
