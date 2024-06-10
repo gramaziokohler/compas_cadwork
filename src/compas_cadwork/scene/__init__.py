@@ -1,5 +1,4 @@
 from compas.plugins import plugin
-from compas.plugins import PluginManager
 from compas.scene import register
 
 from compas_monosashi.sequencer import Text3d
@@ -20,9 +19,6 @@ __all__ = [
 
 
 CONTEXT = "cadwork"
-
-# TODO: remove
-PluginManager.DEBUG = True
 
 
 @plugin(category="drawing-utils", requires=[CONTEXT])
