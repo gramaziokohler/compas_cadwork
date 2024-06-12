@@ -64,7 +64,7 @@ class Dimension(Element):
         self.anchors = self._init_anchors()
 
     def __str__(self) -> str:
-        return f"dimension element_id:{self.id} instruction_id:{self.get_instruction_id()} length:{self.length:.0f} anchors:{len(self.anchors)}"
+        return f"Dimension id:{self.id} length:{self.length:.0f} anchors:{len(self.anchors)}"
 
     def __hash__(self):
         return hash(self.cadwork_guid)
