@@ -70,17 +70,6 @@ class Dimension(Element):
         return hash(self.cadwork_guid)
 
     def __eq__(self, other: Dimension):
-        """Checks if this element is equal to another element.
-
-        Two elements are considered equal if they have the same guid and their dimension points are equal
-        within a tolerance of 0.0001.
-
-        Parameters
-        ----------
-        other : dimension
-            The other element to compare.
-
-        """
         if not isinstance(other, Dimension):
             return False
 
