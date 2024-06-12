@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added new types `Dimension` and `AnchorPoint` in `compas_cadwork.datamodel`. 
+
 ### Changed
 
 * Exporting now with ifc4 and bimwood property set (true).

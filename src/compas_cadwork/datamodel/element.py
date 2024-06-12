@@ -43,12 +43,6 @@ from bim_controller import get_ifc_base64_guid
 ATTR_INSTRUCTION_ID = 666
 
 
-class StrEnum(str, Enum):
-    """Why do *I* have to do this?"""
-
-    pass
-
-
 class ElementGroupingType(IntEnum):
     """CADWork Element Grouping Type"""
 
@@ -60,7 +54,7 @@ class ElementGroupingType(IntEnum):
         return cadwork.element_grouping_type(self.value)
 
 
-class ElementType(StrEnum):
+class ElementType(str, Enum):
     """CADWork Element type"""
 
     BEAM = auto()  # Stab
@@ -70,6 +64,7 @@ class ElementType(StrEnum):
     LINE = auto()
     INSTALLATION_ROUND = auto()
     INSTALLATION_STRAIGHT = auto()
+    DIMENSION = auto()
     OTHER = auto()
 
 
@@ -82,10 +77,12 @@ ELEMENT_TYPE_MAP = {
         "Installation rechteckig": ElementType.INSTALLATION_STRAIGHT,
         "Fläche": ElementType.SURFACE,
         "Installation rund": ElementType.INSTALLATION_ROUND,
+        "Measurement": ElementType.DIMENSION,
     },
     "en": {
         "Beam": ElementType.BEAM,
         "Plate": ElementType.PLATE,
+        "Bemassung": ElementType.DIMENSION,
     },
 }
 
