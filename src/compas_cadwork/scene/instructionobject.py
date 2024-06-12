@@ -1,5 +1,4 @@
 import cadwork
-from compas.geometry import Vector
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
@@ -127,16 +126,10 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             cadwork element ID of the added dimension.
 
         """
-
-        direction = Vector.from_start_end(
-            self.linear_dimension.start, self.linear_dimension.end
-        ).unitized()  # why is this even needed?
-
         text_plane_normal = self.linear_dimension.location.normal * -1.0
-        text_plane_origin = self.linear_dimension.location.point.copy()
-        # text_plane_origin.z += self.linear_dimension.offset
+        text_plane_origin = self.linear_dimension.location.point.copy()  # TODO: remove?
         element_id = create_dimension(
-            vector_to_cadwork(direction),
+            vector_to_cadwork(self.linear_dimension.location.xaxis),
             vector_to_cadwork(text_plane_normal),
             point_to_cadwork(text_plane_origin),
             [point_to_cadwork(point) for point in self.linear_dimension.points],
