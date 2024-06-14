@@ -127,11 +127,12 @@ class LinearDimensionSceneObject(CadworkSceneObject):
 
         """
         text_plane_normal = self.linear_dimension.location.normal * -1.0
-        text_plane_origin = self.linear_dimension.location.point.copy()  # TODO: remove?
+        inst_frame = self.linear_dimension.location
+        distance_vector = inst_frame.point + self.linear_dimension.line_offset
         element_id = create_dimension(
-            vector_to_cadwork(self.linear_dimension.location.xaxis),
+            vector_to_cadwork(inst_frame.xaxis),
             vector_to_cadwork(text_plane_normal),
-            point_to_cadwork(text_plane_origin),
+            vector_to_cadwork(distance_vector),
             [point_to_cadwork(point) for point in self.linear_dimension.points],
         )
         element = self.add_element(element_id)
