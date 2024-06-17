@@ -4,6 +4,7 @@ from typing import Union
 from typing import Generator
 
 from enum import auto
+from enum import Enum
 
 import cadwork
 import utility_controller as uc
@@ -14,7 +15,7 @@ import visualization_controller as vc
 from compas.geometry import Point
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
-from compas_cadwork.datamodel.element import StrEnum
+from compas_cadwork.datamodel import Dimension
 from compas_cadwork.conversions import point_to_compas
 
 from .ifc_export import IFCExporter
@@ -22,7 +23,7 @@ from .ifc_export import IFCExportSettings
 from .dimensions import get_dimension_data
 
 
-class CameraView(StrEnum):
+class CameraView(str, Enum):
     """The view direction to which cadwork camera should be set in viewport.
 
     These coinside with the standard axes.
@@ -164,6 +165,13 @@ def get_plugin_home() -> str:
 def get_filename() -> str:
     """Returns the name of the currently open cadwork document."""
     return uc.get_3d_file_name()
+
+
+def get_dimensions():
+    result = []
+    for dim in filter(lambda element: element.is_linear_dimension, get_all_elements(include_instructions=True)):
+        result.append(Dimension(dim.id))
+    return result
 
 
 def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
@@ -393,4 +401,5 @@ __all__ = [
     "zoom_active_elements",
     "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
+    "get_dimensions",
 ]
