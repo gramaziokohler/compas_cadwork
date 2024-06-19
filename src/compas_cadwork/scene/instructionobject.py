@@ -82,7 +82,7 @@ class Text3dSceneObject(CadworkSceneObject):
 
         """
 
-        color = 112  # TODO: find a way to map compas colors to cadwork materials
+        color = 8  # TODO: find a way to map compas colors to cadwork materials
 
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
