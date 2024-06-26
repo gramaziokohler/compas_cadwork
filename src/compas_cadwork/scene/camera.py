@@ -165,7 +165,14 @@ class Camera(Data):
 
     @classmethod
     def from_activedoc(cls) -> Camera:
-        """Create a camera from the camera in the currently active cadwork document."""
+        """Create a camera from the camera in the currently active cadwork document.
+
+        Returns
+        -------
+        Camera
+            The camera object created from the active cadwork document.
+
+        """
         data: cadwork.camera_data = get_camera_data()
         target = point_to_compas(data.get_target())
         position = point_to_compas(data.get_position())
@@ -211,12 +218,12 @@ class Camera(Data):
         cam_data.set_projection_type(cadwork.projection_type(self._projection_type.value))
         set_camera_data(cam_data)
 
-    def zoom_active_element(self):
+    def zoom_active_element(self) -> None:
         """Zoom the camera to the currently active element."""
         zoom_active_elements()
         self.reload_camera()
 
-    def reset_view(self):
+    def reset_view(self) -> None:
         """Reset the camera to the standard axonometric view."""
         show_view_standard_axo()
         self.reload_camera()
