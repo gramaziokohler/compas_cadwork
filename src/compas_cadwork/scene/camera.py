@@ -245,9 +245,11 @@ class Camera(Data):
     def zoom_active_element(self) -> None:
         """Zoom the camera to the currently active element."""
         zoom_active_elements()
+        refresh()
         self.reload_camera()
 
     def reset_view(self) -> None:
         """Reset the camera to the standard axonometric view."""
         show_view_standard_axo()
+        refresh()
         self.reload_camera()
