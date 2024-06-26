@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Added new types `Dimension` and `AnchorPoint` in `compas_cadwork.datamodel`.
 * Added `from_element` and `from_id` to `Dimension`. 
+* Added `compas_cadwork.scene.Camera` to read and manipulate the camera.
 
 ### Changed
 

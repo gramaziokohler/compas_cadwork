@@ -1,0 +1,218 @@
+from __future__ import annotations
+from enum import Enum
+from typing import Any
+from typing import Dict
+
+from compas.data import Data
+from compas.geometry import Point
+from compas.geometry import Frame
+from compas.geometry import Vector
+
+import cadwork
+from visualization_controller import get_camera_data
+from visualization_controller import set_camera_data
+from visualization_controller import zoom_active_elements
+from visualization_controller import show_view_standard_axo
+
+from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import vector_to_compas
+from compas_cadwork.conversions import point_to_cadwork
+from compas_cadwork.conversions import vector_to_cadwork
+
+
+class ProjectionType(Enum):
+    """Projection type of the camera.
+
+    Attributes
+    ----------
+    PERSPECTIVE = 0
+        Perspective projection.
+    ORTHOGRAPHIC = 1
+        Orthographic projection.
+
+    """
+
+    PERSPECTIVE = 0
+    ORTHOGRAPHIC = 1
+
+
+class Camera(Data):
+    """This class is a wrapper for cadwork's camera data which allows to get information and manipulate the camera settings in an object-oriented way.
+
+    Parameters
+    ----------
+    frame : Frame
+        Position and orientation of the camera.
+    fov : float
+        The field of view of the camera.
+    fwidth : float
+        The field width of the camera.
+    fheight : float
+        The field height of the camera.
+    target : Point
+        The point the camera is looking at.
+    projection_type : ProjectionType
+        The projection type of the camera.
+
+    Attributes
+    ----------
+    frame : :class:`~compas.geometry.Frame`, read-only
+        Position and orientation of the camera.
+    fov : float, read-only
+        The field of view of the camera.
+    fov_width : float, read-only
+        The field width of the camera.
+    fov_height : float, read-only
+        The field height of the camera.
+    position : Point
+        The position of the camera.
+    target : Point
+        The point the camera is looking at.
+    up_vector : Vector
+        The up vector of the camera.
+
+    Examples
+    --------
+    >>> from compas_cadwork.scene import Camera
+    >>> camera = Camera.from_activedoc()
+    >>> camera.position
+    Point(0.0, 0.0, 0.0)
+
+    >>> # Set the camera position to the center of the active element and zoom to it:
+    >>> length = element.length * 0.001
+    >>> element_p1 = element.frame.point * 0.001
+    >>> target = element_p1 + element.frame.xaxis * length * 0.5
+    >>> location = target + element.frame.zaxis * length
+    >>> camera = Camera.from_activedoc()
+    >>> camera.position = location
+    >>> camera.target = target
+    >>> camera.up_vector = element.frame.zaxis
+    >>> camera.zoom_active_element()
+
+    """
+
+    @property
+    def __data__(self) -> Dict[str, Any]:
+        return {
+            "frame": self._frame,
+            "fov": self._fov,
+            "fwidth": self._fwidth,
+            "fheight": self._fheight,
+            "target": self._target,
+            "projection_type": self._projection_type,
+        }
+
+    def __init__(
+        self, frame: Frame, fov: float, fwidth: float, fheight: float, target: Point, projection_type: ProjectionType
+    ) -> None:
+        super().__init__()
+        self._frame = frame
+        self._fov = fov
+        self._fwidth = fwidth
+        self._fheight = fheight
+        self._target = target
+        self._projection_type = projection_type
+
+    def __repr__(self) -> str:
+        return f"Camera({self._frame}, {self._fov}, {self._fwidth}, {self._fheight}, {self._target}, {self._projection_type})"
+
+    @property
+    def fov(self) -> float:
+        return self._fov
+
+    @property
+    def fov_height(self) -> float:
+        return self._fheight
+
+    @property
+    def fov_width(self) -> float:
+        return self._fwidth
+
+    @property
+    def frame(self) -> Frame:
+        return self._frame
+
+    @property
+    def position(self) -> Point:
+        return self._frame.point
+
+    @position.setter
+    def position(self, position: Point) -> None:
+        self._frame.point = position.copy()
+        self.apply_camera()
+
+    @property
+    def target(self) -> Point:
+        return self._target
+
+    @target.setter
+    def target(self, target: Point) -> None:
+        self._target = target.copy()
+        self.apply_camera()
+
+    @property
+    def up_vector(self) -> Vector:
+        return self._frame.zaxis
+
+    @up_vector.setter
+    def up_vector(self, up_vector: Vector) -> None:
+        self._frame = self._frame_from_camera_data(self.position, self.target, up_vector)
+        self.apply_camera()
+
+    @classmethod
+    def from_activedoc(cls) -> Camera:
+        """Create a camera from the camera in the currently active cadwork document."""
+        data: cadwork.camera_data = get_camera_data()
+        target = point_to_compas(data.get_target())
+        position = point_to_compas(data.get_position())
+        up_vector = vector_to_compas(data.get_up_vector())
+        cam_frame = cls._frame_from_camera_data(position, target, up_vector)
+        return cls(
+            cam_frame,
+            data.get_field_of_view(),
+            data.get_field_width(),
+            data.get_field_height(),
+            target,
+            ProjectionType(data.get_projection_type()),
+        )
+
+    @staticmethod
+    def _frame_from_camera_data(position: Point, target: Point, up_vector: Vector):
+        vector_to_target = Vector.from_start_end(position, target).unitized()
+        yaxis = vector_to_target.cross(up_vector)
+        return Frame(position, target, yaxis)
+
+    def reload_camera(self) -> None:
+        """Load the camera settings from the currently active cadwork document."""
+        cam_data: cadwork.camera_data = get_camera_data()
+        target = point_to_compas(cam_data.get_target())
+        position = point_to_compas(cam_data.get_position())
+        up_vector = vector_to_compas(cam_data.get_up_vector())
+        self._frame = self._frame_from_camera_data(position, target, up_vector)
+        self._target = target
+        self._fov = cam_data.get_field_of_view()
+        self._fwidth = cam_data.get_field_width()
+        self._fheight = cam_data.get_field_height()
+        self._projection_type = ProjectionType(cam_data.get_projection_type())
+
+    def apply_camera(self) -> None:
+        """Apply the camera settings to the currently active cadwork document."""
+        cam_data: cadwork.camera_data = get_camera_data()
+        cam_data.set_position(point_to_cadwork(self.position))
+        cam_data.set_target(point_to_cadwork(self._target))
+        cam_data.set_up_vector(vector_to_cadwork(self.up_vector))
+        cam_data.set_field_of_view(self._fov)
+        cam_data.set_field_width(self._fwidth)
+        cam_data.set_field_height(self._fheight)
+        cam_data.set_projection_type(cadwork.projection_type(self._projection_type.value))
+        set_camera_data(cam_data)
+
+    def zoom_active_element(self):
+        """Zoom the camera to the currently active element."""
+        zoom_active_elements()
+        self.reload_camera()
+
+    def reset_view(self):
+        """Reset the camera to the standard axonometric view."""
+        show_view_standard_axo()
+        self.reload_camera()
