@@ -86,14 +86,10 @@ class Camera(Data):
 
     >>> # Set the camera position to the center of the active element and zoom to it:
     >>> length = element.length * 0.001
-    >>> element_p1 = element.frame.point * 0.001
-    >>> target = element_p1 + element.frame.xaxis * length * 0.5
+    >>> target = element.midpoint * 0.001
     >>> location = target + element.frame.zaxis * length
     >>> camera = Camera.from_activedoc()
-    >>> camera.position = location
-    >>> camera.target = target
-    >>> camera.up_vector = element.frame.zaxis
-    >>> camera.zoom_active_element()
+    >>> camera.look_at(target, up_vector=element.frame.xaxis)
 
     """
 
