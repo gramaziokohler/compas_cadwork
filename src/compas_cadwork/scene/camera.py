@@ -7,12 +7,14 @@ from compas.data import Data
 from compas.geometry import Point
 from compas.geometry import Frame
 from compas.geometry import Vector
+from compas.tolerance import TOL
 
 import cadwork
 from visualization_controller import get_camera_data
 from visualization_controller import set_camera_data
 from visualization_controller import zoom_active_elements
 from visualization_controller import show_view_standard_axo
+from visualization_controller import refresh
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
@@ -158,11 +160,6 @@ class Camera(Data):
     def up_vector(self) -> Vector:
         return self._frame.zaxis
 
-    @up_vector.setter
-    def up_vector(self, up_vector: Vector) -> None:
-        self._frame = self._frame_from_camera_data(self.position, self.target, up_vector)
-        self.apply_camera()
-
     @classmethod
     def from_activedoc(cls) -> Camera:
         """Create a camera from the camera in the currently active cadwork document.
@@ -187,11 +184,37 @@ class Camera(Data):
             ProjectionType(data.get_projection_type()),
         )
 
+    def look_at(self, target: Point, up_vector: Vector) -> None:
+        """Set the camera to look at a specific target point.
+
+        Raises
+        ------
+        ValueError
+            If the up vector and the camera-to-target vector are not orthogonal.
+
+        Parameters
+        ----------
+        target : Point
+            The point the camera should look at.
+        up_vector : Vector
+            The up vector of the camera.
+
+        """
+        camera_to_target = Vector.from_start_end(self.position, target)
+        if not TOL.is_zero(camera_to_target.dot(up_vector)):
+            raise ValueError(
+                f"up vector and camera-to-target vector must be orthogonal. camera_to_target: {camera_to_target}, up_vector: {up_vector}"
+            )
+
+        self._frame = self._frame_from_camera_data(self.position, target, up_vector)
+        self._target = target
+        self.apply_camera()
+
     @staticmethod
     def _frame_from_camera_data(position: Point, target: Point, up_vector: Vector):
         vector_to_target = Vector.from_start_end(position, target).unitized()
         yaxis = vector_to_target.cross(up_vector)
-        return Frame(position, target, yaxis)
+        return Frame(position, vector_to_target, yaxis)
 
     def reload_camera(self) -> None:
         """Load the camera settings from the currently active cadwork document."""
@@ -217,6 +240,7 @@ class Camera(Data):
         cam_data.set_field_height(self._fheight)
         cam_data.set_projection_type(cadwork.projection_type(self._projection_type.value))
         set_camera_data(cam_data)
+        refresh()
 
     def zoom_active_element(self) -> None:
         """Zoom the camera to the currently active element."""
