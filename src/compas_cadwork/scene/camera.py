@@ -39,6 +39,10 @@ class ProjectionType(Enum):
 class Camera(Data):
     """This class is a wrapper for cadwork's camera data which allows to get information and manipulate the camera settings in an object-oriented way.
 
+    ..note::
+        While the cadwork document might use millimeters as the unit of length, the camera data is expected in meters.
+        The caller is responsible for converting the data to the correct unit before passing it to the camera.
+
     Parameters
     ----------
     frame : Frame
