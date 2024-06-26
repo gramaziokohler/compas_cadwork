@@ -11,6 +11,7 @@ from typing import List
 from compas.geometry import Frame
 from compas.geometry import Vector
 from compas.geometry import Point
+from compas.geometry import Line
 
 import cadwork  # noqa: F401
 from attribute_controller import get_subgroup
@@ -30,6 +31,7 @@ from element_controller import get_element_cadwork_guid
 from element_controller import delete_elements
 from element_controller import get_elements_in_contact
 from geometry_controller import get_p1
+from geometry_controller import get_p2
 from geometry_controller import get_xl
 from geometry_controller import get_yl
 from geometry_controller import get_length
@@ -37,6 +39,8 @@ from geometry_controller import get_height
 from geometry_controller import get_width
 from bim_controller import get_ifc_guid
 from bim_controller import get_ifc_base64_guid
+
+from compas_cadwork.conversions import point_to_compas
 
 
 # These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
@@ -166,6 +170,10 @@ class Element:
         The base64 IFC GUID of the Element
     cadwork_guid : str
         The cadwork GUID of the Element
+    centerline : Line
+        The centerline of the Element.
+    midpoint : Point
+        The midpoint of the Element's centerline.
     ifc_guid : str
         The IFC GUID of the Element. See also: ifc_base64_guid.
     is_wall : bool
@@ -220,6 +228,16 @@ class Element:
     @property
     def cadwork_guid(self) -> str:
         return get_element_cadwork_guid(self.id)
+
+    @property
+    def centerline(self) -> Line:
+        p1 = point_to_compas(get_p1(self.id))
+        p2 = point_to_compas(get_p2(self.id))
+        return Line(p1, p2)
+
+    @property
+    def midpoint(self) -> Point:
+        return self.centerline.midpoint
 
     @property
     def ifc_guid(self) -> str:
