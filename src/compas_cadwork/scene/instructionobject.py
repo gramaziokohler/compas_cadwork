@@ -33,38 +33,23 @@ class Text3dSceneObject(CadworkSceneObject):
 
     @staticmethod
     def _generate_translation_vectors(element_id: int, inst_frame: Frame):
-        """Generates translation vectors from a bounding box that shift a text
-        or a box from the bottom left point of the object to the center point
-        of the object.
-
-        Parameters
-        ----------
-        element_ids : int
-            Cadwork element id of the text object.
-        inst_frame : compas.geometry.Frame
-            Frame of the text instruction.
-
-        Return
-        -------
-        compas.geometry.Vector
-            The translation vector by which the instruction must be shifted.
-        """
+        # calculates the translation vectors needed properly center the text
         width, height = Text3dSceneObject._calculate_text_size(element_id)
-        vx = inst_frame.xaxis.scaled(-0.5 * width)
-        vy = inst_frame.yaxis.scaled(-0.5 * height)
+        shift_x = inst_frame.xaxis.scaled(-0.5 * width)
+        shift_y = inst_frame.yaxis.scaled(-0.5 * height)
 
-        # shift text in vy so it doesnt intersect with geometry
-        vz = inst_frame.normal.scaled(5.0)
-        return vx + vy + vz
+        # shift text 5 mm in z direction to ensure it does not get hidden inside the element
+        shift_z = inst_frame.normal.scaled(5.0)
+        return shift_x + shift_y + shift_z
 
     @staticmethod
     def _calculate_text_size(element_id: int):
-        # https://github.com/inconai/innosuisse_issue_collection/issues/137
+        # use the bounding box to determine the size of the text
         #  0 -------- 2
         #  ^          |
-        #  y          |
+        #  h          |
         #  |          |
-        #  1 --------x> 3
+        #  1 --------w> 3
         bb = get_bounding_box_vertices_local(element_id, [element_id])
         p0 = point_to_compas(bb[0])
         p1 = point_to_compas(bb[1])
