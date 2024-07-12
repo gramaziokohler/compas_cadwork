@@ -30,6 +30,7 @@ from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
 from element_controller import delete_elements
 from element_controller import get_elements_in_contact
+from element_controller import move_element
 from geometry_controller import get_p1
 from geometry_controller import get_p2
 from geometry_controller import get_xl
@@ -41,6 +42,7 @@ from bim_controller import get_ifc_guid
 from bim_controller import get_ifc_base64_guid
 
 from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import vector_to_cadwork
 
 
 # These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
@@ -360,3 +362,14 @@ class Element:
     def remove(self):
         """Removes the Element from the cadwork file"""
         delete_elements([self.id])
+
+    def translate(self, vector: Vector) -> None:
+        """Translates the Element by the given vector.
+
+        Parameters
+        ----------
+        vector : Vector
+            The vector by which to translate the Element
+
+        """
+        move_element([self.id], vector_to_cadwork(vector))
