@@ -76,6 +76,9 @@ class Dimension(Element):
         if self.cadwork_guid != other.cadwork_guid:
             return False
 
+        if len(self.anchors) != len(other.anchors):
+            return False
+
         for point_self, point_other in zip(self.anchors, other.anchors):
             if point_self != point_other:
                 return False
