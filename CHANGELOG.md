@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Number of anchor points is taken into account when comparing `Dimension` instances.
+
 ### Removed
 
 
