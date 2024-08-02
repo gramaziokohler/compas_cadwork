@@ -341,6 +341,15 @@ def get_all_element_ids(include_instructions: bool = False) -> Generator[int, No
         yield element.id
 
 
+def get_user_point():
+    """Gets a point from the user
+
+    Returns:
+        user point
+    """
+    return point_to_compas(uc.get_user_point())
+
+
 def get_all_elements(include_instructions: bool = False) -> Generator[Element, None, None]:
     """Returns all element ids of the currently open cadwork document.
 
