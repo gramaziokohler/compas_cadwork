@@ -182,6 +182,10 @@ class Element:
         Whether the Element is a framed wall i.e. container for all other elements in the building group.
     is_drilling : bool
         Whether the Element is a drilling hole
+    is_roof : bool
+        Whether the Element is a framed roof i.e. container for all other elements in the building group.
+    is_floor : bool
+        Whether the Element is a framed floor i.e. container for all other elements in the building group.
 
     """
 
