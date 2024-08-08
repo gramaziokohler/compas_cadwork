@@ -1,49 +1,49 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import auto
 from enum import Enum
 from enum import IntEnum
+from enum import auto
 from typing import Generator
-from typing import Optional
 from typing import List
-
-from compas.geometry import Frame
-from compas.geometry import Vector
-from compas.geometry import Point
-from compas.geometry import Line
+from typing import Optional
 
 import cadwork  # noqa: F401
-from attribute_controller import get_subgroup
+from attribute_controller import delete_user_attribute
+from attribute_controller import get_element_grouping_type
+from attribute_controller import get_element_type
 from attribute_controller import get_group
 from attribute_controller import get_name
-from attribute_controller import get_element_grouping_type
-from attribute_controller import is_drilling
-from attribute_controller import is_framed_wall
-from attribute_controller import get_element_type
-from attribute_controller import set_user_attribute
+from attribute_controller import get_subgroup
 from attribute_controller import get_user_attribute
-from attribute_controller import delete_user_attribute
-from utility_controller import get_language
-from element_controller import get_element_type_description
+from attribute_controller import is_drilling
+from attribute_controller import is_framed_floor
+from attribute_controller import is_framed_roof
+from attribute_controller import is_framed_wall
+from attribute_controller import set_user_attribute
+from bim_controller import get_ifc_base64_guid
+from bim_controller import get_ifc_guid
+from compas.geometry import Frame
+from compas.geometry import Line
+from compas.geometry import Point
+from compas.geometry import Vector
+from element_controller import delete_elements
 from element_controller import get_active_identifiable_element_ids
 from element_controller import get_element_cadwork_guid
-from element_controller import delete_elements
+from element_controller import get_element_type_description
 from element_controller import get_elements_in_contact
 from element_controller import move_element
+from geometry_controller import get_height
+from geometry_controller import get_length
 from geometry_controller import get_p1
 from geometry_controller import get_p2
+from geometry_controller import get_width
 from geometry_controller import get_xl
 from geometry_controller import get_yl
-from geometry_controller import get_length
-from geometry_controller import get_height
-from geometry_controller import get_width
-from bim_controller import get_ifc_guid
-from bim_controller import get_ifc_base64_guid
+from utility_controller import get_language
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
-
 
 # These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
 ATTR_INSTRUCTION_ID = 666
@@ -132,7 +132,7 @@ class ElementGroup:
         if self.elements is None:
             self.elements = []
         self.elements.append(element)
-        if element.is_wall:
+        if element.is_wall or element.is_roof or element.is_floor:
             self.wall_frame_element = element
 
     @property
@@ -182,6 +182,10 @@ class Element:
         Whether the Element is a framed wall i.e. container for all other elements in the building group.
     is_drilling : bool
         Whether the Element is a drilling hole
+    is_roof : bool
+        Whether the Element is a framed roof i.e. container for all other elements in the building group.
+    is_floor : bool
+        Whether the Element is a framed floor i.e. container for all other elements in the building group.
 
     """
 
@@ -248,6 +252,14 @@ class Element:
     @property
     def is_wall(self) -> bool:
         return is_framed_wall(self.id)
+
+    @property
+    def is_roof(self) -> bool:
+        return is_framed_roof(self.id)
+
+    @property
+    def is_floor(self) -> bool:
+        return is_framed_floor(self.id)
 
     @property
     def is_linear_dimension(self) -> bool:
