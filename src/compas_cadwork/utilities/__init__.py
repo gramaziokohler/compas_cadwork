@@ -341,6 +341,16 @@ def get_all_element_ids(include_instructions: bool = False) -> Generator[int, No
         yield element.id
 
 
+def get_user_point():
+    """Prompts the user to select a cadwork point in the viewport and returns the coordinates of the selected point.
+
+    Returns
+    --------
+    :class:`~compas.geometry.Point`
+    """
+    return point_to_compas(uc.get_user_point())
+
+
 def get_all_elements(include_instructions: bool = False) -> Generator[Element, None, None]:
     """Returns all element ids of the currently open cadwork document.
 
@@ -402,4 +412,5 @@ __all__ = [
     "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
+    "get_user_point",
 ]
