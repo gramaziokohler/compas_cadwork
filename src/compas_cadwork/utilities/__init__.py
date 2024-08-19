@@ -411,4 +411,5 @@ __all__ = [
     "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
+    "get_user_point",
 ]
