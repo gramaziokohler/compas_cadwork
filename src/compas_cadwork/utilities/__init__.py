@@ -342,10 +342,11 @@ def get_all_element_ids(include_instructions: bool = False) -> Generator[int, No
 
 
 def get_user_point():
-    """Gets a point from the user
+    """Prompts the user to select a cadwork point in the viewport and returns the coordinates of the selected point.
 
-    Returns:
-        user point
+    Returns
+    --------
+    :class:`~compas.geometry.Point`
     """
     return point_to_compas(uc.get_user_point())
 
