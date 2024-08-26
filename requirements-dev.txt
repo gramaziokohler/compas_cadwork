@@ -3,7 +3,7 @@ autopep8
 black
 bump2version >=1.0.1
 check-manifest >=0.36
-compas_invocations
+compas_invocations2
 doc8
 flake8
 graphviz
@@ -17,7 +17,7 @@ nbsphinx
 pydocstyle
 pytest >=3.2
 sphinx >=3.4
-sphinx_compas_theme >=0.15.18
+sphinx_compas2_theme
 twine
 wheel
 -e .
