@@ -10,11 +10,7 @@ from compas.geometry import Vector
 from compas.tolerance import TOL
 
 import cadwork
-from visualization_controller import get_camera_data
-from visualization_controller import set_camera_data
-from visualization_controller import zoom_active_elements
-from visualization_controller import show_view_standard_axo
-from visualization_controller import refresh
+import visualization_controller as vc
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
@@ -166,7 +162,7 @@ class Camera(Data):
             The camera object created from the active cadwork document.
 
         """
-        data: cadwork.camera_data = get_camera_data()
+        data: cadwork.camera_data = vc.get_camera_data()
         target = point_to_compas(data.get_target())
         position = point_to_compas(data.get_position())
         up_vector = vector_to_compas(data.get_up_vector())
@@ -214,7 +210,7 @@ class Camera(Data):
 
     def reload_camera(self) -> None:
         """Load the camera settings from the currently active cadwork document."""
-        cam_data: cadwork.camera_data = get_camera_data()
+        cam_data: cadwork.camera_data = vc.get_camera_data()
         target = point_to_compas(cam_data.get_target())
         position = point_to_compas(cam_data.get_position())
         up_vector = vector_to_compas(cam_data.get_up_vector())
@@ -227,7 +223,7 @@ class Camera(Data):
 
     def apply_camera(self) -> None:
         """Apply the camera settings to the currently active cadwork document."""
-        cam_data: cadwork.camera_data = get_camera_data()
+        cam_data: cadwork.camera_data = vc.get_camera_data()
         cam_data.set_position(point_to_cadwork(self.position))
         cam_data.set_target(point_to_cadwork(self._target))
         cam_data.set_up_vector(vector_to_cadwork(self.up_vector))
@@ -235,17 +231,17 @@ class Camera(Data):
         cam_data.set_field_width(self._fwidth)
         cam_data.set_field_height(self._fheight)
         cam_data.set_projection_type(cadwork.projection_type(self._projection_type.value))
-        set_camera_data(cam_data)
-        refresh()
+        vc.set_camera_data(cam_data)
+        vc.refresh()
 
     def zoom_active_element(self) -> None:
         """Zoom the camera to the currently active element."""
-        zoom_active_elements()
-        refresh()
-        self.reload_camera()
+        vc.zoom_active_elements()
+        vc.refresh()
+        vc.self.reload_camera()
 
     def reset_view(self) -> None:
         """Reset the camera to the standard axonometric view."""
-        show_view_standard_axo()
-        refresh()
+        vc.show_view_standard_axo()
+        vc.refresh()
         self.reload_camera()

@@ -1,4 +1,8 @@
-from cadwork import point_3d
+try:
+    from cadwork import point_3d
+except ImportError:
+    pass
+
 from compas.geometry import Point
 from compas.geometry import Vector
 
@@ -35,24 +39,24 @@ def vector_to_cadwork(vector: Vector):
     return point_3d(vector.x, vector.y, vector.z)
 
 
-def point_to_compas(point: point_3d):
-    """Convert a :class:`compas.geometry.Point` to a cadwork point_3d object.
+def point_to_compas(point):
+    """Convert a cadwork point_3d to a :class:`compas.geometry.Point` object.
 
     Parameters
     ----------
-    point : :class:`~compas.geometry.Point`
+    point : :class:`cadwork.point_3d`
         The point to convert
 
     Returns
     -------
-    :class:`cadwork.point_3d`
+    :class:`~compas.geometry.Point`
 
     """
     return Point(point.x, point.y, point.z)
 
 
-def vector_to_compas(vector: point_3d):
-    """Convert a :class:`compas.geometry.Point` to a cadwork point_3d object.
+def vector_to_compas(vector):
+    """Convert a cadwork point_3d to a :class:`compas.geometry.Point` obhect.
 
     Parameters
     ----------

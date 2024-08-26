@@ -9,38 +9,16 @@ from typing import List
 from typing import Optional
 
 import cadwork  # noqa: F401
-from attribute_controller import delete_user_attribute
-from attribute_controller import get_element_grouping_type
-from attribute_controller import get_element_type
-from attribute_controller import get_group
-from attribute_controller import get_name
-from attribute_controller import get_subgroup
-from attribute_controller import get_user_attribute
-from attribute_controller import is_drilling
-from attribute_controller import is_framed_floor
-from attribute_controller import is_framed_roof
-from attribute_controller import is_framed_wall
-from attribute_controller import set_user_attribute
-from bim_controller import get_ifc_base64_guid
-from bim_controller import get_ifc_guid
+import attribute_controller as ac
+import bim_controller as bc
+import element_controller as ec
+import geometry_controller as gc
+import utility_controller as uc
+
 from compas.geometry import Frame
 from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Vector
-from element_controller import delete_elements
-from element_controller import get_active_identifiable_element_ids
-from element_controller import get_element_cadwork_guid
-from element_controller import get_element_type_description
-from element_controller import get_elements_in_contact
-from element_controller import move_element
-from geometry_controller import get_height
-from geometry_controller import get_length
-from geometry_controller import get_p1
-from geometry_controller import get_p2
-from geometry_controller import get_width
-from geometry_controller import get_xl
-from geometry_controller import get_yl
-from utility_controller import get_language
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
@@ -50,13 +28,31 @@ ATTR_INSTRUCTION_ID = 666
 
 
 class ElementGroupingType(IntEnum):
-    """CADWork Element Grouping Type"""
+    """CADWork Element Grouping Type
+
+    Attributes
+    ----------
+    GROUP
+        Elements are grouped using group as the main grouping type.
+    SUBGROUP
+        Elements are grouped using subgroup as the main grouping type.
+    NONE
+        Not setting is available.
+
+    """
 
     GROUP = 1
     SUBGROUP = 2
     NONE = 3
 
     def to_cadwork(self):
+        """Converts the ElementGroupingType to a cadwork compatible value.
+
+        Returns
+        -------
+        int
+            The cadwork compatible value of the ElementGroupingType
+        """
         return cadwork.element_grouping_type(self.value)
 
 
@@ -92,8 +88,11 @@ ELEMENT_TYPE_MAP = {
     },
 }
 
-
-LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[get_language()]
+# TODO: get rid of this whole thing
+try:
+    LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[uc.get_language()]
+except AttributeError:
+    pass
 
 
 @dataclass
@@ -113,6 +112,10 @@ class ElementGroup:
         The name of the Element Group
     elements : list
         A list of Elements belonging to the Element Group
+    wall_frame_element : Element, optional
+        The containing Element (often a wall element) which contains all other elements in the group. If any.
+    ifc_guid : str
+        The IFC GUID of the container element, often used to represent the whole group. See also: ifc_base64_guid
 
     """
 
@@ -120,7 +123,7 @@ class ElementGroup:
     elements: list = None
     wall_frame_element: Element = None
 
-    def add_element(self, element: Element):
+    def add_element(self, element: Element) -> None:
         """Adds an Element to the Element Group
 
         Parameters
@@ -136,7 +139,7 @@ class ElementGroup:
             self.wall_frame_element = element
 
     @property
-    def ifc_guid(self):
+    def ifc_guid(self) -> str:
         if self.wall_frame_element is None:
             return None
         return self.wall_frame_element.ifc_base64_guid
@@ -194,14 +197,14 @@ class Element:
 
     @property
     def name(self) -> str:
-        return get_name(self.id)
+        return ac.get_name(self.id)
 
     @property
     def frame(self) -> Frame:
         try:
-            p1 = Point(*get_p1(self.id))
-            x_axis = Vector(*get_xl(self.id))
-            y_axis = Vector(*get_yl(self.id))
+            p1 = Point(*gc.get_p1(self.id))
+            x_axis = Vector(*gc.get_xl(self.id))
+            y_axis = Vector(*gc.get_yl(self.id))
             return Frame(p1, x_axis, y_axis)
         except ZeroDivisionError:
             # TODO: get to the bottom of this:
@@ -210,35 +213,35 @@ class Element:
 
     @property
     def width(self) -> float:
-        return get_width(self.id)
+        return gc.get_width(self.id)
 
     @property
     def height(self) -> float:
-        return get_height(self.id)
+        return gc.get_height(self.id)
 
     @property
     def length(self) -> float:
-        return get_length(self.id)
+        return gc.get_length(self.id)
 
     @property
     def group(self) -> str:
-        if get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
-            return get_subgroup(self.id)
+        if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
+            return ac.get_subgroup(self.id)
         else:
-            return get_group(self.id)
+            return ac.get_group(self.id)
 
     @property
     def ifc_base64_guid(self) -> str:
-        return get_ifc_base64_guid(self.id)
+        return bc.get_ifc_base64_guid(self.id)
 
     @property
     def cadwork_guid(self) -> str:
-        return get_element_cadwork_guid(self.id)
+        return ec.get_element_cadwork_guid(self.id)
 
     @property
     def centerline(self) -> Line:
-        p1 = point_to_compas(get_p1(self.id))
-        p2 = point_to_compas(get_p2(self.id))
+        p1 = point_to_compas(gc.get_p1(self.id))
+        p2 = point_to_compas(gc.get_p2(self.id))
         return Line(p1, p2)
 
     @property
@@ -247,35 +250,35 @@ class Element:
 
     @property
     def ifc_guid(self) -> str:
-        return get_ifc_guid(self.id)
+        return bc.get_ifc_guid(self.id)
 
     @property
     def is_wall(self) -> bool:
-        return is_framed_wall(self.id)
+        return ac.is_framed_wall(self.id)
 
     @property
     def is_roof(self) -> bool:
-        return is_framed_roof(self.id)
+        return ac.is_framed_roof(self.id)
 
     @property
     def is_floor(self) -> bool:
-        return is_framed_floor(self.id)
+        return ac.is_framed_floor(self.id)
 
     @property
     def is_linear_dimension(self) -> bool:
-        type_ = get_element_type(self.id)
+        type_ = ac.get_element_type(self.id)
         return type_.is_dimension()
 
     @property
     def is_drilling(self) -> bool:
-        return is_drilling(self.id)
+        return ac.is_drilling(self.id)
 
     @property
     def is_instruction(self) -> bool:
-        return get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
+        return ac.get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
 
     def is_beam(self) -> bool:
-        type_ = get_element_type(self.id)
+        type_ = ac.get_element_type(self.id)
         return type_.is_rectangular_beam()
 
     @classmethod
@@ -293,7 +296,7 @@ class Element:
             The Element object for the given ID
 
         """
-        type_description = get_element_type_description(element_id)
+        type_description = ec.get_element_type_description(element_id)
         try:
             type_ = LOCAL_TYPE_MAP[type_description]
         except KeyError:
@@ -310,7 +313,7 @@ class Element:
             A generator containing Element objects for all currently activated Elements
 
         """
-        return (Element.from_id(e_id) for e_id in get_active_identifiable_element_ids())
+        return (Element.from_id(e_id) for e_id in ec.get_active_identifiable_element_ids())
 
     def set_attribute(self, name, value):
         """Sets an attribute on the Element
@@ -323,7 +326,7 @@ class Element:
             The value of the attribute
 
         """
-        set_user_attribute([self.id], name, value)
+        ac.set_user_attribute([self.id], name, value)
 
     def remove_attribute(self, name):
         """Removes an attribute from the Element
@@ -334,7 +337,7 @@ class Element:
             The name of the attribute
 
         """
-        delete_user_attribute([self.id], name)
+        ac.delete_user_attribute([self.id], name)
 
     def set_is_instruction(self, value: bool, instruction_id: Optional[str] = None):
         """Sets the is_instruction attribute on the Element
@@ -365,15 +368,15 @@ class Element:
             The instruction ID of the Element
 
         """
-        return get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
+        return ac.get_user_attribute(self.id, ATTR_INSTRUCTION_ID)
 
     def get_elements_in_contact(self) -> List[Element]:
         """Returns a list of elements in contact with the current element"""
-        return [Element.from_id(e_id) for e_id in get_elements_in_contact(self.id)]
+        return [Element.from_id(e_id) for e_id in ec.get_elements_in_contact(self.id)]
 
     def remove(self):
         """Removes the Element from the cadwork file"""
-        delete_elements([self.id])
+        ec.delete_elements([self.id])
 
     def translate(self, vector: Vector) -> None:
         """Translates the Element by the given vector.
@@ -384,4 +387,4 @@ class Element:
             The vector by which to translate the Element
 
         """
-        move_element([self.id], vector_to_cadwork(vector))
+        ec.move_element([self.id], vector_to_cadwork(vector))

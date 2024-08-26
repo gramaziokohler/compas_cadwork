@@ -4,11 +4,10 @@ from compas.geometry import Frame
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
-from dimension_controller import create_dimension
-from element_controller import apply_transformation_coordinate
-from element_controller import create_text_object_with_options
-from element_controller import get_bounding_box_vertices_local
-from file_controller import import_element_light
+
+import dimension_controller as dc
+import element_controller as ec
+import file_controller as fc
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
@@ -50,7 +49,7 @@ class Text3dSceneObject(CadworkSceneObject):
         #  h          |
         #  |          |
         #  1 --------w> 3
-        bb = get_bounding_box_vertices_local(element_id, [element_id])
+        bb = ec.get_bounding_box_vertices_local(element_id, [element_id])
         p0 = point_to_compas(bb[0])
         p1 = point_to_compas(bb[1])
         p3 = point_to_compas(bb[3])
@@ -87,7 +86,7 @@ class Text3dSceneObject(CadworkSceneObject):
         text_options.set_height(self.text_instruction.size)
 
         loc = self.text_instruction.location
-        element_id = create_text_object_with_options(
+        element_id = ec.create_text_object_with_options(
             point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
 
@@ -127,7 +126,7 @@ class LinearDimensionSceneObject(CadworkSceneObject):
         text_plane_normal = self.linear_dimension.location.normal * -1.0
         inst_frame = self.linear_dimension.location
         distance_vector = inst_frame.point + self.linear_dimension.line_offset
-        element_id = create_dimension(
+        element_id = dc.create_dimension(
             vector_to_cadwork(inst_frame.xaxis),
             vector_to_cadwork(text_plane_normal),
             vector_to_cadwork(distance_vector),
@@ -146,12 +145,12 @@ class Model3dSceneObject(CadworkSceneObject):
         self.model3d = model3d
 
     def draw(self):
-        element_id = import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
+        element_id = fc.import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
         old_loc = self.model3d.location
         new_loc = self.model3d.t_location
 
         # TODO: missing scaling..
-        apply_transformation_coordinate(
+        ec.apply_transformation_coordinate(
             [element_id],
             point_to_cadwork(old_loc.point),
             vector_to_cadwork(old_loc.xaxis),
