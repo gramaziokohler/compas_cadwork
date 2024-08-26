@@ -111,7 +111,7 @@ class Dimension(Element):
     def from_id(cls, element_id: int) -> Dimension:
         """Creates a dimension object from an element id.
 
-        This is an override of :method:`Element.from_id`.
+        This is an override of :func:`Element.from_id`.
 
         Parameters
         ----------

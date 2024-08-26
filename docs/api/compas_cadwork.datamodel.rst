@@ -15,3 +15,6 @@ Classes
     ElementType
     ElementGroup
     Element
+
+    AnchorPoint
+    Dimension
