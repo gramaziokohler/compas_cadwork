@@ -157,6 +157,11 @@ def get_bounding_box_from_cadwork_object(element: Union[int, Element]) -> List[P
     return [point_to_compas(p) for p in bbox]
 
 
+def is_cadwork_window_in_dark_mode() -> bool:
+    """Returns true if cadwork is in dark_mode and false if not."""
+    return vc.is_cadwork_window_in_dark_mode()
+
+
 def get_plugin_home() -> str:
     """Returns the home root directory of the currently running plugin"""
     return uc.get_plugin_path()
@@ -413,4 +418,5 @@ __all__ = [
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
     "get_user_point",
+    "is_cadwork_window_in_dark_mode",
 ]
