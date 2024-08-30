@@ -1,5 +1,4 @@
 import cadwork
-
 from compas.geometry import Frame
 from compas_monosashi.sequencer import LinearDimension
 from compas_monosashi.sequencer import Model3d
@@ -11,8 +10,8 @@ from element_controller import get_bounding_box_vertices_local
 from file_controller import import_element_light
 
 from compas_cadwork.conversions import point_to_cadwork
-from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.scene import CadworkSceneObject
 
 
@@ -92,13 +91,79 @@ class Text3dSceneObject(CadworkSceneObject):
         )
 
         element = self.add_element(element_id)
+        translation = self._generate_translation_vectors(element_id, self.text_instruction.location)
 
         if self.text_instruction.centered:
-            translation = self._generate_translation_vectors(element_id, self.text_instruction.location)
             element.translate(translation)
 
         element.set_is_instruction(True, self.text_instruction.id)
         return [element_id]
+
+    @classmethod
+    def _generate_translation_vectors2(cls, element_id: int, inst_frame: Frame):
+        # calculates the translation vectors needed properly center the text
+        width, height = Text3dSceneObject._calculate_text_size2(element_id)
+        shift_x = inst_frame.xaxis.scaled(0.5 * width)
+        shift_y = inst_frame.yaxis.scaled(0.5 * height)
+
+        # shift text 5 mm in z direction to ensure it does not get hidden inside the element
+        shift_z = inst_frame.normal.scaled(5.0)
+        return shift_x + shift_y + shift_z
+
+    @classmethod
+    def _calculate_text_size2(cls, element_id: int):
+        # use the bounding box to determine the size of the text
+        #  0 -------- 2
+        #  ^          |
+        #  h          |
+        #  |          |
+        #  1 --------w> 3
+        bb = get_bounding_box_vertices_local(element_id, [element_id])
+        p0 = point_to_compas(bb[0])
+        p1 = point_to_compas(bb[1])
+        p3 = point_to_compas(bb[3])
+        d1 = p1.distance_to_point(p3)
+        d2 = p0.distance_to_point(p1)
+
+        # https://github.com/inconai/innosuisse_issue_collection/issues/259
+        # this is a hack designed to get over the inconsistency of the bounding box's orientation
+        # the texts are longer then they are tall, so determine which is which depending on the ratio.
+        if d1 > d2:
+            width = d1
+            height = d2
+        else:
+            width = d2
+            height = d1
+        return width, height
+
+    @classmethod
+    def draw2(cls, text_instruction):
+        """Adds a text element with the text included in the provided text instruction.
+
+        Returns
+        -------
+        int
+            cadwork element ID of the added text.
+
+        """
+
+        print("USING draw 2")
+        color = 8  # TODO: find a way to map compas colors to cadwork materials
+
+        text_options = cadwork.text_object_options()
+        text_options.set_color(color)
+        text_options.set_element_type(cadwork.raster)
+        text_options.set_text(text_instruction.text)
+        text_options.set_height(text_instruction.size)
+
+        loc = text_instruction.location
+        element_id = create_text_object_with_options(
+            point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
+        )
+
+        translation_vector = Text3dSceneObject._generate_translation_vectors2(element_id, text_instruction.location)
+
+        return [element_id], translation_vector
 
 
 class LinearDimensionSceneObject(CadworkSceneObject):
