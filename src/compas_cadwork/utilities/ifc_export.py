@@ -42,6 +42,16 @@ class IFCExportSettings:
 
         properties = options.get_ifc_options_properties()
         properties.set_export_bim_wood_property(True)
+
+        lod_settings = options.get_ifc_options_level_of_detail()
+        lod_settings.set_export_endtype_materialization(False)
+        lod_settings.set_export_vba_drillings(False)
+        lod_settings.set_export_vba_components(False)
+        lod_settings.set_cut_drillings(True)
+        lod_settings.set_export_vba_components(True)
+        lod_settings.set_cut_installation_round(False)
+        lod_settings.set_export_installation_rectangular_materialization(True)
+        lod_settings.set_cut_installation_rectangular(False)
         return options
 
 
