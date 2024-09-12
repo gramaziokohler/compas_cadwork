@@ -2,13 +2,10 @@ import cadwork
 
 from compas.geometry import Frame
 from compas_monosashi.sequencer import LinearDimension
-from compas_monosashi.sequencer import Model3d
 from compas_monosashi.sequencer import Text3d
 from dimension_controller import create_dimension
-from element_controller import apply_transformation_coordinate
 from element_controller import create_text_object_with_options
 from element_controller import get_bounding_box_vertices_local
-from file_controller import import_element_light
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
