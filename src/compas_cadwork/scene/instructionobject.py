@@ -27,9 +27,9 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, text_instruction: Text3d, **kwargs) -> None:
-        super().__init__(text_instruction)
-        self.text_instruction = text_instruction
+    def __init__(self, item: Text3d, **kwargs) -> None:
+        super().__init__(item)
+        self._text_instruction = item
 
     @staticmethod
     def _generate_translation_vectors(element_id: int, inst_frame: Frame):
@@ -83,21 +83,21 @@ class Text3dSceneObject(CadworkSceneObject):
         text_options = cadwork.text_object_options()
         text_options.set_color(color)
         text_options.set_element_type(cadwork.raster)
-        text_options.set_text(self.text_instruction.text)
-        text_options.set_height(self.text_instruction.size)
+        text_options.set_text(self._text_instruction.text)
+        text_options.set_height(self._text_instruction.size)
 
-        loc = self.text_instruction.location
+        loc = self._text_instruction.location
         element_id = create_text_object_with_options(
             point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
         )
 
         element = self.add_element(element_id)
 
-        if self.text_instruction.centered:
-            translation = self._generate_translation_vectors(element_id, self.text_instruction.location)
+        if self._text_instruction.centered:
+            translation = self._generate_translation_vectors(element_id, self._text_instruction.location)
             element.translate(translation)
 
-        element.set_is_instruction(True, self.text_instruction.id)
+        element.set_is_instruction(True, self._text_instruction.id)
         return [element_id]
 
 
@@ -111,9 +111,9 @@ class LinearDimensionSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, linear_dimension: LinearDimension, **kwargs) -> None:
-        super().__init__(linear_dimension)
-        self.linear_dimension = linear_dimension
+    def __init__(self, item: LinearDimension, **kwargs) -> None:
+        super().__init__(item)
+        self._linear_dimension = item
 
     def draw(self, *args, **kwargs):
         """Adds a new dimension to the cadwork document.
@@ -124,17 +124,17 @@ class LinearDimensionSceneObject(CadworkSceneObject):
             cadwork element ID of the added dimension.
 
         """
-        text_plane_normal = self.linear_dimension.location.normal * -1.0
-        inst_frame = self.linear_dimension.location
-        distance_vector = inst_frame.point + self.linear_dimension.line_offset
+        text_plane_normal = self._linear_dimension.location.normal * -1.0
+        inst_frame = self._linear_dimension.location
+        distance_vector = inst_frame.point + self._linear_dimension.line_offset
         element_id = create_dimension(
             vector_to_cadwork(inst_frame.xaxis),
             vector_to_cadwork(text_plane_normal),
             vector_to_cadwork(distance_vector),
-            [point_to_cadwork(point) for point in self.linear_dimension.points],
+            [point_to_cadwork(point) for point in self._linear_dimension.points],
         )
         element = self.add_element(element_id)
-        element.set_is_instruction(True, self.linear_dimension.id)
+        element.set_is_instruction(True, self._linear_dimension.id)
         return [element_id]
 
 
