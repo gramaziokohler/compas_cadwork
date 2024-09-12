@@ -136,30 +136,3 @@ class LinearDimensionSceneObject(CadworkSceneObject):
         element = self.add_element(element_id)
         element.set_is_instruction(True, self._linear_dimension.id)
         return [element_id]
-
-
-class Model3dSceneObject(CadworkSceneObject):
-    """TODO: This is incomplete, complete."""
-
-    def __init__(self, model3d: Model3d, **kwargs) -> None:
-        super().__init__(model3d)
-        self.model3d = model3d
-
-    def draw(self):
-        element_id = import_element_light(self.model3d.obj_filepath, point_to_cadwork(self.model3d.location.point))
-        old_loc = self.model3d.location
-        new_loc = self.model3d.t_location
-
-        # TODO: missing scaling..
-        apply_transformation_coordinate(
-            [element_id],
-            point_to_cadwork(old_loc.point),
-            vector_to_cadwork(old_loc.xaxis),
-            vector_to_cadwork(old_loc.yaxis),
-            point_to_cadwork(new_loc.point),
-            point_to_cadwork(new_loc.xaxis),
-            point_to_cadwork(new_loc.yaxis),
-        )
-        element = self.add_element(element_id)
-        element.set_is_instruction(True, self.model3d.id)
-        return [element_id]
