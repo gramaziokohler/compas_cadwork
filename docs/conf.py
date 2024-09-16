@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
 project = "compas_cadwork"
 copyright = ""
 author = ""
-release = "0.4.4"
+release = "0.5.0"
 version = ".".join(release.split(".")[0:2])
 
 master_doc = "index"
