@@ -11,8 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Made changes to instruction scene objects to support recent COMPAS2.x versions.
+
 ### Removed
 
+* Removed the unused `Model3dSceneObject`.
 
 ## [0.4.4] 2024-09-03
 
