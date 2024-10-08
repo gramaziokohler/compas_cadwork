@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added new file storage manager `FileStorage` to `compas_cadwork.storage`.
+* Added new project storage manager `ProjectStorage` to `compas_cadwork.storage`.
+
 ### Changed
 
 ### Removed
