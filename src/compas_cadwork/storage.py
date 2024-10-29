@@ -1,13 +1,13 @@
 import logging
 from typing import Dict
-from compas.data import Data
-from compas.data import json_dumps
-from compas.data import json_loads
-from compas.data import json_dump
-from compas.data import json_load
 
-from utility_controller import set_project_data
+from compas.data import Data
+from compas.data import json_dump
+from compas.data import json_dumps
+from compas.data import json_load
+from compas.data import json_loads
 from utility_controller import get_project_data
+from utility_controller import set_project_data
 
 LOG = logging.getLogger(__name__)
 

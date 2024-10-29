@@ -36,5 +36,5 @@ def register_scene_objects():
         # These should move to monosashi probably
         register(Text3d, Text3dSceneObject, context=CONTEXT)
         register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
-    except Exception as e:
+    except Exception:
         pass

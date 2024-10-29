@@ -1,7 +1,6 @@
-from compas.scene import SceneObject
-
 import element_controller as ec
 import visualization_controller as vc
+from compas.scene import SceneObject
 
 from compas_cadwork.datamodel import Element
 

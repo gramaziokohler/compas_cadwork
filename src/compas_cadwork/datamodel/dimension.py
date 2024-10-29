@@ -1,8 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 
 import dimension_controller as dc
-
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Vector
@@ -10,9 +10,9 @@ from compas.tolerance import Tolerance
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
+
 from .element import Element
 from .element import ElementType
-
 
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 

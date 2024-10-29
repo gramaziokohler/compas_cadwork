@@ -8,13 +8,12 @@ from typing import Generator
 from typing import List
 from typing import Optional
 
-import cadwork  # noqa: F401
 import attribute_controller as ac
 import bim_controller as bc
+import cadwork  # noqa: F401
 import element_controller as ec
 import geometry_controller as gc
 import utility_controller as uc
-
 from compas.geometry import Frame
 from compas.geometry import Line
 from compas.geometry import Point

@@ -1,21 +1,21 @@
 from __future__ import annotations
+
 from enum import Enum
 from typing import Any
 from typing import Dict
 
+import cadwork
+import visualization_controller as vc
 from compas.data import Data
-from compas.geometry import Point
 from compas.geometry import Frame
+from compas.geometry import Point
 from compas.geometry import Vector
 from compas.tolerance import TOL
 
-import cadwork
-import visualization_controller as vc
-
-from compas_cadwork.conversions import point_to_compas
-from compas_cadwork.conversions import vector_to_compas
 from compas_cadwork.conversions import point_to_cadwork
+from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
+from compas_cadwork.conversions import vector_to_compas
 
 
 class ProjectionType(Enum):

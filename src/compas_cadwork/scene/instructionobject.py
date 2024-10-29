@@ -1,22 +1,19 @@
 import cadwork
-
 from compas.geometry import Frame
 
 # TODO: this should NOT be here. either move these to compas_cadwork or add them here and wrap them in monosashi
 try:
     from compas_monosashi.sequencer import LinearDimension
-    from compas_monosashi.sequencer import Model3d
     from compas_monosashi.sequencer import Text3d
 except ImportError:
     pass
 
 import dimension_controller as dc
 import element_controller as ec
-import file_controller as fc
 
 from compas_cadwork.conversions import point_to_cadwork
-from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.scene import CadworkSceneObject
 
 
@@ -91,9 +88,7 @@ class Text3dSceneObject(CadworkSceneObject):
         text_options.set_height(self._text_instruction.size)
 
         loc = self._text_instruction.location
-        element_id = ec.create_text_object_with_options(
-            point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
-        )
+        element_id = ec.create_text_object_with_options(point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options)
 
         element = self.add_element(element_id)
 
