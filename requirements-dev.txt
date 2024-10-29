@@ -7,3 +7,4 @@ sphinx_compas2_theme
 twine
 wheel
 ruff
+build
