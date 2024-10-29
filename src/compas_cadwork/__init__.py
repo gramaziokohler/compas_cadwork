@@ -1,33 +1,17 @@
-"""
-********************************************************************************
-compas_cadwork
-********************************************************************************
-
-.. currentmodule:: compas_cadwork
-
-
-.. toctree::
-    :maxdepth: 1
-
-
-"""
-
 from __future__ import print_function
-
 import os
+from datetime import datetime
 
-
-from .__version__ import __author__
-from .__version__ import __author_email__
-from .__version__ import __copyright__
-from .__version__ import __description__
-from .__version__ import __license__
-from .__version__ import __title__
-from .__version__ import __url__
-from .__version__ import __version__
+__title__ = "compas_cadwork"
+__description__ = "COMPAS package for integrating with cadwork"
+__url__ = "https://github.com/gramaziokohler/compas_cadwork"
+__version__ = "0.4.4"
+__author__ = "Gramazio Kohler Research"
+__author_email__ = "gramaziokohler@arch.ethz.ch"
+__license__ = "MIT license"
+__copyright__ = "Copyright {} Gramazio Kohler Research".format(datetime.today().year)
 
 HERE = os.path.dirname(__file__)
-
 HOME = os.path.abspath(os.path.join(HERE, "../../"))
 DATA = os.path.abspath(os.path.join(HOME, "data"))
 DOCS = os.path.abspath(os.path.join(HOME, "docs"))
