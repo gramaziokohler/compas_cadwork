@@ -52,7 +52,7 @@ where = ["src"]
 # ============================================================================
 
 [tool.bumpversion]
-current_version = "0.4.4"
+current_version = "0.6.0"
 message = "Bump version to {new_version}"
 commit = true
 tag = true
@@ -117,7 +117,7 @@ forced_separate = "test_compas_cadwork"
 skip = ["__init__.py"]
 
 # ============================================================================
-# testing
+# Testing
 # ============================================================================
 
 [tool.pytest.ini_options]
