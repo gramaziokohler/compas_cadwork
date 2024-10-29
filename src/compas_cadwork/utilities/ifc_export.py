@@ -81,9 +81,7 @@ class IFCExporter:
         filepath = os.path.abspath(filepath)
         options = self.settings.get_ifc_options()
         try:
-            LOG.debug(
-                f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})"""
-            )
+            LOG.debug(f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})""")
             success = bc.export_ifc4_silently_with_options(element_ids, filepath, options)
             LOG.debug(f"export_ifc4_silently_with_options: {success}")
         except Exception as ex:

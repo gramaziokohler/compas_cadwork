@@ -100,9 +100,7 @@ class Camera(Data):
             "projection_type": self._projection_type,
         }
 
-    def __init__(
-        self, frame: Frame, fov: float, fwidth: float, fheight: float, target: Point, projection_type: ProjectionType
-    ) -> None:
+    def __init__(self, frame: Frame, fov: float, fwidth: float, fheight: float, target: Point, projection_type: ProjectionType) -> None:
         super().__init__()
         self._frame = frame
         self._fov = fov
@@ -194,9 +192,7 @@ class Camera(Data):
         """
         camera_to_target = Vector.from_start_end(self.position, target)
         if not TOL.is_zero(camera_to_target.dot(up_vector)):
-            raise ValueError(
-                f"up vector and camera-to-target vector must be orthogonal. camera_to_target: {camera_to_target}, up_vector: {up_vector}"
-            )
+            raise ValueError(f"up vector and camera-to-target vector must be orthogonal. camera_to_target: {camera_to_target}, up_vector: {up_vector}")
 
         self._frame = self._frame_from_camera_data(self.position, target, up_vector)
         self._target = target
