@@ -23,6 +23,7 @@ from .ifc_export import IFCExportSettings
 from .dimensions import get_dimension_data
 
 
+# TODO: remove. replaced by compas_cadwork.scene.Camera
 class CameraView(str, Enum):
     """The view direction to which cadwork camera should be set in viewport.
 

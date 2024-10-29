@@ -238,7 +238,7 @@ class Camera(Data):
         """Zoom the camera to the currently active element."""
         vc.zoom_active_elements()
         vc.refresh()
-        vc.self.reload_camera()
+        self.reload_camera()
 
     def reset_view(self) -> None:
         """Reset the camera to the standard axonometric view."""

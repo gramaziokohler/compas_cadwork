@@ -1,9 +1,14 @@
 import cadwork
 
 from compas.geometry import Frame
-from compas_monosashi.sequencer import LinearDimension
-from compas_monosashi.sequencer import Model3d
-from compas_monosashi.sequencer import Text3d
+
+# TODO: this should NOT be here. either move these to compas_cadwork or add them here and wrap them in monosashi
+try:
+    from compas_monosashi.sequencer import LinearDimension
+    from compas_monosashi.sequencer import Model3d
+    from compas_monosashi.sequencer import Text3d
+except ImportError:
+    pass
 
 import dimension_controller as dc
 import element_controller as ec

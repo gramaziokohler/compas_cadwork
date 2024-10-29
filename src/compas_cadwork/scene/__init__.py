@@ -1,10 +1,6 @@
 from compas.plugins import plugin
 from compas.scene import register
 
-from compas_monosashi.sequencer import Text3d
-from compas_monosashi.sequencer import LinearDimension
-from compas_monosashi.sequencer import Model3d
-
 from .camera import Camera
 from .scene import CadworkSceneObject
 from .instructionobject import Text3dSceneObject
@@ -35,6 +31,14 @@ def after_draw(*args, **kwargs):
 
 @plugin(category="factories", requires=[CONTEXT])
 def register_scene_objects():
-    register(Text3d, Text3dSceneObject, context=CONTEXT)
-    register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
-    register(Model3d, Model3dSceneObject, context=CONTEXT)
+    try:
+        from compas_monosashi.sequencer import Text3d
+        from compas_monosashi.sequencer import LinearDimension
+        from compas_monosashi.sequencer import Model3d
+
+        # These should move to monosashi probably
+        register(Text3d, Text3dSceneObject, context=CONTEXT)
+        register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
+        register(Model3d, Model3dSceneObject, context=CONTEXT)
+    except Exception as e:
+        pass
