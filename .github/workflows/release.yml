@@ -14,7 +14,7 @@ jobs:
         python: ['3.10']
 
     steps:
-      - uses: compas-dev/compas-actions.build@v3
+      - uses: compas-dev/compas-actions.build@v4
         with:
           invoke_lint: true
           check_import: false
@@ -26,9 +26,9 @@ jobs:
     needs: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: compas-dev/compas-actions.publish@v2
+      - uses: compas-dev/compas-actions.publish@v3
         with:
-          bdist_wheel: true
-          sdist: true
-          publish_to_pypi: false
+          publish_to_pypi: true
+          pypi_token: ${{ secrets.PYPI }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          python: '3.10'
