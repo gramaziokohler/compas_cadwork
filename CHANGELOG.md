@@ -14,6 +14,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
+## [0.6.0] 2024-10-15
+
+### Added
+
+* Added new file storage manager `FileStorage` to `compas_cadwork.storage`.
+* Added new project storage manager `ProjectStorage` to `compas_cadwork.storage`.
+
+### Changed
+
+### Removed
+
+
+## [0.5.0] 2024-09-16
+
+### Added
+
+### Changed
+
+* Made changes to instruction scene objects to support recent COMPAS2.x versions.
+
+### Removed
+
+* Removed the unused `Model3dSceneObject`.
+
 ## [0.4.4] 2024-09-03
 
 ### Added
