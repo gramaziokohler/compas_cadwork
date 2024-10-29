@@ -23,6 +23,7 @@ from .ifc_export import IFCExportSettings
 from .dimensions import get_dimension_data
 
 
+# TODO: remove. replaced by compas_cadwork.scene.Camera
 class CameraView(str, Enum):
     """The view direction to which cadwork camera should be set in viewport.
 
@@ -350,7 +351,7 @@ def get_user_point():
     """Prompts the user to select a cadwork point in the viewport and returns the coordinates of the selected point.
 
     Returns
-    --------
+    -------
     :class:`~compas.geometry.Point`
     """
     return point_to_compas(uc.get_user_point())
@@ -377,17 +378,39 @@ def get_all_elements(include_instructions: bool = False) -> Generator[Element, N
 
 
 def get_all_elements_with_attrib(attrib_number, attrib_value=None):
+    """Returns a generator containing all elements with the given user attribute set to the given value.
+
+    Parameters
+    ----------
+    attrib_number : int
+        The user attribute number to filter by.
+    attrib_value : str, optional
+        The value the user attribute should have.
+
+    Returns
+    -------
+    generator(:class:`compas_cadwork.datamodel.Element`)
+        Generator of elements
+    """
     for element_id in ec.get_all_identifiable_element_ids():
         if ac.get_user_attribute(element_id, attrib_number) == attrib_value:
             yield Element.from_id(element_id)
 
 
 def remove_elements(elements: List[Union[Element, int]]) -> None:
+    """Removes the given elements from the cadwork document.
+
+    Parameters
+    ----------
+    elements : list(:class:`compas_cadwork.datamodel.Element` or int)
+        List of elements or element ids to remove.
+    """
     element_ids = [element.id if isinstance(element, Element) else element for element in elements]
     ec.delete_elements(element_ids)
 
 
 def save_project_file():
+    """Saves the current cadwork project file."""
     uc.save_3d_file_silently()
 
 

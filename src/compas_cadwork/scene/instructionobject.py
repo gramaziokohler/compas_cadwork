@@ -1,15 +1,19 @@
 import cadwork
-
 from compas.geometry import Frame
-from compas_monosashi.sequencer import LinearDimension
-from compas_monosashi.sequencer import Text3d
-from dimension_controller import create_dimension
-from element_controller import create_text_object_with_options
-from element_controller import get_bounding_box_vertices_local
+
+# TODO: this should NOT be here. either move these to compas_cadwork or add them here and wrap them in monosashi
+try:
+    from compas_monosashi.sequencer import LinearDimension
+    from compas_monosashi.sequencer import Text3d
+except ImportError:
+    pass
+
+import dimension_controller as dc
+import element_controller as ec
 
 from compas_cadwork.conversions import point_to_cadwork
-from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.scene import CadworkSceneObject
 
 
@@ -24,7 +28,7 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, item: Text3d, **kwargs) -> None:
+    def __init__(self, item: "Text3d", **kwargs) -> None:
         super().__init__(item)
         self._text_instruction = item
 
@@ -47,7 +51,7 @@ class Text3dSceneObject(CadworkSceneObject):
         #  h          |
         #  |          |
         #  1 --------w> 3
-        bb = get_bounding_box_vertices_local(element_id, [element_id])
+        bb = ec.get_bounding_box_vertices_local(element_id, [element_id])
         p0 = point_to_compas(bb[0])
         p1 = point_to_compas(bb[1])
         p3 = point_to_compas(bb[3])
@@ -84,9 +88,7 @@ class Text3dSceneObject(CadworkSceneObject):
         text_options.set_height(self._text_instruction.size)
 
         loc = self._text_instruction.location
-        element_id = create_text_object_with_options(
-            point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options
-        )
+        element_id = ec.create_text_object_with_options(point_to_cadwork(loc.point), vector_to_cadwork(loc.xaxis), vector_to_cadwork(loc.yaxis), text_options)
 
         element = self.add_element(element_id)
 
@@ -108,7 +110,7 @@ class LinearDimensionSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, item: LinearDimension, **kwargs) -> None:
+    def __init__(self, item: "LinearDimension", **kwargs) -> None:
         super().__init__(item)
         self._linear_dimension = item
 
@@ -124,7 +126,7 @@ class LinearDimensionSceneObject(CadworkSceneObject):
         text_plane_normal = self._linear_dimension.location.normal * -1.0
         inst_frame = self._linear_dimension.location
         distance_vector = inst_frame.point + self._linear_dimension.line_offset
-        element_id = create_dimension(
+        element_id = dc.create_dimension(
             vector_to_cadwork(inst_frame.xaxis),
             vector_to_cadwork(text_plane_normal),
             vector_to_cadwork(distance_vector),

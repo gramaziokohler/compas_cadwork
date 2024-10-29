@@ -4,14 +4,13 @@ from typing import Tuple
 from typing import Union
 
 import dimension_controller as dc
-
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Vector
 
-from compas_cadwork.datamodel import Element
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
+from compas_cadwork.datamodel import Element
 
 
 def _get_dimension_element(element: Union[int, Element]) -> Tuple[List[Point], Vector, float]:

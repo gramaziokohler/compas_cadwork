@@ -3,10 +3,8 @@ import os
 from dataclasses import dataclass
 from typing import List
 
-from bim_controller import export_ifc4_silently_with_options
-from bim_controller import get_ifc_options
-from utility_controller import get_use_of_global_coordinates
-from utility_controller import set_use_of_global_coordinates
+import bim_controller as bc
+import utility_controller as uc
 
 from compas_cadwork.datamodel import ElementGroupingType
 
@@ -34,7 +32,7 @@ class IFCExportSettings:
     translate_local_frame: bool = False
 
     def get_ifc_options(self):
-        options = get_ifc_options()
+        options = bc.get_ifc_options()
         aggregation = options.get_ifc_options_aggregation()
         aggregation.set_export_cover_geometry(self.export_cover_geometry)
         aggregation.set_element_aggregation_attribute(self.grouping_type.to_cadwork())
@@ -83,10 +81,8 @@ class IFCExporter:
         filepath = os.path.abspath(filepath)
         options = self.settings.get_ifc_options()
         try:
-            LOG.debug(
-                f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})"""
-            )
-            success = export_ifc4_silently_with_options(element_ids, filepath, options)
+            LOG.debug(f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})""")
+            success = bc.export_ifc4_silently_with_options(element_ids, filepath, options)
             LOG.debug(f"export_ifc4_silently_with_options: {success}")
         except Exception as ex:
             LOG.exception(f"Failed to export elements to ifc. {str(ex)}")
@@ -95,9 +91,9 @@ class IFCExporter:
 
     def initialize(self):
         """Sets any global settings that are required for the export."""
-        self._translate_local_frame = get_use_of_global_coordinates()
-        set_use_of_global_coordinates(self.settings.translate_local_frame)
+        self._translate_local_frame = uc.get_use_of_global_coordinates()
+        uc.set_use_of_global_coordinates(self.settings.translate_local_frame)
 
     def cleanup(self):
         """Restores any global settings that were changed during the export."""
-        set_use_of_global_coordinates(self._translate_local_frame)
+        uc.set_use_of_global_coordinates(self._translate_local_frame)

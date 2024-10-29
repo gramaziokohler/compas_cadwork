@@ -1,12 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 
-from dimension_controller import get_dimension_points
-from dimension_controller import get_plane_normal
-from dimension_controller import get_plane_xl
-from dimension_controller import get_segment_distance
-from dimension_controller import get_segment_direction
-
+import dimension_controller as dc
 from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Vector
@@ -14,9 +10,9 @@ from compas.tolerance import Tolerance
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
+
 from .element import Element
 from .element import ElementType
-
 
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 
@@ -88,14 +84,14 @@ class Dimension(Element):
     def frame(self):
         if not self._frame:
             zaxis = -self.text_normal
-            xaxis = vector_to_compas(get_plane_xl(self.id))
+            xaxis = vector_to_compas(dc.get_plane_xl(self.id))
             yaxis = xaxis.cross(zaxis).unitized()
             self._frame = Frame(self.anchors[0].location, xaxis, yaxis)
         return self._frame
 
     @property
     def text_normal(self):
-        return vector_to_compas(get_plane_normal(self.id))
+        return vector_to_compas(dc.get_plane_normal(self.id))
 
     @property
     def length(self):
@@ -105,9 +101,9 @@ class Dimension(Element):
 
     def _init_anchors(self):
         anchors = []
-        for index, point in enumerate(get_dimension_points(self.id)):
-            distance = get_segment_distance(self.id, index)
-            direction = get_segment_direction(self.id, index)
+        for index, point in enumerate(dc.get_dimension_points(self.id)):
+            distance = dc.get_segment_distance(self.id, index)
+            direction = dc.get_segment_direction(self.id, index)
             anchors.append(AnchorPoint(point_to_compas(point), distance, vector_to_compas(direction)))
         return tuple(anchors)
 
@@ -115,7 +111,7 @@ class Dimension(Element):
     def from_id(cls, element_id: int) -> Dimension:
         """Creates a dimension object from an element id.
 
-        This is an override of :method:`Element.from_id`.
+        This is an override of :func:`Element.from_id`.
 
         Parameters
         ----------
