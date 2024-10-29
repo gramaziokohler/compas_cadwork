@@ -1,92 +1,50 @@
 # compas_cadwork
 
+[![Github Actions Build Status](https://github.com/gramaziokohler/compas_cadwork/workflows/build/badge.svg)](https://github.com/gramaziokohler/compas_cadwork/actions)
+[![License](https://img.shields.io/github/license/gramaziokohler/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
+[![pip downloads](https://img.shields.io/pypi/dm/compas_cadwork)](https://pypi.python.org/project/compas_cadwork)
+[![PyPI Package latest release](https://img.shields.io/pypi/v/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
+[![Supported implementations](https://img.shields.io/pypi/implementation/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7934267.svg)](https://doi.org/10.5281/zenodo.7934267)
+[![Twitter Follow](https://img.shields.io/twitter/follow/compas_dev?style=social)](https://twitter.com/compas_dev)
 
+![COMPAS Cadwork](https://raw.githubusercontent.com/gramaziokohler/compas_cadwork/main/compas_cadwork.jpg)
 
+COMPAS cadwork is an open-source Python package which allows you to harness the power of the COMPAS framework inside cadwork 3d.
+Make use of COMPAS' extensive geometry kernel, data structures, and algorithms to create, manipulate, and analyze your 3d models in cadwork.
+Gain access to the COMPAS ecosystem which includes a wide range of tools and libraries engineered for the AEC industry.
 
-## Getting started with this project
+## Installation
 
-### Setup code editor
+> For different installation options please see the [installation guide](https://gramaziokohler.github.io/compas_cadwork/latest/installation.html).
 
-1. Open project folder in VS Code
-2. Select python environment for the project
-3. First time using VS Code and on Windows? Make sure select the correct terminal profile: `Ctrl+Shift+P`, `Terminal: Select Default Profile` and select `Command Prompt`.
+To install `compas_cadwork` directly to cadwork 3d, run:
 
-> All terminal commands in the following sections can be run from the VS Code integrated terminal. 
+.. code-block:: bash
 
+    pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
 
-### First steps with git
+## First Steps
 
-1. Go to the `Source control` tab
-2. Make an initial commit with all newly created files
+* [Documentation](https://gramaziokohler.github.io/compas_cadwork/)
+* [COMPAS CADWORK API Reference](https://gramaziokohler.github.io/compas_cadwork/latest/api.html)
 
+## Questions and feedback
 
-### First steps with code
+We encourage the use of the [COMPAS framework forum](https://forum.compas-framework.org/)
+for questions and discussions.
 
-1. Install the newly created project 
+## Issue tracker
 
-        pip install -e .
+If you found an issue or have a suggestion for a dandy new feature, please file a new issue in our [issue tracker](https://github.com/gramaziokohler/compas_cadwork/issues).
 
-2. Install it on Rhino
+## Contributing
 
-        python -m compas_rhino.install
+We love contributions!
 
+Check the [Contributor's Guide](https://compas.dev/compas/latest/devguide/)
+for more details.
 
-### Code conventions
+## Credits
 
-Code convention follows [PEP8](https://pep8.org/) style guidelines and line length of 120 characters.
-
-1. Check adherence to style guidelines
-
-        invoke lint
-
-2. Format code automatically
-
-        invoke format
-
-
-### Documentation
-
-Documentation is generated automatically out of docstrings and [RST](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html) files in this repository
-
-1. Generate the docs
-
-        invoke docs
-
-2. Check links in docs are valid
-
-        invoke linkcheck
-
-3. Open docs in your browser (file explorer -> `dist/docs/index.html`)
-
-
-### Testing
-
-Tests are written using the [pytest](https://docs.pytest.org/) framework
-
-1. Run all tests from terminal
-
-        invoke test
-
-2. Or run them from VS Code from the `Testing` tab
-
-
-### Developing Grasshopper components
-
-We use [Grasshopper Componentizer](https://github.com/compas-dev/compas-actions.ghpython_components) to develop Python components that can be stored and edited on git.
-
-1. Build components
-
-        invoke build-ghuser-components
-
-2. Install components on Rhino
-
-        python -m compas_rhino.install
-
-
-### Publish release
-
-Releases follow the [semver](https://semver.org/spec/v2.0.0.html) versioning convention.
-
-1. Create a new release
-
-        invoke release major
+`compas_cadwork` is currently developed by [Gramazio Kohler Research](https://gramaziokohler.arch.ethz.ch/). 
