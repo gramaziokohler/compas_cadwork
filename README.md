@@ -5,7 +5,6 @@
 [![pip downloads](https://img.shields.io/pypi/dm/compas_cadwork)](https://pypi.python.org/project/compas_cadwork)
 [![PyPI Package latest release](https://img.shields.io/pypi/v/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
 [![Supported implementations](https://img.shields.io/pypi/implementation/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7934267.svg)](https://doi.org/10.5281/zenodo.7934267)
 [![Twitter Follow](https://img.shields.io/twitter/follow/compas_dev?style=social)](https://twitter.com/compas_dev)
 
 ![COMPAS Cadwork](https://raw.githubusercontent.com/gramaziokohler/compas_cadwork/main/compas_cadwork.jpg)
@@ -16,13 +15,13 @@ Gain access to the COMPAS ecosystem which includes a wide range of tools and lib
 
 ## Installation
 
-> For different installation options please see the [installation guide](https://gramaziokohler.github.io/compas_cadwork/latest/installation.html).
+> For the different installation options please see the [installation guide](https://gramaziokohler.github.io/compas_cadwork/latest/installation.html).
 
 To install `compas_cadwork` directly to cadwork 3d, run:
 
-.. code-block:: bash
-
-    pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
+```bash
+pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
+```
 
 ## First Steps
 
