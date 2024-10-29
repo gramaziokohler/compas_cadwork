@@ -8,6 +8,7 @@ description = "COMPAS package for integrating with cadwork."
 authors = [
     { name = "Chen Kasirer", email = "kasirer@arch.ethz.ch" },
     { name = "Matthias Helmreich", email = "helmreich@arch.ethz.ch" },
+    { name = "Gonzalo Casas", email = "casas@arch.ethz.ch" }
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
