@@ -28,7 +28,7 @@ class Text3dSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, item: Text3d, **kwargs) -> None:
+    def __init__(self, item: "Text3d", **kwargs) -> None:
         super().__init__(item)
         self._text_instruction = item
 
@@ -110,7 +110,7 @@ class LinearDimensionSceneObject(CadworkSceneObject):
 
     """
 
-    def __init__(self, item: LinearDimension, **kwargs) -> None:
+    def __init__(self, item: "LinearDimension", **kwargs) -> None:
         super().__init__(item)
         self._linear_dimension = item
 
