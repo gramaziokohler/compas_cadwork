@@ -1,19 +1,109 @@
-[tool.black]
-line-length = 120
+# ============================================================================
+# Project info
+# ============================================================================
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-testpaths = ["tests"]
-python_files = [
-    "test_*.py",
-    "tests.py"
+[project]
+name = "compas_cadwork"
+description = "COMPAS package for integrating with cadwork."
+authors = [
+    { name = "Chen Kasirer", email = "kasirer@arch.ethz.ch" },
+    { name = "Matthias Helmreich", email = "helmreich@arch.ethz.ch" },
 ]
-addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short"
-doctest_optionflags= "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES NUMBER"
-filterwarnings = "ignore::DeprecationWarning"
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+dynamic = ["dependencies", "optional-dependencies", "version"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+Homepage = "https://gramaziokohler.github.io/compas_cadwork/latest/"
+Repository = "https://github.com/gramaziokohler/compas_cadwork"
+
+# ============================================================================
+# Setup and build
+# ============================================================================
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.dynamic]
+version = { attr = "compas_cadwork.__version__" }
+dependencies = { file = "requirements.txt" }
+optional-dependencies = { dev = { file = "requirements-dev.txt" } }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+
+# ============================================================================
+# Release
+# ============================================================================
+
+[tool.bumpversion]
+current_version = "0.4.4"
+message = "Bump version to {new_version}"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "src/compas_cadwork/__init__.py"
+search = "{current_version}"
+replace = "{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "Unreleased"
+replace = "[{new_version}] {now:%Y-%m-%d}"
+
+# ============================================================================
+# Formatting and linting
+# ============================================================================
+
+[tool.black]
+line-length = 179
+
+[tool.ruff]
+line-length = 179
+indent-width = 4
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["I001"]
+"tests/*" = ["I001"]
+"tasks.py" = ["I001"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-first-party = [
+    "compas_cadwork",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 179
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
 
 [tool.isort]
-line_length = 120
+line_length = 179
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
@@ -25,3 +115,17 @@ default_section = "THIRDPARTY"
 forced_separate = "test_compas_cadwork"
 skip = ["__init__.py"]
 
+# ============================================================================
+# testing
+# ============================================================================
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+python_files = [
+    "test_*.py",
+    "tests.py"
+]
+addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short"
+doctest_optionflags= "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES NUMBER"
+filterwarnings = "ignore::DeprecationWarning"
