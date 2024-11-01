@@ -1,6 +1,6 @@
 # compas_cadwork
 
-[![Github Actions Build Status](https://github.com/gramaziokohler/compas_cadwork/workflows/build/badge.svg)](https://github.com/gramaziokohler/compas_cadwork/actions)
+[![build](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/build.yml/badge.svg)](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/build.yml)
 [![License](https://img.shields.io/github/license/gramaziokohler/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
 [![pip downloads](https://img.shields.io/pypi/dm/compas_cadwork)](https://pypi.python.org/project/compas_cadwork)
 [![PyPI Package latest release](https://img.shields.io/pypi/v/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
