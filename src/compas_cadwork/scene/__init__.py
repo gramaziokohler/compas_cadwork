@@ -1,16 +1,20 @@
 from compas.plugins import plugin
 from compas.scene import register
 
+from compas_timber.elements import Beam
+
 from .camera import Camera
 from .scene import CadworkSceneObject
 from .instructionobject import Text3dSceneObject
 from .instructionobject import LinearDimensionSceneObject
+from .beamobject import BeamSceneObject
 
 __all__ = [
     "Camera",
     "CadworkSceneObject",
     "Text3dSceneObject",
     "LinearDimensionSceneObject",
+    "BeamSceneObject",
 ]
 
 
@@ -29,6 +33,7 @@ def after_draw(*args, **kwargs):
 
 @plugin(category="factories", requires=[CONTEXT])
 def register_scene_objects():
+    register(Beam, BeamSceneObject, context=CONTEXT)
     try:
         from compas_monosashi.sequencer import Text3d
         from compas_monosashi.sequencer import LinearDimension
