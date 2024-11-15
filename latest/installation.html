@@ -480,8 +480,12 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Basic.1_api_examples.html">Basic.1 API Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Basic.2_comp_design.html">Basic.2 Computational Design</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/compas_cadwork.conversions.html">compas_cadwork.conversions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/compas_cadwork.datamodel.html">compas_cadwork.datamodel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/compas_cadwork.scene.html">compas_cadwork.scene</a></li>
@@ -566,12 +570,24 @@ document.write(`
 </div>
 <section id="use-in-cadwork-s-python-console">
 <h2>Use in cadwork’s Python Console</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are getting the following error trying to follow the method below</p>
+<p><cite>PermissionError: [WinError 5] Access is denied …</cite></p>
+<p>This might be due to cadwork 3d running in the background. Make sure to close cadwork 3d before running the command again.</p>
+</div>
 <p>The simplest way to use <cite>compas_cadwork</cite> in cadwork’s Python Console is to install it to the python environment that’s integrated with cadwork.</p>
 <p>One of these relevant paths is</p>
 <p><code class="docutils literal notranslate"><span class="pre">C:\Program</span> <span class="pre">Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages</span></code></p>
-<p>To install <cite>compas_cadwork</cite> to this path, you can use the following command</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>compas_cadwork<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages&quot;</span><span class="w"> </span>--upgrade
+<p>To install <cite>compas_cadwork</cite> to this path, open a terminal and run following commands</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="w"> </span><span class="nv">CADWORK_SITE_PACKAGES</span><span class="o">=</span><span class="s2">&quot;C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages&quot;</span>
+
+pip<span class="w"> </span>install<span class="w"> </span>compas_cadwork<span class="w"> </span>--target<span class="w"> </span>%CADWORK_SITE_PACKAGES%<span class="w"> </span>--upgrade
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Following an update of cadwork 3d, packages installed to the location above might be removed. Make sure to reinstall <cite>compas_cadwork</cite> after an update.</p>
 </div>
 </section>
 <section id="develop-a-plugin-using-compas-cadwork">
