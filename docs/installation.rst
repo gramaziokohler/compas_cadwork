@@ -19,17 +19,32 @@ Installation
 Use in cadwork's Python Console
 ==========================================================
 
+.. NOTE::
+
+    If you are getting the following error trying to follow the method below
+
+    `PermissionError: [WinError 5] Access is denied ...`
+
+    This might be due to cadwork 3d running in the background. Make sure to close cadwork 3d before running the command again.
+
 The simplest way to use `compas_cadwork` in cadwork's Python Console is to install it to the python environment that's integrated with cadwork.
 
 One of these relevant paths is
 
 ``C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages``
 
-To install `compas_cadwork` to this path, you can use the following command
+To install `compas_cadwork` to this path, open a terminal and run following commands
 
 .. code-block:: bash
 
-    python -m pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
+    set CADWORK_SITE_PACKAGES="C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages"
+
+    pip install compas_cadwork --target %CADWORK_SITE_PACKAGES% --upgrade
+
+
+.. WARNING::
+
+    Following an update of cadwork 3d, packages installed to the location above might be removed. Make sure to reinstall `compas_cadwork` after an update.
 
 
 Develop a plugin using `compas_cadwork`
