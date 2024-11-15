@@ -1,10 +1,9 @@
+import attribute_controller as ac
+import element_controller as ec
 from compas_timber.elements import Beam
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
-
-import element_controller as ec
-import attribute_controller as ac
 
 from .scene import CadworkSceneObject
 
