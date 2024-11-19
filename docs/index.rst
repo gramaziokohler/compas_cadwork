@@ -6,7 +6,7 @@ COMPAS cadwork
 
     COMPAS cadwork is an open-source Python package which allows you to harness the power of the COMPAS framework inside cadwork 3d.
 
-.. figure:: ../compas_cadwork.JPG
+.. figure:: ../compas_cadwork.jpg
      :figclass: figure
      :class: figure-img img-fluid
 
