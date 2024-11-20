@@ -105,39 +105,3 @@ class Dimension(Element):
             direction = dc.get_segment_direction(self.id, index)
             anchors.append(AnchorPoint(point_to_compas(point), distance, vector_to_compas(direction)))
         return tuple(anchors)
-
-    @classmethod
-    def from_id(cls, element_id: int) -> Dimension:
-        """Creates a dimension object from an element id.
-
-        This is an override of :func:`Element.from_id`.
-
-        Parameters
-        ----------
-        element_id : int
-            The id of the element to create the dimension from.
-
-        Returns
-        -------
-        :class:`Dimension`
-            The dimension object created from the element id.
-
-        """
-        return cls(id=element_id)
-
-    @classmethod
-    def from_element(cls, element: Element) -> Dimension:
-        """Creates a dimension object from an element.
-
-        Parameters
-        ----------
-        element : :class:`Element`
-            The element to create the dimension from.
-
-        Returns
-        -------
-        :class:`Dimension`
-            The dimension object created from the element.
-
-        """
-        return cls(id=element.id)
