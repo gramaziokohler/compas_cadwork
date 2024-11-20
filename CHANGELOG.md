@@ -9,15 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Added `Element.is_beam` property.
-
 ### Changed
 
 ### Removed
 
 * Removed `ElementType` class.
 * Removed `Element.from_id` method.
-* Removed `Element.type` property.
+* Removed `Element.type` property. Use `Element.is_*` properties instead.
 
 ## [0.8.0] 2024-11-15
 

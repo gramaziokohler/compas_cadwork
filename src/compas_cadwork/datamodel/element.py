@@ -208,10 +208,6 @@ class Element:
         return bc.get_ifc_guid(self.id)
 
     @property
-    def is_beam(self) -> bool:
-        return ac.is_beam(self.id)
-
-    @property
     def is_wall(self) -> bool:
         return ac.is_framed_wall(self.id)
 
