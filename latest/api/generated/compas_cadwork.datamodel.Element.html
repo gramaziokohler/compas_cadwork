@@ -59,7 +59,7 @@
         </script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Element.from_id" href="compas_cadwork.datamodel.Element.from_id.html" />
+    <link rel="next" title="Element.from_selection" href="compas_cadwork.datamodel.Element.from_selection.html" />
     <link rel="prev" title="ElementGroup.add_element" href="compas_cadwork.datamodel.ElementGroup.add_element.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -548,15 +548,13 @@ document.write(`
 <h1>Element</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_cadwork.datamodel.Element">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_cadwork.datamodel.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><a class="reference external" href="https://github.com/gramaziokohler/compas_cadwork/blob/0af1cc1/src/compas_cadwork/datamodel/element.py#L147"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_cadwork.datamodel.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><a class="reference external" href="https://github.com/gramaziokohler/compas_cadwork/blob/a33aa40/src/compas_cadwork/datamodel/element.py#L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a cadwork Element</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>id</strong><span class="classifier">int</span></dt><dd><p>The ID of the Element</p>
-</dd>
-<dt><strong>type</strong><span class="classifier">ElementType</span></dt><dd><p>The type of the Element</p>
 </dd>
 </dl>
 </dd>
@@ -584,6 +582,8 @@ document.write(`
 </dd>
 <dt><strong>ifc_guid</strong><span class="classifier">str</span></dt><dd><p>The IFC GUID of the Element. See also: ifc_base64_guid.</p>
 </dd>
+<dt><strong>is_beam</strong><span class="classifier">bool</span></dt><dd><p>Whether the Element is a beam</p>
+</dd>
 <dt><strong>is_wall</strong><span class="classifier">bool</span></dt><dd><p>Whether the Element is a framed wall i.e. container for all other elements in the building group.</p>
 </dd>
 <dt><strong>is_drilling</strong><span class="classifier">bool</span></dt><dd><p>Whether the Element is a drilling hole</p>
@@ -598,34 +598,31 @@ document.write(`
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.from_id.html#compas_cadwork.datamodel.Element.from_id" title="compas_cadwork.datamodel.Element.from_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_id</span></code></a></p></td>
-<td><p>Returns an Element object for the cadwork Element with the given ID</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.from_selection.html#compas_cadwork.datamodel.Element.from_selection" title="compas_cadwork.datamodel.Element.from_selection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_selection</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.from_selection.html#compas_cadwork.datamodel.Element.from_selection" title="compas_cadwork.datamodel.Element.from_selection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_selection</span></code></a></p></td>
 <td><p>Returns a generator containing Element objects for all currently activated Elements</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.get_elements_in_contact.html#compas_cadwork.datamodel.Element.get_elements_in_contact" title="compas_cadwork.datamodel.Element.get_elements_in_contact"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elements_in_contact</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.get_elements_in_contact.html#compas_cadwork.datamodel.Element.get_elements_in_contact" title="compas_cadwork.datamodel.Element.get_elements_in_contact"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elements_in_contact</span></code></a></p></td>
 <td><p>Returns a list of elements in contact with the current element</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.get_instruction_id.html#compas_cadwork.datamodel.Element.get_instruction_id" title="compas_cadwork.datamodel.Element.get_instruction_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_instruction_id</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.get_instruction_id.html#compas_cadwork.datamodel.Element.get_instruction_id" title="compas_cadwork.datamodel.Element.get_instruction_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_instruction_id</span></code></a></p></td>
 <td><p>Returns the instruction ID of the Element</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.is_beam.html#compas_cadwork.datamodel.Element.is_beam" title="compas_cadwork.datamodel.Element.is_beam"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_beam</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.is_beam.html#compas_cadwork.datamodel.Element.is_beam" title="compas_cadwork.datamodel.Element.is_beam"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_beam</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.remove.html#compas_cadwork.datamodel.Element.remove" title="compas_cadwork.datamodel.Element.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.remove.html#compas_cadwork.datamodel.Element.remove" title="compas_cadwork.datamodel.Element.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a></p></td>
 <td><p>Removes the Element from the cadwork file</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.remove_attribute.html#compas_cadwork.datamodel.Element.remove_attribute" title="compas_cadwork.datamodel.Element.remove_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_attribute</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.remove_attribute.html#compas_cadwork.datamodel.Element.remove_attribute" title="compas_cadwork.datamodel.Element.remove_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_attribute</span></code></a></p></td>
 <td><p>Removes an attribute from the Element</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.set_attribute.html#compas_cadwork.datamodel.Element.set_attribute" title="compas_cadwork.datamodel.Element.set_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_attribute</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.set_attribute.html#compas_cadwork.datamodel.Element.set_attribute" title="compas_cadwork.datamodel.Element.set_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_attribute</span></code></a></p></td>
 <td><p>Sets an attribute on the Element</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.set_is_instruction.html#compas_cadwork.datamodel.Element.set_is_instruction" title="compas_cadwork.datamodel.Element.set_is_instruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_is_instruction</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.set_is_instruction.html#compas_cadwork.datamodel.Element.set_is_instruction" title="compas_cadwork.datamodel.Element.set_is_instruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_is_instruction</span></code></a></p></td>
 <td><p>Sets the is_instruction attribute on the Element</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.translate.html#compas_cadwork.datamodel.Element.translate" title="compas_cadwork.datamodel.Element.translate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_cadwork.datamodel.Element.translate.html#compas_cadwork.datamodel.Element.translate" title="compas_cadwork.datamodel.Element.translate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code></a></p></td>
 <td><p>Translates the Element by the given vector.</p></td>
 </tr>
 </tbody>
