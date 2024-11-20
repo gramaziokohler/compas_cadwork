@@ -113,7 +113,7 @@ def get_active_elements() -> list[Element]:
         List of currently selected elements.
 
     """
-    return [Element.from_id(e_id) for e_id in ec.get_active_identifiable_element_ids()]
+    return [Element(e_id) for e_id in ec.get_active_identifiable_element_ids()]
 
 
 def get_language() -> str:
@@ -205,7 +205,7 @@ def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
 
         if group_name not in groups_elements:
             groups_elements[group_name] = ElementGroup(group_name)
-        groups_elements[group_name].add_element(Element.from_id(element_id))
+        groups_elements[group_name].add_element(Element(element_id))
 
     if is_wall_frame:
         _remove_wallless_groups(groups_elements)
@@ -372,7 +372,7 @@ def get_all_elements(include_instructions: bool = False) -> Generator[Element, N
 
     """
     for element_id in ec.get_all_identifiable_element_ids():
-        element = Element.from_id(element_id)
+        element = Element(element_id)
         if include_instructions or not element.is_instruction:
             yield element
 
@@ -394,7 +394,7 @@ def get_all_elements_with_attrib(attrib_number, attrib_value=None):
     """
     for element_id in ec.get_all_identifiable_element_ids():
         if ac.get_user_attribute(element_id, attrib_number) == attrib_value:
-            yield Element.from_id(element_id)
+            yield Element(element_id)
 
 
 def remove_elements(elements: List[Union[Element, int]]) -> None:

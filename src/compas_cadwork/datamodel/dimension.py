@@ -12,7 +12,6 @@ from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
 
 from .element import Element
-from .element import ElementType
 
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 
@@ -53,7 +52,7 @@ class Dimension(Element):
     """Represents a cadwork dimension"""
 
     def __init__(self, id):
-        super().__init__(id, ElementType.DIMENSION)
+        super().__init__(id)
         self._frame = None
         # not lazy-instantiating this so that it can be used to compare the modified instances of the same dimension
         # otherwise, the anchors values that are compared depend on the time `anchors` was first accessed
@@ -106,39 +105,3 @@ class Dimension(Element):
             direction = dc.get_segment_direction(self.id, index)
             anchors.append(AnchorPoint(point_to_compas(point), distance, vector_to_compas(direction)))
         return tuple(anchors)
-
-    @classmethod
-    def from_id(cls, element_id: int) -> Dimension:
-        """Creates a dimension object from an element id.
-
-        This is an override of :func:`Element.from_id`.
-
-        Parameters
-        ----------
-        element_id : int
-            The id of the element to create the dimension from.
-
-        Returns
-        -------
-        :class:`Dimension`
-            The dimension object created from the element id.
-
-        """
-        return cls(id=element_id)
-
-    @classmethod
-    def from_element(cls, element: Element) -> Dimension:
-        """Creates a dimension object from an element.
-
-        Parameters
-        ----------
-        element : :class:`Element`
-            The element to create the dimension from.
-
-        Returns
-        -------
-        :class:`Dimension`
-            The dimension object created from the element.
-
-        """
-        return cls(id=element.id)

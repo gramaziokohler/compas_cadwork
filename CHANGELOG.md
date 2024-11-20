@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+* Removed `ElementType` class.
+* Removed `Element.from_id` method.
+* Removed `Element.type` property. Use `Element.is_*` properties instead.
+* Removed `Dimension.from_element` method. Use `Dimension(element_id)` instead.
+* Removed `Dimension.from_id` method. Use `Dimension(element_id)` instead.
 
 ## [0.8.0] 2024-11-15
 
