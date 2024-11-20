@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
 from enum import IntEnum
-from enum import auto
 from typing import Generator
 from typing import List
 from typing import Optional
@@ -13,7 +11,6 @@ import bim_controller as bc
 import cadwork  # noqa: F401
 import element_controller as ec
 import geometry_controller as gc
-import utility_controller as uc
 from compas.geometry import Frame
 from compas.geometry import Line
 from compas.geometry import Point
@@ -53,45 +50,6 @@ class ElementGroupingType(IntEnum):
             The cadwork compatible value of the ElementGroupingType
         """
         return cadwork.element_grouping_type(self.value)
-
-
-class ElementType(str, Enum):
-    """CADWork Element type"""
-
-    BEAM = auto()  # Stab
-    PLATE = auto()  # Platte
-    SURFACE = auto()
-    SHAFT = auto()
-    LINE = auto()
-    INSTALLATION_ROUND = auto()
-    INSTALLATION_STRAIGHT = auto()
-    DIMENSION = auto()
-    OTHER = auto()
-
-
-ELEMENT_TYPE_MAP = {
-    "de": {
-        "Stab": ElementType.BEAM,
-        "Platte": ElementType.PLATE,
-        "Achse": ElementType.SHAFT,
-        "Linie": ElementType.LINE,
-        "Installation rechteckig": ElementType.INSTALLATION_STRAIGHT,
-        "Fläche": ElementType.SURFACE,
-        "Installation rund": ElementType.INSTALLATION_ROUND,
-        "Measurement": ElementType.DIMENSION,
-    },
-    "en": {
-        "Beam": ElementType.BEAM,
-        "Plate": ElementType.PLATE,
-        "Bemassung": ElementType.DIMENSION,
-    },
-}
-
-# TODO: get rid of this whole thing
-try:
-    LOCAL_TYPE_MAP = ELEMENT_TYPE_MAP[uc.get_language()]
-except AttributeError:
-    pass
 
 
 @dataclass
@@ -152,9 +110,6 @@ class Element:
     ----------
     id : int
         The ID of the Element
-    type : ElementType
-        The type of the Element
-
 
     Attributes
     ----------
@@ -180,6 +135,8 @@ class Element:
         The midpoint of the Element's centerline.
     ifc_guid : str
         The IFC GUID of the Element. See also: ifc_base64_guid.
+    is_beam : bool
+        Whether the Element is a beam
     is_wall : bool
         Whether the Element is a framed wall i.e. container for all other elements in the building group.
     is_drilling : bool
@@ -192,7 +149,6 @@ class Element:
     """
 
     id: int
-    type: ElementType
 
     @property
     def name(self) -> str:
@@ -252,6 +208,10 @@ class Element:
         return bc.get_ifc_guid(self.id)
 
     @property
+    def is_beam(self) -> bool:
+        return ac.is_beam(self.id)
+
+    @property
     def is_wall(self) -> bool:
         return ac.is_framed_wall(self.id)
 
@@ -281,28 +241,6 @@ class Element:
         return type_.is_rectangular_beam()
 
     @classmethod
-    def from_id(cls, element_id: int) -> Element:
-        """Returns an Element object for the cadwork Element with the given ID
-
-        Parameters
-        ----------
-        element_id : int
-            The ID of the Element
-
-        Returns
-        -------
-        Element
-            The Element object for the given ID
-
-        """
-        type_description = ec.get_element_type_description(element_id)
-        try:
-            type_ = LOCAL_TYPE_MAP[type_description]
-        except KeyError:
-            type_ = ElementType.OTHER
-        return Element(element_id, type_)
-
-    @classmethod
     def from_selection(cls) -> Generator[Element]:
         """Returns a generator containing Element objects for all currently activated Elements
 
@@ -312,7 +250,7 @@ class Element:
             A generator containing Element objects for all currently activated Elements
 
         """
-        return (Element.from_id(e_id) for e_id in ec.get_active_identifiable_element_ids())
+        return (Element(e_id) for e_id in ec.get_active_identifiable_element_ids())
 
     def set_attribute(self, name, value):
         """Sets an attribute on the Element
@@ -371,7 +309,7 @@ class Element:
 
     def get_elements_in_contact(self) -> List[Element]:
         """Returns a list of elements in contact with the current element"""
-        return [Element.from_id(e_id) for e_id in ec.get_elements_in_contact(self.id)]
+        return [Element(e_id) for e_id in ec.get_elements_in_contact(self.id)]
 
     def remove(self):
         """Removes the Element from the cadwork file"""

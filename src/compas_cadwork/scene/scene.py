@@ -20,7 +20,7 @@ class CadworkSceneObject(SceneObject):
 
         """
         self.DRAWN_ELEMENTS.append(element_id)
-        return Element.from_id(element_id)
+        return Element(element_id)
 
     @classmethod
     def refresh(cls):

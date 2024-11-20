@@ -12,7 +12,6 @@ from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
 
 from .element import Element
-from .element import ElementType
 
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 
@@ -53,7 +52,7 @@ class Dimension(Element):
     """Represents a cadwork dimension"""
 
     def __init__(self, id):
-        super().__init__(id, ElementType.DIMENSION)
+        super().__init__(id)
         self._frame = None
         # not lazy-instantiating this so that it can be used to compare the modified instances of the same dimension
         # otherwise, the anchors values that are compared depend on the time `anchors` was first accessed
