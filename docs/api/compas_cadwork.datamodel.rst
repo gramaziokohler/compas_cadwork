@@ -12,7 +12,6 @@ Classes
     :nosignatures:
 
     ElementGroupingType
-    ElementType
     ElementGroup
     Element
 
