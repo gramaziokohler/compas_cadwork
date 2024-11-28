@@ -5,7 +5,7 @@ from datetime import datetime
 __title__ = "compas_cadwork"
 __description__ = "COMPAS package for integrating with cadwork"
 __url__ = "https://github.com/gramaziokohler/compas_cadwork"
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 __author__ = "Gramazio Kohler Research"
 __author_email__ = "gramaziokohler@arch.ethz.ch"
 __license__ = "MIT license"
