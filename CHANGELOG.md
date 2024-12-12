@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+* Removed obsolete module `compas_cadwork.utilities.dimensions.py`.
+* Removed obsolete class `CameraView`, replaced by `compas_cadwork.scene.Camera`.
+* Removed obsolete function `set_camera_view`, replaced by `compas_cadwork.scene.Camera`.
 
 ## [0.9.0] 2024-11-28
 

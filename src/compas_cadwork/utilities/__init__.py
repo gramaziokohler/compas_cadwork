@@ -3,9 +3,6 @@ from typing import Dict
 from typing import Union
 from typing import Generator
 
-from enum import auto
-from enum import Enum
-
 import cadwork
 import utility_controller as uc
 import element_controller as ec
@@ -20,76 +17,6 @@ from compas_cadwork.conversions import point_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
-from .dimensions import get_dimension_data
-
-
-# TODO: remove. replaced by compas_cadwork.scene.Camera
-class CameraView(str, Enum):
-    """The view direction to which cadwork camera should be set in viewport.
-
-    These coinside with the standard axes.
-
-    Attributes
-    ----------
-    NEGATIVE_X : literal(CameraView.NEGATIVE_X)
-        Negative X.
-    NEGATIVE_Y : literal(CameraView.NEGATIVE_Y)
-        Negative Y.
-    NEGATIVE_Z : literal(CameraView.NEGATIVE_Z)
-        Negative Z.
-    POSITIVE_X : literal(CameraView.POSITIVE_X)
-        Positive X.
-    POSITIVE_Y : literal(CameraView.POSITIVE_Y)
-        Positive Y.
-    POSITIVE_Z : literal(CameraView.POSITIVE_Z)
-        Positive Z.
-    STANDARD_AXO : literal(CameraView.STANDARD_AXO)
-        Standard Axonometric view.
-
-    """
-
-    NEGATIVE_X = auto()
-    NEGATIVE_Y = auto()
-    NEGATIVE_Z = auto()
-    POSITIVE_X = auto()
-    POSITIVE_Y = auto()
-    POSITIVE_Z = auto()
-    STANDARD_AXO = auto()
-
-
-def set_camera_view(view: CameraView):
-    """Sets the cadwork viewport to the given view.
-
-    Parameters
-    ----------
-    view : :class:`CameraView`
-        The view to set.
-
-    Examples
-    --------
-    set_camera_view(CameraView.NEGATIVE_X)
-
-    Returns
-    -------
-    None
-
-    """
-    func_map = {
-        CameraView.NEGATIVE_X: vc.show_view_negative_x,
-        CameraView.NEGATIVE_Y: vc.show_view_negative_y,
-        CameraView.NEGATIVE_Z: vc.show_view_negative_z,
-        CameraView.POSITIVE_X: vc.show_view_positive_x,
-        CameraView.POSITIVE_Y: vc.show_view_positive_y,
-        CameraView.POSITIVE_Z: vc.show_view_positive_z,
-        CameraView.STANDARD_AXO: vc.show_view_standard_axo,
-    }
-
-    func = func_map.get(view)
-
-    if callable(func):
-        func()
-    else:
-        raise ValueError(f"Unknown camera view: {view}")
 
 
 def zoom_active_elements():
@@ -417,7 +344,6 @@ def save_project_file():
 __all__ = [
     "IFCExporter",
     "IFCExportSettings",
-    "set_camera_view",
     "get_plugin_home",
     "get_filename",
     "get_active_elements",
@@ -437,7 +363,6 @@ __all__ = [
     "remove_elements",
     "save_project_file",
     "zoom_active_elements",
-    "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
     "get_user_point",
