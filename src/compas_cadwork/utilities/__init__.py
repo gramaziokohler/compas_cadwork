@@ -20,7 +20,6 @@ from compas_cadwork.conversions import point_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
-from .dimensions import get_dimension_data
 
 
 # TODO: remove. replaced by compas_cadwork.scene.Camera
@@ -437,7 +436,6 @@ __all__ = [
     "remove_elements",
     "save_project_file",
     "zoom_active_elements",
-    "get_dimension_data",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
     "get_user_point",
