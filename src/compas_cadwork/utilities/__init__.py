@@ -3,9 +3,6 @@ from typing import Dict
 from typing import Union
 from typing import Generator
 
-from enum import auto
-from enum import Enum
-
 import cadwork
 import utility_controller as uc
 import element_controller as ec
