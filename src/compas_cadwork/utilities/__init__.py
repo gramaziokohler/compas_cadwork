@@ -126,7 +126,6 @@ def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
     groups_elements = {}
     for element_id in ec.get_all_identifiable_element_ids():
         group_name = get_grouping_name(element_id)
-
         if not group_name:
             continue
 

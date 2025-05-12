@@ -195,9 +195,15 @@ class Element:
 
     @property
     def centerline(self) -> Line:
-        p1 = point_to_compas(gc.get_p1(self.id))
-        p2 = point_to_compas(gc.get_p2(self.id))
-        return Line(p1, p2)
+        return Line(self.p1, self.p2)
+
+    @property
+    def p1(self) -> Point:
+        return point_to_compas(gc.get_p1(self.id))
+
+    @property
+    def p2(self) -> Point:
+        return point_to_compas(gc.get_p2(self.id))
 
     @property
     def midpoint(self) -> Point:
