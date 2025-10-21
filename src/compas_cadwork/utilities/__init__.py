@@ -1,19 +1,18 @@
-from typing import List
 from typing import Dict
-from typing import Union
 from typing import Generator
+from typing import List
+from typing import Union
 
-import cadwork
-import utility_controller as uc
-import element_controller as ec
 import attribute_controller as ac
+import cadwork
+import element_controller as ec
+import utility_controller as uc
 import visualization_controller as vc
-
 from compas.geometry import Point
+from compas_cadwork.conversions import point_to_compas
+from compas_cadwork.datamodel import Dimension
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
-from compas_cadwork.datamodel import Dimension
-from compas_cadwork.conversions import point_to_compas
 
 from .ifc_export import IFCExporter
 from .ifc_export import IFCExportSettings
@@ -127,6 +126,27 @@ def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
     for element_id in ec.get_all_identifiable_element_ids():
         group_name = get_grouping_name(element_id)
 
+        if not group_name:
+            continue
+
+        if group_name not in groups_elements:
+            groups_elements[group_name] = ElementGroup(group_name)
+        groups_elements[group_name].add_element(Element(element_id))
+
+    if is_wall_frame:
+        _remove_wallless_groups(groups_elements)
+
+    return groups_elements
+
+
+def get_element_groups_from_selection(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
+    """Return a dictionary of ElementGroups built from the currently selected elements."""
+
+    get_grouping_name = _get_grouping_func()
+
+    groups_elements = {}
+    for element_id in ec.get_active_identifiable_element_ids():
+        group_name = get_grouping_name(element_id)
         if not group_name:
             continue
 
@@ -342,29 +362,29 @@ def save_project_file():
 
 
 __all__ = [
-    "IFCExporter",
     "IFCExportSettings",
-    "get_plugin_home",
-    "get_filename",
-    "get_active_elements",
-    "get_element_groups",
+    "IFCExporter",
     "activate_elements",
-    "hide_elements",
-    "lock_elements",
-    "unlock_elements",
-    "show_all_elements",
-    "hide_all_elements",
     "disable_autorefresh",
     "enable_autorefresh",
     "force_refresh",
+    "get_active_elements",
     "get_all_element_ids",
     "get_all_elements",
     "get_all_elements_with_attrib",
-    "remove_elements",
-    "save_project_file",
-    "zoom_active_elements",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
+    "get_element_groups",
+    "get_filename",
+    "get_plugin_home",
     "get_user_point",
+    "hide_all_elements",
+    "hide_elements",
     "is_cadwork_window_in_dark_mode",
+    "lock_elements",
+    "remove_elements",
+    "save_project_file",
+    "show_all_elements",
+    "unlock_elements",
+    "zoom_active_elements",
 ]
