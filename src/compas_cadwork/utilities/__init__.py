@@ -371,6 +371,7 @@ __all__ = [
     "get_active_elements",
     "get_all_element_ids",
     "get_all_elements",
+    "get_element_groups_from_selection",
     "get_all_elements_with_attrib",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
