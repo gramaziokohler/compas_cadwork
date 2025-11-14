@@ -129,6 +129,10 @@ class Element:
         The base64 IFC GUID of the Element
     cadwork_guid : str
         The cadwork GUID of the Element
+    startpoint : Point
+        The start point of the Element
+    endpoint : Point
+        The end point of the Element
     centerline : Line
         The centerline of the Element.
     midpoint : Point
@@ -192,6 +196,14 @@ class Element:
     @property
     def cadwork_guid(self) -> str:
         return ec.get_element_cadwork_guid(self.id)
+
+    @property
+    def startpoint(self) -> Point:
+        return point_to_compas(gc.get_p1(self.id))
+
+    @property
+    def endpoint(self) -> Point:
+        return point_to_compas(gc.get_p2(self.id))
 
     @property
     def centerline(self) -> Line:
