@@ -248,20 +248,25 @@ class Element:
         """
         return (Element(e_id) for e_id in ec.get_active_identifiable_element_ids())
 
-    def set_attribute(self, name, value):
+    def set_attribute(self, attribute_number: int, name: str, value: str):
         """Sets an attribute on the Element
 
         Parameters
         ----------
+        attribute_number : int
+            The number of the attribute (1-10)
         name : str
             The name of the attribute
         value : str
             The value of the attribute
 
         """
-        ac.set_user_attribute([self.id], name, value)
+        ac.set_user_attribute_name(number=attribute_number, user_attribute_name=name)
+        ac.set_user_attribute([self.id], number=attribute_number, user_attribute=value)
 
-    def remove_attribute(self, name):
+    # actully this only use the user_attribute number; no pass the elment id
+    # I am not sure how it defines which element to remove the attribute from
+    def remove_attribute(self, attribute_number):
         """Removes an attribute from the Element
 
         Parameters
@@ -270,7 +275,7 @@ class Element:
             The name of the attribute
 
         """
-        ac.delete_user_attribute([self.id], name)
+        ac.delete_user_attribute(number=attribute_number)
 
     def set_is_instruction(self, value: bool, instruction_id: Optional[str] = None):
         """Sets the is_instruction attribute on the Element
