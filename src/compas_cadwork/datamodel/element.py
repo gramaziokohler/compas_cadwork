@@ -248,34 +248,45 @@ class Element:
         """
         return (Element(e_id) for e_id in ec.get_active_identifiable_element_ids())
 
-    def set_attribute(self, attribute_number: int, name: str, value: str):
+    def set_attribute(self, attribute_number: int, name_or_value: str, value: Optional[str] = None):
         """Sets an attribute on the Element
 
         Parameters
         ----------
         attribute_number : int
             The number of the attribute (1-10)
-        name : str
-            The name of the attribute
-        value : str
+        name_or_value : str
+            If ``value`` is provided, this is the name of the attribute.
+            Otherwise, this is the user attribute value.
+        value : str, optional
             The value of the attribute
 
         """
-        ac.set_user_attribute_name(number=attribute_number, user_attribute_name=name)
-        ac.set_user_attribute([self.id], number=attribute_number, user_attribute=value)
+        if value is None:
+            user_attribute_value = name_or_value
+        else:
+            ac.set_user_attribute_name(attribute_number, name_or_value)
+            user_attribute_value = value
+
+        ac.set_user_attribute([self.id], attribute_number, user_attribute_value)
 
     # actully this only use the user_attribute number; no pass the elment id
     # I am not sure how it defines which element to remove the attribute from
-    def remove_attribute(self, attribute_number):
+    def remove_attribute(self, attribute_number: int, value: Optional[str] = None):
         """Removes an attribute from the Element
 
         Parameters
         ----------
-        name : str
-            The name of the attribute
+        attribute_number : int
+            The number of the attribute (1-10)
+        value : str, optional
+            The attribute value to remove from the user attribute list.
 
         """
-        ac.delete_user_attribute(number=attribute_number)
+        if value is None:
+            ac.delete_user_attribute(attribute_number)
+        else:
+            ac.delete_item_from_user_attribute_list(attribute_number, value)
 
     def set_is_instruction(self, value: bool, instruction_id: Optional[str] = None):
         """Sets the is_instruction attribute on the Element
