@@ -140,7 +140,18 @@ def get_element_groups(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
 
 
 def get_element_groups_from_selection(is_wall_frame: bool = True) -> Dict[str, ElementGroup]:
-    """Return a dictionary of ElementGroups built from the currently selected elements."""
+    """Return ElementGroups built from the current selection.
+
+    Parameters
+    ----------
+    is_wall_frame : bool, optional
+        If True, only groups containing a framed wall/roof/floor element are returned.
+
+    Returns
+    -------
+    dict(str, ElementGroup)
+        Dictionary of group names mapped to ElementGroup instances.
+    """
 
     get_grouping_name = _get_grouping_func()
 
