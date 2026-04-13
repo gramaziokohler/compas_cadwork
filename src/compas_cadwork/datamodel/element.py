@@ -229,6 +229,10 @@ class Element:
         return ac.is_drilling(self.id)
 
     @property
+    def is_opening(self) -> bool:
+        return ac.is_opening(self.id)
+
+    @property
     def is_instruction(self) -> bool:
         return ac.get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
 
