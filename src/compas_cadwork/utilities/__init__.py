@@ -148,7 +148,7 @@ def get_element_groups_from_selection(is_wall_frame: bool = True) -> Dict[str, E
     for element_id in ec.get_active_identifiable_element_ids():
         group_name = get_grouping_name(element_id)
         if not group_name:
-            continue
+            group_name = "Ungrouped"
 
         if group_name not in groups_elements:
             groups_elements[group_name] = ElementGroup(group_name)
