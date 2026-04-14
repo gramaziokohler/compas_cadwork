@@ -553,12 +553,14 @@ document.write(`
 <h1>Element.remove_attribute</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_cadwork.datamodel.Element.remove_attribute">
-<span class="sig-prename descclassname"><span class="pre">Element.</span></span><span class="sig-name descname"><span class="pre">remove_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/gramaziokohler/compas_cadwork/blob/dc6e0ac/src/compas_cadwork/datamodel/element.py#L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Element.</span></span><span class="sig-name descname"><span class="pre">remove_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/gramaziokohler/compas_cadwork/blob/8daced3/src/compas_cadwork/datamodel/element.py#L279"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Removes an attribute from the Element</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The name of the attribute</p>
+<dt><strong>attribute_number</strong><span class="classifier">int</span></dt><dd><p>The number of the attribute (1-10)</p>
+</dd>
+<dt><strong>value</strong><span class="classifier">str, optional</span></dt><dd><p>The attribute value to remove from the user attribute list.</p>
 </dd>
 </dl>
 </dd>
