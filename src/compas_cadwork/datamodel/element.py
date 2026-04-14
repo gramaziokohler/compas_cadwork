@@ -238,7 +238,7 @@ class Element:
 
     def is_beam(self) -> bool:
         type_ = ac.get_element_type(self.id)
-        return type_.is_rectangular_beam()
+        return type_.is_rectangular_beam() or type_.is_circular_beam()
 
     @classmethod
     def from_selection(cls) -> Generator[Element]:

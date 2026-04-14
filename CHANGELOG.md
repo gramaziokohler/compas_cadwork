@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added support for circular beams in `Element.is_beam()`.
 
 - Added `Element.is_opening` property.
 
