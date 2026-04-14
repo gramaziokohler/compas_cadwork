@@ -236,9 +236,18 @@ class Element:
     def is_instruction(self) -> bool:
         return ac.get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
 
+    @property
+    def is_surface(self) -> bool:
+        # TODO: add a check for the element type to be a surface specifically for a gridline, we
+        # should not be a surface in general
+        type_ = ac.get_element_type(self.id)
+        return type_.is_surface()
+
+    @property   
     def is_beam(self) -> bool:
         type_ = ac.get_element_type(self.id)
         return type_.is_rectangular_beam() or type_.is_circular_beam()
+
 
     @classmethod
     def from_selection(cls) -> Generator[Element]:

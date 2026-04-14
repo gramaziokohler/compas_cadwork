@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `Element.is_opening` property.
 
 ### Changed
+- Fixed `Element.set_attribute` and `Element.remove_attribute` to use positional cadwork API calls and support clearing attribute values.
 
 ### Removed
 
