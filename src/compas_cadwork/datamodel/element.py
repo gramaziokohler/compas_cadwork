@@ -8,7 +8,7 @@ from typing import Optional
 
 import attribute_controller as ac
 import bim_controller as bc
-import cadwork  # noqa: F401
+import cadwork
 import element_controller as ec
 import geometry_controller as gc
 from compas.geometry import Frame
@@ -18,6 +18,7 @@ from compas.geometry import Vector
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
+
 
 # These are used to identify instruction elements which were added to the cadwork file by compas_cadwork.
 ATTR_INSTRUCTION_ID = 666
@@ -237,17 +238,14 @@ class Element:
         return ac.get_user_attribute(self.id, ATTR_INSTRUCTION_ID) != ""
 
     @property
-    def is_surface(self) -> bool:
-        # TODO: add a check for the element type to be a surface specifically for a gridline, we
-        # should not be a surface in general
+    def is_gridline(self) -> bool:
         type_ = ac.get_element_type(self.id)
-        return type_.is_surface()
+        return type_.is_surface() or "GL_" in self.group
 
-    @property   
+    @property
     def is_beam(self) -> bool:
         type_ = ac.get_element_type(self.id)
         return type_.is_rectangular_beam() or type_.is_circular_beam()
-
 
     @classmethod
     def from_selection(cls) -> Generator[Element]:
