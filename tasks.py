@@ -1,28 +1,29 @@
-from __future__ import print_function
+from invoke.collection import Collection
+from invoke.context import Context
+from invoke.tasks import task
 
-import os
 
-from compas_invocations2 import build
-from compas_invocations2 import docs
-from compas_invocations2 import style
-from compas_invocations2 import tests
-from invoke import Collection
+@task
+def setup(ctx: Context):
+    """Register the pre-commit hooks for this project."""
+    ctx.run("pre-commit install")
+
+
+@task
+def lint(ctx: Context):
+    """Run all pre-commit hooks against the whole project."""
+    ctx.run("pre-commit run --all-files")
+
 
 ns = Collection(
-    docs.help,
-    style.check,
-    style.lint,
-    style.format,
-    docs.docs,
-    docs.linkcheck,
-    tests.test,
-    tests.testdocs,
-    build.prepare_changelog,
-    build.clean,
-    build.release,
+    setup,
+    lint,
 )
+
 ns.configure(
     {
-        "base_folder": os.path.dirname(__file__),
+        "run": {
+            "encoding": "utf-8",
+        },
     }
 )
