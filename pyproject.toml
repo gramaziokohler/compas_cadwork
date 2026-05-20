@@ -14,7 +14,8 @@ dev = [
 authors = [
   {name = "Chen Kasirer", email = "kasirer@arch.ethz.ch"},
   {name = "Matthias Helmreich", email = "helmreich@arch.ethz.ch"},
-  {name = "Gonzalo Casas", email = "casas@arch.ethz.ch"}
+  {name = "Gonzalo Casas", email = "casas@arch.ethz.ch"},
+  {name = "José Miguel Moreno", email = "morenolopez@arch.ethz.ch"}
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
