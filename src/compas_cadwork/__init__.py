@@ -1,6 +1,8 @@
 from __future__ import print_function
+
 import os
 from datetime import datetime
+
 
 __title__ = "compas_cadwork"
 __description__ = "COMPAS package for integrating with cadwork"
@@ -19,9 +21,9 @@ TEMP = os.path.abspath(os.path.join(HOME, "temp"))
 
 
 __all__ = [
-    "HOME",
     "DATA",
     "DOCS",
+    "HOME",
     "TEMP",
     "__author__",
     "__author_email__",

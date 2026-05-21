@@ -27,7 +27,7 @@ if latest_version == "Unreleased":
     version = "latest"
 else:
     release = latest_version
-    version = ".".join(release.split(".")[0:2])  # type: ignore
+    version = ".".join(release.split(".")[0:2])
 
 # -- Extension configuration ------------------------------------------------
 
@@ -44,7 +44,7 @@ numpydoc_show_inherited_class_members = False
 
 # autodoc options
 
-autodoc_type_aliases = {}
+autodoc_type_aliases = {}  # type: ignore[var-annotated]
 autodoc_typehints_description_target = "documented"
 autodoc_mock_imports = sphinx_compas2_theme.default_mock_imports
 autodoc_default_options = {
@@ -156,8 +156,8 @@ html_context = {
 }
 
 html_static_path = sphinx_compas2_theme.get_html_static_path() + ["_static"]
-html_css_files = []
-html_extra_path = []
+html_css_files = []  # type: ignore[var-annotated]
+html_extra_path = []  # type: ignore[var-annotated]
 html_last_updated_fmt = ""
 html_copy_source = False
 html_show_sourcelink = True

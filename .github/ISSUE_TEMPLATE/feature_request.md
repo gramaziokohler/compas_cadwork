@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-
 ---
+
 # Feature Request
 
 As a [role], I want [something] so that [benefit].

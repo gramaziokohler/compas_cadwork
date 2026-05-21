@@ -20,10 +20,10 @@ class ElementDelta:
             List of new elements.
         """
         current_ids = set(get_all_element_ids())
-        new_ids = current_ids - self._known_element_ids
-        removed_ids = self._known_element_ids - current_ids
+        new_ids = current_ids - self._known_element_ids  # type: ignore[operator]
+        removed_ids = self._known_element_ids - current_ids  # type: ignore[operator]
         self._known_element_ids = current_ids
-        return [Element(id) for id in new_ids], [Element(id) for id in removed_ids]
+        return [Element(id) for id in new_ids], [Element(id) for id in removed_ids]  # noqa: A001
 
     def reset(self):
         """Reset the known element ids"""
@@ -33,7 +33,8 @@ class ElementDelta:
 class DimensionsDelta:
     """Helper for detecting edits to the dimensions in the document
 
-    TODO: check if and how this can be merged with ElementDelta, seems this could do both jobs, question is just the reset point.
+    TODO: check if and how this can be merged with ElementDelta, seems this could do both jobs, question is just the
+    reset point.
 
     """
 
@@ -52,8 +53,8 @@ class DimensionsDelta:
         # Changes will contain additions as well, since the objects are compared as a whole..
         # However, addtions need to be handled separately. Therefore, new ids are filtered out.
         current_dimensions = get_dimensions()
-        changes = set(current_dimensions) - self._known_dimensions
-        additions = set([m.id for m in current_dimensions]) - set([m.id for m in self._known_dimensions])
+        changes = set(current_dimensions) - self._known_dimensions  # type: ignore[operator]
+        additions = set([m.id for m in current_dimensions]) - set([m.id for m in self._known_dimensions])  # type: ignore[union-attr]
         return list(filter(lambda m: m.id not in additions, changes))
 
     def reset(self):

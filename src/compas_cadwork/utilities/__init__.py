@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import Dict
 from typing import Generator
 from typing import List
@@ -9,6 +10,7 @@ import element_controller as ec
 import utility_controller as uc
 import visualization_controller as vc
 from compas.geometry import Point
+
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.datamodel import Dimension
 from compas_cadwork.datamodel import Element
@@ -160,7 +162,7 @@ def get_element_groups_from_selection(is_wall_frame: bool = True) -> Dict[str, E
     return groups_elements
 
 
-def _get_grouping_func() -> callable:
+def _get_grouping_func() -> Callable:
     if ac.get_element_grouping_type() == cadwork.element_grouping_type.subgroup:
         return ac.get_subgroup
     else:
@@ -371,11 +373,11 @@ __all__ = [
     "get_active_elements",
     "get_all_element_ids",
     "get_all_elements",
-    "get_element_groups_from_selection",
     "get_all_elements_with_attrib",
     "get_bounding_box_from_cadwork_object",
     "get_dimensions",
     "get_element_groups",
+    "get_element_groups_from_selection",
     "get_filename",
     "get_plugin_home",
     "get_user_point",

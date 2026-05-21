@@ -25,8 +25,8 @@ pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x
 
 ## First Steps
 
-* [Documentation](https://gramaziokohler.github.io/compas_cadwork/)
-* [COMPAS CADWORK API Reference](https://gramaziokohler.github.io/compas_cadwork/latest/api.html)
+- [Documentation](https://gramaziokohler.github.io/compas_cadwork/)
+- [COMPAS CADWORK API Reference](https://gramaziokohler.github.io/compas_cadwork/latest/api.html)
 
 ## Questions and feedback
 
@@ -46,4 +46,4 @@ for more details.
 
 ## Credits
 
-`compas_cadwork` is currently developed by [Gramazio Kohler Research](https://gramaziokohler.arch.ethz.ch/). 
+`compas_cadwork` is currently developed by [Gramazio Kohler Research](https://gramaziokohler.arch.ethz.ch/).

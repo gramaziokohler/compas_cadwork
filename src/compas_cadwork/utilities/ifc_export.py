@@ -8,6 +8,7 @@ import utility_controller as uc
 
 from compas_cadwork.datamodel import ElementGroupingType
 
+
 LOG = logging.getLogger(__name__)
 
 
@@ -60,7 +61,7 @@ class IFCExporter:
 
     """
 
-    def __init__(self, settings: IFCExportSettings = None) -> None:
+    def __init__(self, settings: IFCExportSettings | None = None) -> None:
         self.settings = settings or IFCExportSettings()
         self._translate_local_frame = None
 
@@ -81,11 +82,13 @@ class IFCExporter:
         filepath = os.path.abspath(filepath)
         options = self.settings.get_ifc_options()
         try:
-            LOG.debug(f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})""")
+            LOG.debug(
+                f"""export_ifc4_silently_with_options(element_i_ds={type(element_ids)}({type(element_ids[0])}), file_path={type(filepath)}, options={type(options)})"""  # noqa: E501
+            )
             success = bc.export_ifc4_silently_with_options(element_ids, filepath, options)
             LOG.debug(f"export_ifc4_silently_with_options: {success}")
         except Exception as ex:
-            LOG.exception(f"Failed to export elements to ifc. {str(ex)}")
+            LOG.exception(f"Failed to export elements to ifc. {ex!s}")
         finally:
             self.cleanup()
 

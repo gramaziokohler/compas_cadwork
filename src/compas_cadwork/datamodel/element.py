@@ -78,8 +78,8 @@ class ElementGroup:
     """
 
     name: str
-    elements: list = None
-    wall_frame_element: Element = None
+    elements: list | None = None
+    wall_frame_element: Element | None = None
 
     def add_element(self, element: Element) -> None:
         """Adds an Element to the Element Group
@@ -99,7 +99,7 @@ class ElementGroup:
     @property
     def ifc_guid(self) -> str:
         if self.wall_frame_element is None:
-            return None
+            return None  # type: ignore[return-value]
         return self.wall_frame_element.ifc_base64_guid
 
 
@@ -315,7 +315,7 @@ class Element:
             raise ValueError("Instruction ID must be provided when setting is_instruction to True")
 
         if value:
-            self.set_attribute(ATTR_INSTRUCTION_ID, instruction_id)
+            self.set_attribute(ATTR_INSTRUCTION_ID, instruction_id)  # type: ignore[arg-type]
         else:
             self.remove_attribute(ATTR_INSTRUCTION_ID)
 
