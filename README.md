@@ -1,11 +1,12 @@
 # compas_cadwork
 
-[![build](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/build.yml/badge.svg)](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/build.yml)
-[![License](https://img.shields.io/github/license/gramaziokohler/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
-[![pip downloads](https://img.shields.io/pypi/dm/compas_cadwork)](https://pypi.python.org/project/compas_cadwork)
-[![PyPI Package latest release](https://img.shields.io/pypi/v/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
-[![Supported implementations](https://img.shields.io/pypi/implementation/compas_cadwork.svg)](https://pypi.python.org/pypi/compas_cadwork)
+[![Build](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/ci.yml/badge.svg)](https://github.com/gramaziokohler/compas_cadwork/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/gramaziokohler/compas_cadwork.svg)](https://pypi.python.org/pypi/compas-cadwork)
+[![pip downloads](https://img.shields.io/pypi/dm/compas-cadwork)](https://pypi.org/project/compas-cadwork/)
+[![PyPI Package latest release](https://img.shields.io/pypi/v/compas-cadwork.svg)](https://pypi.python.org/pypi/compas-cadwork/)
+[![Supported implementations](https://img.shields.io/pypi/implementation/compas-cadwork.svg)](https://pypi.python.org/pypi/compas-cadwork/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/compas_dev?style=social)](https://twitter.com/compas_dev)
+[![Made with COMPAS](https://compas.dev/badge.svg)](https://compas.dev/)
 
 ![COMPAS Cadwork](https://raw.githubusercontent.com/gramaziokohler/compas_cadwork/refs/heads/main/compas_cadwork.jpg)
 
@@ -20,7 +21,7 @@ Gain access to the COMPAS ecosystem which includes a wide range of tools and lib
 To install `compas_cadwork` directly to cadwork 3d, run:
 
 ```bash
-pip install compas_cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
+pip install compas-cadwork --target "C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages" --upgrade
 ```
 
 ## First Steps
