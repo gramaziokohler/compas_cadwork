@@ -1,4 +1,5 @@
 name: verify-pr-checklist
+
 on:
   pull_request:
     types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
@@ -6,13 +7,15 @@ on:
       - main
 
 jobs:
-  build:
-    name: Check Actions
-    runs-on: ubuntu-latest
+  checklist:
+    name: Verify PR checklist
+    runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v1
-      - name: Changelog check
-        uses: Zomzog/changelog-checker@v1.2.0
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check changelog
+        uses: Zomzog/changelog-checker@v1.3.0
         with:
           fileName: CHANGELOG.md
           checkNotification: Simple
