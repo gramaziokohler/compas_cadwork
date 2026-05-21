@@ -15,7 +15,7 @@ import element_controller as ec
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
-from compas_cadwork.scene import CadworkSceneObject
+from compas_cadwork.scene.scene import CadworkSceneObject
 
 
 class Text3dSceneObject(CadworkSceneObject):
