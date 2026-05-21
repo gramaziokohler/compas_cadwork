@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Switched project to Astral's uv project manager.
+
 ### Removed
 
 ## [0.10.1] 2026-04-22
@@ -18,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for circular beams in `Element.is_beam()`.
-
 - Added `Element.is_opening` property.
 
 ### Changed
