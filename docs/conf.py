@@ -136,7 +136,7 @@ html_theme_options = {
         },
     ],
     "switcher": {
-        "json_url": f"https://raw.githubusercontent.com/{organization}/{package}/gh-pages/versions.json",
+        "json_url": f"https://{organization}.github.io/{package}/versions.json",
         "version_match": version,
     },
     "logo": {
