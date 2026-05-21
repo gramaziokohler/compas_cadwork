@@ -15,9 +15,16 @@ def lint(ctx: Context):
     ctx.run("pre-commit run --all-files")
 
 
+@task
+def test(ctx: Context):
+    """Run the entire test suite."""
+    ctx.run("pytest")
+
+
 ns = Collection(
     setup,
     lint,
+    test,
 )
 
 ns.configure(

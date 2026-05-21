@@ -7,7 +7,8 @@ dev = [
   "bump-my-version>=1.3.0",
   "cwapi3d==32.443.10",
   "invoke>=3.0.3",
-  "pre-commit>=4.6.0"
+  "pre-commit>=4.6.0",
+  "pytest>=9.0.3"
 ]
 
 [project]
@@ -98,6 +99,7 @@ doctest_optionflags = [
 ]
 minversion = "6.0"
 python_files = ["test_*.py"]
+testpaths = ["tests"]
 
 [tool.ruff]
 indent-width = 4
