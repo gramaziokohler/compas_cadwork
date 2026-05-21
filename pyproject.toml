@@ -61,7 +61,7 @@ replace = "[{new_version}] {now:%Y-%m-%d}"
 search = "Unreleased"
 
 [tool.hatch]
-build.packages = ["src/compas_cadwork"]
+build.targets.wheel.packages = ["src/compas_cadwork"]
 version.path = "src/compas_cadwork/__init__.py"
 
 [tool.mypy]
