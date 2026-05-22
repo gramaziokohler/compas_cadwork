@@ -23,6 +23,8 @@ def prepare_changelog(ctx: Context) -> None:
     with chdir(ctx.base_folder):
         with open("CHANGELOG.md", "r+", newline="") as changelog:
             content = changelog.read()
+            if "\n## Unreleased\n" in content:
+                raise RuntimeError("Changelog already contains an unreleased section")
             changelog.seek(0)
             changelog.write(content.replace("## ", _UNRELEASED_CHANGELOG_TEMPLATE, 1))
         ctx.run('git add CHANGELOG.md && git commit -m "Prepare changelog for next release"')
