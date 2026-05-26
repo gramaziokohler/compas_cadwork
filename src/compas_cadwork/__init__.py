@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 from datetime import datetime
 
+from .project import Project
+
 
 __title__ = "compas_cadwork"
 __description__ = "COMPAS package for integrating with cadwork"
@@ -25,6 +27,7 @@ __all__ = [
     "DOCS",
     "HOME",
     "TEMP",
+    "Project",
     "__author__",
     "__author_email__",
     "__copyright__",
