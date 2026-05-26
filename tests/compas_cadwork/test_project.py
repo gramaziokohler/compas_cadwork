@@ -192,6 +192,30 @@ def test_sets_project_designer(cadwork) -> None:
     cadwork.uc.set_project_designer.assert_called_with("Test Value")
 
 
+def test_get_elements(cadwork) -> None:
+    project = Project()
+
+    # Without elements
+    cadwork.ec.get_all_identifiable_element_ids.return_value = []
+    assert len(list(project.elements())) == 0
+
+    # With elements
+    cadwork.ec.get_all_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
+    assert [x.id for x in project.elements()] == [505, 404, 303, 202, 101]
+
+
+def test_get_selected_elements(cadwork) -> None:
+    project = Project()
+
+    # Without elements
+    cadwork.ec.get_active_identifiable_element_ids.return_value = []
+    assert len(list(project.selected_elements())) == 0
+
+    # With elements
+    cadwork.ec.get_active_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
+    assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
+
+
 def test_repr(cadwork) -> None:
     project = Project()
     cadwork.uc.get_project_guid.return_value = "{12345678-AAAA-BBBB-CCCC-DDEE12345678}"

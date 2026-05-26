@@ -1,9 +1,12 @@
 from datetime import date
 from datetime import datetime
+from typing import Generator
 from uuid import UUID
 
+import element_controller as ec
 import utility_controller as uc
 
+from compas_cadwork.elements.element import Element
 
 
 def _is_empty_value(raw_value: str) -> bool:
@@ -99,6 +102,28 @@ class Project:
     @designer.setter
     def designer(self, value: str | None) -> None:
         uc.set_project_designer(value or "")
+
+    def elements(self) -> Generator[Element, None, None]:
+        """Get all elements in the project.
+
+        Returns
+        -------
+        Generator[Element, None, None]
+            Generator of elements.
+        """
+        for cadwork_id in ec.get_all_identifiable_element_ids():
+            yield Element(cadwork_id)
+
+    def selected_elements(self) -> Generator[Element, None, None]:
+        """Get currently selected (active) elements.
+
+        Returns
+        -------
+        Generator[Element, None, None]
+            Generator of elements.
+        """
+        for cadwork_id in ec.get_active_identifiable_element_ids():
+            yield Element(cadwork_id)
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"
