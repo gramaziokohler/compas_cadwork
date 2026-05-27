@@ -139,6 +139,31 @@ def test_sets_element_group_from_subgroup(cadwork) -> None:
     cadwork.ac.set_subgroup.assert_called_with([123], "Test Value")
 
 
+def test_gets_element_comment(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_comment.return_value = ""
+    assert element.comment is None
+    cadwork.ac.get_comment.assert_called_once_with(123)
+
+    # With value
+    cadwork.ac.get_comment.return_value = "Element Comment"
+    assert element.comment == "Element Comment"
+
+
+def test_sets_element_comment(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    element.comment = None
+    cadwork.ac.set_comment.assert_called_once_with([123], "")
+
+    # With value
+    element.comment = "Test Value"
+    cadwork.ac.set_comment.assert_called_with([123], "Test Value")
+
+
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
     element.delete()

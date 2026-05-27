@@ -106,6 +106,16 @@ class Element:
         else:
             ac.set_group([self.id], value or "")
 
+    @property
+    def comment(self) -> str | None:
+        """Element comment."""
+        raw_value = ac.get_comment(self.id)
+        return None if raw_value == "" else raw_value
+
+    @comment.setter
+    def comment(self, value: str | None) -> None:
+        ac.set_comment([self.id], value or "")
+
     def delete(self) -> None:
         """Delete element.
 
