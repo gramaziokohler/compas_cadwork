@@ -85,6 +85,72 @@ class _ElementUserAttributes:
         return self[key]
 
 
+class _ElementAdditionalData:
+    """Dictionary-like accessor for element additional data.
+
+    NOTE: Additional data is hidden from users and only accessible via the Cadwork API.
+    """
+
+    _id: Final[ElementId]
+
+    def __init__(self, element_id: ElementId) -> None:
+        self._id = element_id
+
+    def __contains__(self, key: str) -> bool:
+        raw_value = ac.get_additional_data(self._id, key)
+        return raw_value != ""
+
+    def __getitem__(self, key: str) -> str:
+        raw_value = ac.get_additional_data(self._id, key)
+        if raw_value == "":
+            raise KeyError(key)
+        return raw_value
+
+    def __setitem__(self, key: str, value: str) -> None:
+        ac.set_additional_data([self._id], key, value)
+
+    def __delitem__(self, key: str) -> None:
+        if key not in self:
+            raise KeyError(key)
+        ac.delete_additional_data([self._id], key)
+
+    def get(self, key: str, default: str | None = None) -> str | None:
+        """Get additional data.
+
+        Parameters
+        ----------
+        key : str
+            Additional data ID.
+        default : str | None, optional
+            Value to return if additional data is not set.
+
+        Returns
+        -------
+        str | None
+            Additional data value, or ``default`` if additional data is not set.
+        """
+        return self[key] if key in self else default
+
+    def setdefault(self, key: str, default: str) -> str:
+        """Set additional data to ``default`` if not set, then return its value.
+
+        Parameters
+        ----------
+        key : str
+            Additional data ID.
+        default : str
+            Value to set if additional data is not set.
+
+        Returns
+        -------
+        str
+            Existing additional data value, or ``default`` if data was not set.
+        """
+        if key not in self:
+            self[key] = default
+        return self[key]
+
+
 class Element:
     """Generic Cadwork element."""
 
@@ -188,6 +254,11 @@ class Element:
     def attributes(self) -> _ElementUserAttributes:
         """User attributes."""
         return _ElementUserAttributes(self.id)
+
+    @cached_property
+    def data(self) -> _ElementAdditionalData:
+        """Additional data."""
+        return _ElementAdditionalData(self.id)
 
     def delete(self) -> None:
         """Delete element.

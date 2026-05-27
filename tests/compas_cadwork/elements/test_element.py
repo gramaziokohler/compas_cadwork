@@ -235,6 +235,78 @@ def test_deletes_attributes(cadwork) -> None:
     cadwork.ac.set_user_attribute.assert_called_once_with([123], 700, "")
 
 
+def test_contains_data(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_additional_data.return_value = ""
+    assert "first" not in element.data
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "first")
+
+    # With value
+    cadwork.ac.get_additional_data.return_value = "Test Value"
+    assert "second" in element.data
+    cadwork.ac.get_additional_data.assert_called_with(123, "second")
+
+
+def test_gets_data(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_additional_data.return_value = ""
+    with pytest.raises(KeyError):
+        _ = element.data["third"]
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "third")
+    assert element.data.get("third", None) is None
+    assert element.data.get("third", "Default") == "Default"
+
+    # With value
+    cadwork.ac.get_additional_data.return_value = "Test Value"
+    assert element.data["fourth"] == "Test Value"
+    cadwork.ac.get_additional_data.assert_called_with(123, "fourth")
+    assert element.data.get("fourth", None) == "Test Value"
+    assert element.data.get("fourth", "Default") == "Test Value"
+
+
+def test_sets_data(cadwork) -> None:
+    element = Element(123)
+
+    # Base case
+    element.data["fifth"] = "New Value"
+    cadwork.ac.set_additional_data.assert_called_once_with([123], "fifth", "New Value")
+
+    # Without value
+    cadwork.ac.get_additional_data.side_effect = ["", "Default Value"]
+    assert element.data.setdefault("sixth", "Default Value") == "Default Value"
+    cadwork.ac.get_additional_data.assert_called_with(123, "sixth")
+    cadwork.ac.set_additional_data.assert_called_with([123], "sixth", "Default Value")
+
+    # With value
+    cadwork.ac.set_additional_data.reset_mock()
+    cadwork.ac.get_additional_data.reset_mock(side_effect=True)
+    cadwork.ac.get_additional_data.return_value = "Existing Value"
+    assert element.data.setdefault("seventh", "Default Value") == "Existing Value"
+    cadwork.ac.get_additional_data.assert_called_with(123, "seventh")
+    cadwork.ac.set_additional_data.assert_not_called()
+
+
+def test_deletes_data(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_additional_data.return_value = ""
+    with pytest.raises(KeyError):
+        del element.data["first"]
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "first")
+
+    # With value
+    cadwork.ac.get_additional_data.return_value = "Test Value"
+    del element.data["second"]
+    cadwork.ac.get_additional_data.assert_called_with(123, "second")
+    cadwork.ac.delete_additional_data.assert_called_once_with([123], "second")
+    cadwork.ac.set_additional_data.assert_not_called()
+
+
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
     element.delete()
