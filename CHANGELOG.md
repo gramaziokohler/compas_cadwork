@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Switched project to Astral's uv project manager.
+- Added new `Element`, `Project`, and `IfcUUID` classes.
 
 ### Removed
 
