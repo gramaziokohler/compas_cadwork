@@ -1,6 +1,8 @@
 from datetime import date
 from uuid import UUID
 
+import pytest
+
 from compas_cadwork.project import Project
 
 
@@ -214,6 +216,77 @@ def test_get_selected_elements(cadwork) -> None:
     # With elements
     cadwork.ec.get_active_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
     assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
+
+
+def test_contains_attribute_names(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.ac.get_user_attribute_name.return_value = "User100"
+    assert 100 not in project.attribute_names
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(100)
+
+    # With value
+    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
+    assert 200 in project.attribute_names
+    cadwork.ac.get_user_attribute_name.assert_called_with(200)
+
+
+def test_gets_attribute_names(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.ac.get_user_attribute_name.return_value = "User300"
+    with pytest.raises(KeyError):
+        _ = project.attribute_names[300]
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(300)
+    assert project.attribute_names.get(300, None) is None
+    assert project.attribute_names.get(300, "Default") == "Default"
+
+    # With value
+    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
+    assert project.attribute_names[400] == "Test Value"
+    cadwork.ac.get_user_attribute_name.assert_called_with(400)
+    assert project.attribute_names.get(400, None) == "Test Value"
+    assert project.attribute_names.get(400, "Default") == "Test Value"
+
+
+def test_sets_attribute_names(cadwork) -> None:
+    project = Project()
+
+    # Base case
+    project.attribute_names[500] = "New Value"
+    cadwork.ac.set_user_attribute_name.assert_called_once_with(500, "New Value")
+
+    # Without value
+    cadwork.ac.get_user_attribute_name.side_effect = ["User501", "Default Value"]
+    assert project.attribute_names.setdefault(501, "Default Value") == "Default Value"
+    cadwork.ac.get_user_attribute_name.assert_called_with(501)
+    cadwork.ac.set_user_attribute_name.assert_called_with(501, "Default Value")
+
+    # With value
+    cadwork.ac.set_user_attribute_name.reset_mock()
+    cadwork.ac.get_user_attribute_name.reset_mock(side_effect=True)
+    cadwork.ac.get_user_attribute_name.return_value = "Existing Value"
+    assert project.attribute_names.setdefault(502, "Default Value") == "Existing Value"
+    cadwork.ac.get_user_attribute_name.assert_called_with(502)
+    cadwork.ac.set_user_attribute_name.assert_not_called()
+
+
+def test_deletes_attribute_names(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.ac.get_user_attribute_name.return_value = "User600"
+    with pytest.raises(KeyError):
+        del project.attribute_names[600]
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(600)
+
+    # With value
+    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
+    del project.attribute_names[700]
+    cadwork.ac.get_user_attribute_name.assert_called_with(700)
+    cadwork.ac.set_user_attribute_name.assert_called_once_with(700, "")
 
 
 def test_repr(cadwork) -> None:

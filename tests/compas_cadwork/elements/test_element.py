@@ -164,6 +164,77 @@ def test_sets_element_comment(cadwork) -> None:
     cadwork.ac.set_comment.assert_called_with([123], "Test Value")
 
 
+def test_contains_attributes(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_user_attribute.return_value = ""
+    assert 100 not in element.attributes
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 100)
+
+    # With value
+    cadwork.ac.get_user_attribute.return_value = "Test Value"
+    assert 200 in element.attributes
+    cadwork.ac.get_user_attribute.assert_called_with(123, 200)
+
+
+def test_gets_attributes(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_user_attribute.return_value = ""
+    with pytest.raises(KeyError):
+        _ = element.attributes[300]
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 300)
+    assert element.attributes.get(300, None) is None
+    assert element.attributes.get(300, "Default") == "Default"
+
+    # With value
+    cadwork.ac.get_user_attribute.return_value = "Test Value"
+    assert element.attributes[400] == "Test Value"
+    cadwork.ac.get_user_attribute.assert_called_with(123, 400)
+    assert element.attributes.get(400, None) == "Test Value"
+    assert element.attributes.get(400, "Default") == "Test Value"
+
+
+def test_sets_attributes(cadwork) -> None:
+    element = Element(123)
+
+    # Base case
+    element.attributes[500] = "New Value"
+    cadwork.ac.set_user_attribute.assert_called_once_with([123], 500, "New Value")
+
+    # Without value
+    cadwork.ac.get_user_attribute.side_effect = ["", "Default Value"]
+    assert element.attributes.setdefault(501, "Default Value") == "Default Value"
+    cadwork.ac.get_user_attribute.assert_called_with(123, 501)
+    cadwork.ac.set_user_attribute.assert_called_with([123], 501, "Default Value")
+
+    # With value
+    cadwork.ac.set_user_attribute.reset_mock()
+    cadwork.ac.get_user_attribute.reset_mock(side_effect=True)
+    cadwork.ac.get_user_attribute.return_value = "Existing Value"
+    assert element.attributes.setdefault(502, "Default Value") == "Existing Value"
+    cadwork.ac.get_user_attribute.assert_called_with(123, 502)
+    cadwork.ac.set_user_attribute.assert_not_called()
+
+
+def test_deletes_attributes(cadwork) -> None:
+    element = Element(123)
+
+    # Without value
+    cadwork.ac.get_user_attribute.return_value = ""
+    with pytest.raises(KeyError):
+        del element.attributes[600]
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 600)
+
+    # With value
+    cadwork.ac.get_user_attribute.return_value = "Test Value"
+    del element.attributes[700]
+    cadwork.ac.get_user_attribute.assert_called_with(123, 700)
+    cadwork.ac.set_user_attribute.assert_called_once_with([123], 700, "")
+
+
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
     element.delete()

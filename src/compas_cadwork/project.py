@@ -1,12 +1,21 @@
+from __future__ import annotations
+
 from datetime import date
 from datetime import datetime
+from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import Generator
 from uuid import UUID
 
+import attribute_controller as ac
 import element_controller as ec
 import utility_controller as uc
 
 from compas_cadwork.elements.element import Element
+
+
+if TYPE_CHECKING:
+    from attribute_controller import UserAttributeId
 
 
 def _is_empty_value(raw_value: str) -> bool:
@@ -23,6 +32,82 @@ def _is_empty_value(raw_value: str) -> bool:
         Whether value is considered empty.
     """
     return raw_value == "" or raw_value == "???"
+
+
+def _is_empty_attribute_name(attribute_id: UserAttributeId, attribute_name: str) -> bool:
+    """Is empty user attribute name.
+
+    Parameters
+    ----------
+    attribute_id: UserAttributeId
+        User attribute ID.
+    attribute_name : str
+        Raw user attribute name coming from Cadwork.
+
+    Return
+    ------
+    bool
+        Whether user attribute name is considered empty.
+    """
+    return attribute_name == "" or attribute_name == f"User{attribute_id}"
+
+
+class _ProjectUserAttributeNames:
+    """Dictionary-like accessor for getting the names of user attributes."""
+
+    def __contains__(self, key: UserAttributeId) -> bool:
+        raw_value = ac.get_user_attribute_name(key)
+        return not _is_empty_attribute_name(key, raw_value)
+
+    def __getitem__(self, key: UserAttributeId) -> str:
+        raw_value = ac.get_user_attribute_name(key)
+        if _is_empty_attribute_name(key, raw_value):
+            raise KeyError(key)
+        return raw_value
+
+    def __setitem__(self, key: UserAttributeId, value: str) -> None:
+        ac.set_user_attribute_name(key, value)
+
+    def __delitem__(self, key: UserAttributeId) -> None:
+        if key not in self:
+            raise KeyError(key)
+        ac.set_user_attribute_name(key, "")
+
+    def get(self, key: UserAttributeId, default: str | None = None) -> str | None:
+        """Get user attribute name.
+
+        Parameters
+        ----------
+        key : UserAttributeId
+            User attribute ID.
+        default : str | None, optional
+            Value to return if the attribute is not set.
+
+        Returns
+        -------
+        str | None
+            Attribute name, or ``default`` if the attribute is not set.
+        """
+        return self[key] if key in self else default
+
+    def setdefault(self, key: UserAttributeId, default: str) -> str:
+        """Set user attribute name to ``default`` if not set, then return its value.
+
+        Parameters
+        ----------
+        key : UserAttributeId
+            User attribute ID.
+        default : str
+            Value to set if the attribute name is not set.
+
+        Returns
+        -------
+        str
+            Existing attribute name, or ``default`` if the attribute name was not set.
+        """
+        if key not in self:
+            self[key] = default
+        return self[key]
 
 
 class Project:
@@ -102,6 +187,11 @@ class Project:
     @designer.setter
     def designer(self, value: str | None) -> None:
         uc.set_project_designer(value or "")
+
+    @cached_property
+    def attribute_names(self) -> _ProjectUserAttributeNames:
+        """User attributes name."""
+        return _ProjectUserAttributeNames()
 
     def elements(self) -> Generator[Element, None, None]:
         """Get all elements in the project.
