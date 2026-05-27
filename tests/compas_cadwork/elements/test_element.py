@@ -3,6 +3,7 @@ from uuid import UUID
 import pytest
 
 from compas_cadwork.elements.element import Element
+from compas_cadwork.utils.ifc_uuid import IfcUUID
 
 
 def test_get_element_from_guid(cadwork) -> None:
@@ -30,7 +31,7 @@ def test_raises_on_deleted_element(cadwork) -> None:
         _ = element.guid
 
     # For IFC GUID
-    cadwork.bc.get_ifc_base64_guid.return_value = ""
+    cadwork.bc.get_ifc_guid.return_value = ""
     with pytest.raises(RuntimeError, match=r"Cadwork element #123 no longer exists"):
         _ = element.ifc_guid
 
@@ -44,9 +45,9 @@ def test_gets_element_guid(cadwork) -> None:
 
 def test_gets_element_ifc_guid(cadwork) -> None:
     element = Element(123)
-    cadwork.bc.get_ifc_base64_guid.return_value = "34kOveOgv2nQmKGs$RWHRP"
-    assert element.ifc_guid == "34kOveOgv2nQmKGs$RWHRP"
-    cadwork.bc.get_ifc_base64_guid.assert_called_once_with(123)
+    cadwork.bc.get_ifc_guid.return_value = "{C4B98E68-62AE-42C5-AC14-436FDB8116D9}"
+    assert element.ifc_guid == IfcUUID("c4b98e68-62ae-42c5-ac14-436fdb8116d9")
+    cadwork.bc.get_ifc_guid.assert_called_once_with(123)
 
 
 def test_gets_element_name(cadwork) -> None:

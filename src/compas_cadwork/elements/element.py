@@ -10,6 +10,8 @@ import bim_controller as bc
 import cadwork
 import element_controller as ec
 
+from compas_cadwork.utils.ifc_uuid import IfcUUID
+
 
 if TYPE_CHECKING:
     from cadwork import ElementId
@@ -70,12 +72,12 @@ class Element:
         return UUID(raw_guid)
 
     @property
-    def ifc_guid(self) -> str:
+    def ifc_guid(self) -> IfcUUID:
         """IFC GUID."""
-        ifc_guid = bc.get_ifc_base64_guid(self.id)
+        ifc_guid = bc.get_ifc_guid(self.id)
         if ifc_guid == "":
             raise RuntimeError(f"Cadwork element #{self.id} no longer exists")
-        return ifc_guid
+        return IfcUUID(ifc_guid)
 
     @property
     def name(self) -> str | None:
