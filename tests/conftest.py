@@ -34,7 +34,6 @@ class CadworkMocks:
         self._apply_custom_patches()
 
     def _apply_custom_patches(self) -> None:
-        self.cadwork.ElementId = int
         self.cadwork.element_grouping_type.group = 1
         self.cadwork.element_grouping_type.subgroup = 2
 

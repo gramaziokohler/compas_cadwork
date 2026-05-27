@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from typing import Final
 from typing import final
 from uuid import UUID
@@ -8,7 +9,10 @@ import attribute_controller as ac
 import bim_controller as bc
 import cadwork
 import element_controller as ec
-from cadwork import ElementId
+
+
+if TYPE_CHECKING:
+    from cadwork import ElementId
 
 
 class Element:
