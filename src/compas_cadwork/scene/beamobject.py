@@ -1,6 +1,7 @@
 import attribute_controller as ac
 import element_controller as ec
 from compas_timber.elements import Beam
+from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
@@ -8,6 +9,7 @@ from compas_cadwork.conversions import vector_to_cadwork
 from .scene import CadworkSceneObject
 
 
+@deprecated("Subject to removal, avoid using")
 class BeamSceneObject(CadworkSceneObject):
     """Scene object for COMPAS Timber Beam objects.
 

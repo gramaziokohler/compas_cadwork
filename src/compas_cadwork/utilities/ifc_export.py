@@ -5,6 +5,7 @@ from typing import List
 
 import bim_controller as bc
 import utility_controller as uc
+from typing_extensions import deprecated
 
 from compas_cadwork.datamodel import ElementGroupingType
 
@@ -12,6 +13,7 @@ from compas_cadwork.datamodel import ElementGroupingType
 LOG = logging.getLogger(__name__)
 
 
+@deprecated("Subject to removal, avoid using")
 @dataclass
 class IFCExportSettings:
     """Represents settings for the ifc export.
@@ -54,6 +56,7 @@ class IFCExportSettings:
         return options
 
 
+@deprecated("Subject to removal, avoid using")
 class IFCExporter:
     """Used to export elements to ifc files.
 

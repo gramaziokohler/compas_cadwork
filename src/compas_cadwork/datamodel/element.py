@@ -15,6 +15,7 @@ from compas.geometry import Frame
 from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Vector
+from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_cadwork
@@ -24,6 +25,7 @@ from compas_cadwork.conversions import vector_to_cadwork
 ATTR_INSTRUCTION_ID = 666
 
 
+@deprecated("Use cadwork.element_grouping_type instead")
 class ElementGroupingType(IntEnum):
     """CADWork Element Grouping Type
 
@@ -53,6 +55,7 @@ class ElementGroupingType(IntEnum):
         return cadwork.element_grouping_type(self.value)
 
 
+@deprecated("Subject to removal, avoid using")
 @dataclass
 class ElementGroup:
     """Represents a cadwork Element Group
@@ -103,6 +106,7 @@ class ElementGroup:
         return self.wall_frame_element.ifc_base64_guid
 
 
+@deprecated("Use compas_cadwork.elements.Element instead")
 @dataclass
 class Element:
     """Represents a cadwork Element

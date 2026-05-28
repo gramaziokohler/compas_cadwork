@@ -7,6 +7,7 @@ from compas.geometry import Frame
 from compas.geometry import Point
 from compas.geometry import Vector
 from compas.tolerance import Tolerance
+from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
@@ -17,6 +18,7 @@ from .element import Element
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 
 
+@deprecated("Subject to removal, avoid using")
 @dataclass
 class AnchorPoint:
     """Anchor point of a cadwork measurement. There may me 2 or more anchor points in a measurement.
@@ -49,6 +51,7 @@ class AnchorPoint:
         return TOL.is_close(self.distance, other.distance)
 
 
+@deprecated("Subject to removal, avoid using")
 class Dimension(Element):
     """Represents a cadwork dimension"""
 

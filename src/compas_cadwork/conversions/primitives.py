@@ -5,8 +5,10 @@ except ImportError:
 
 from compas.geometry import Point
 from compas.geometry import Vector
+from typing_extensions import deprecated
 
 
+@deprecated("Subject to removal, avoid using")
 def point_to_cadwork(point: Point):
     """Convert a :class:`compas.geometry.Point` to a cadwork point_3d object.
 
@@ -23,6 +25,7 @@ def point_to_cadwork(point: Point):
     return point_3d(point.x, point.y, point.z)
 
 
+@deprecated("Subject to removal, avoid using")
 def vector_to_cadwork(vector: Vector):
     """Convert a :class:`compas.geometry.Vector` to a cadwork point_3d object.
 
@@ -39,6 +42,7 @@ def vector_to_cadwork(vector: Vector):
     return point_3d(vector.x, vector.y, vector.z)
 
 
+@deprecated("Subject to removal, avoid using")
 def point_to_compas(point):
     """Convert a cadwork point_3d to a :class:`compas.geometry.Point` object.
 
@@ -55,6 +59,7 @@ def point_to_compas(point):
     return Point(point.x, point.y, point.z)
 
 
+@deprecated("Subject to removal, avoid using")
 def vector_to_compas(vector):
     """Convert a cadwork point_3d to a :class:`compas.geometry.Point` obhect.
 

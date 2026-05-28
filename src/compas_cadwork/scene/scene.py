@@ -1,10 +1,12 @@
 import element_controller as ec
 import visualization_controller as vc
 from compas.scene import SceneObject
+from typing_extensions import deprecated
 
 from compas_cadwork.datamodel import Element
 
 
+@deprecated("Subject to removal, avoid using")
 class CadworkSceneObject(SceneObject):
     """Base class for all of cadwork's SceneObject."""
 
