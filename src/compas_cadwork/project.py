@@ -1,21 +1,16 @@
-from __future__ import annotations
-
 from datetime import date
 from datetime import datetime
 from functools import cached_property
-from typing import TYPE_CHECKING
 from typing import Generator
+from typing import Iterable
 from uuid import UUID
 
-import attribute_controller as ac
 import element_controller as ec
 import utility_controller as uc
 
 from compas_cadwork.elements.element import Element
-
-
-if TYPE_CHECKING:
-    from attribute_controller import UserAttributeId
+from compas_cadwork.utils.storage import IterableKeyValueStorage
+from compas_cadwork.utils.storage import KeyValueStorage
 
 
 def _is_empty_value(raw_value: str) -> bool:
@@ -34,80 +29,73 @@ def _is_empty_value(raw_value: str) -> bool:
     return raw_value == "" or raw_value == "???"
 
 
-def _is_empty_attribute_name(attribute_id: UserAttributeId, attribute_name: str) -> bool:
-    """Is empty user attribute name.
+class _ProjectAttributes(KeyValueStorage[int, str]):
+    """Dictionary-like accessor for project user attributes.
 
-    Parameters
-    ----------
-    attribute_id: UserAttributeId
-        User attribute ID.
-    attribute_name : str
-        Raw user attribute name coming from Cadwork.
-
-    Return
-    ------
-    bool
-        Whether user attribute name is considered empty.
+    NOTE: The first 10 user attributes are accessible in the GUI under "Preferences" > "Project data".
     """
-    return attribute_name == "" or attribute_name == f"User{attribute_id}"
+
+    _KEY_TYPE = int
+
+    @staticmethod
+    def _empty(key: int, value: str) -> bool:
+        return _is_empty_value(value)
+
+    def _get(self, key: int) -> str:
+        return uc.get_project_user_attribute(key)
+
+    def _set(self, key: int, value: str) -> None:
+        uc.set_project_user_attribute(key, value)
+
+    def _delete(self, key: int) -> None:
+        uc.set_project_user_attribute(key, "")  # There's no delete project user attribute function
 
 
-class _ProjectUserAttributeNames:
-    """Dictionary-like accessor for getting the names of user attributes."""
+class _ProjectAttributeNames(KeyValueStorage[int, str]):
+    """Dictionary-like accessor for project user attribute names.
 
-    def __contains__(self, key: UserAttributeId) -> bool:
-        raw_value = ac.get_user_attribute_name(key)
-        return not _is_empty_attribute_name(key, raw_value)
+    NOTE: The first 10 user attributes are accessible in the GUI under "Preferences" > "Project data".
+    """
 
-    def __getitem__(self, key: UserAttributeId) -> str:
-        raw_value = ac.get_user_attribute_name(key)
-        if _is_empty_attribute_name(key, raw_value):
-            raise KeyError(key)
-        return raw_value
+    _KEY_TYPE = int
 
-    def __setitem__(self, key: UserAttributeId, value: str) -> None:
-        ac.set_user_attribute_name(key, value)
+    @staticmethod
+    def _empty(key: int, value: str) -> bool:
+        return value == ""
 
-    def __delitem__(self, key: UserAttributeId) -> None:
-        if key not in self:
-            raise KeyError(key)
-        ac.set_user_attribute_name(key, "")
+    def _get(self, key: int) -> str:
+        return uc.get_project_user_attribute_name(key)
 
-    def get(self, key: UserAttributeId, default: str | None = None) -> str | None:
-        """Get user attribute name.
+    def _set(self, key: int, value: str) -> None:
+        uc.set_project_user_attribute_name(key, value)
 
-        Parameters
-        ----------
-        key : UserAttributeId
-            User attribute ID.
-        default : str | None, optional
-            Value to return if the attribute is not set.
+    def _delete(self, key: int) -> None:
+        uc.set_project_user_attribute_name(key, "")  # There's no delete project user attribute name function
 
-        Returns
-        -------
-        str | None
-            Attribute name, or ``default`` if the attribute is not set.
-        """
-        return self[key] if key in self else default
 
-    def setdefault(self, key: UserAttributeId, default: str) -> str:
-        """Set user attribute name to ``default`` if not set, then return its value.
+class _ProjectData(IterableKeyValueStorage[str, str]):
+    """Dictionary-like accessor for project data.
 
-        Parameters
-        ----------
-        key : UserAttributeId
-            User attribute ID.
-        default : str
-            Value to set if the attribute name is not set.
+    NOTE: Project data is hidden from the user and only accessible via the Cadwork API.
+    """
 
-        Returns
-        -------
-        str
-            Existing attribute name, or ``default`` if the attribute name was not set.
-        """
-        if key not in self:
-            self[key] = default
-        return self[key]
+    _KEY_TYPE = str
+
+    @staticmethod
+    def _empty(key: str, value: str) -> bool:
+        return value == ""
+
+    def _keys(self) -> Iterable[str]:
+        return uc.get_project_data_keys()
+
+    def _get(self, key: str) -> str:
+        return uc.get_project_data(key)
+
+    def _set(self, key: str, value: str) -> None:
+        uc.set_project_data(key, value)
+
+    def _delete(self, key: str) -> None:
+        uc.delete_project_data(key)
 
 
 class Project:
@@ -189,9 +177,19 @@ class Project:
         uc.set_project_designer(value or "")
 
     @cached_property
-    def attribute_names(self) -> _ProjectUserAttributeNames:
-        """User attributes name."""
-        return _ProjectUserAttributeNames()
+    def attributes(self) -> _ProjectAttributes:
+        """Project user attributes."""
+        return _ProjectAttributes()
+
+    @cached_property
+    def attribute_names(self) -> _ProjectAttributeNames:
+        """Project user attribute names."""
+        return _ProjectAttributeNames()
+
+    @cached_property
+    def data(self) -> _ProjectData:
+        """Project data."""
+        return _ProjectData()
 
     def elements(self) -> Generator[Element, None, None]:
         """Get all elements in the project.

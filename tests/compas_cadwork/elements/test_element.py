@@ -165,146 +165,133 @@ def test_sets_element_comment(cadwork) -> None:
 
 
 def test_contains_attributes(cadwork) -> None:
+    cadwork.ac.get_user_attribute.side_effect = lambda _, x: "Test Value" if x == 100 else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_user_attribute.return_value = ""
-    assert 100 not in element.attributes
-    cadwork.ac.get_user_attribute.assert_called_once_with(123, 100)
-
-    # With value
-    cadwork.ac.get_user_attribute.return_value = "Test Value"
-    assert 200 in element.attributes
-    cadwork.ac.get_user_attribute.assert_called_with(123, 200)
+    assert 200 not in element.attributes
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 200)
+    assert 100 in element.attributes
+    cadwork.ac.get_user_attribute.assert_called_with(123, 100)
 
 
 def test_gets_attributes(cadwork) -> None:
+    cadwork.ac.get_user_attribute.side_effect = lambda _, x: "Test Value" if x == 100 else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_user_attribute.return_value = ""
     with pytest.raises(KeyError):
-        _ = element.attributes[300]
-    cadwork.ac.get_user_attribute.assert_called_once_with(123, 300)
-    assert element.attributes.get(300, None) is None
-    assert element.attributes.get(300, "Default") == "Default"
-
-    # With value
-    cadwork.ac.get_user_attribute.return_value = "Test Value"
-    assert element.attributes[400] == "Test Value"
-    cadwork.ac.get_user_attribute.assert_called_with(123, 400)
-    assert element.attributes.get(400, None) == "Test Value"
-    assert element.attributes.get(400, "Default") == "Test Value"
+        _ = element.attributes[200]
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 200)
+    assert element.attributes[100] == "Test Value"
+    cadwork.ac.get_user_attribute.assert_called_with(123, 100)
 
 
 def test_sets_attributes(cadwork) -> None:
     element = Element(123)
-
-    # Base case
-    element.attributes[500] = "New Value"
-    cadwork.ac.set_user_attribute.assert_called_once_with([123], 500, "New Value")
-
-    # Without value
-    cadwork.ac.get_user_attribute.side_effect = ["", "Default Value"]
-    assert element.attributes.setdefault(501, "Default Value") == "Default Value"
-    cadwork.ac.get_user_attribute.assert_called_with(123, 501)
-    cadwork.ac.set_user_attribute.assert_called_with([123], 501, "Default Value")
-
-    # With value
-    cadwork.ac.set_user_attribute.reset_mock()
-    cadwork.ac.get_user_attribute.reset_mock(side_effect=True)
-    cadwork.ac.get_user_attribute.return_value = "Existing Value"
-    assert element.attributes.setdefault(502, "Default Value") == "Existing Value"
-    cadwork.ac.get_user_attribute.assert_called_with(123, 502)
-    cadwork.ac.set_user_attribute.assert_not_called()
+    element.attributes[100] = "New Value"
+    cadwork.ac.set_user_attribute.assert_called_once_with([123], 100, "New Value")
 
 
 def test_deletes_attributes(cadwork) -> None:
+    cadwork.ac.get_user_attribute.side_effect = lambda _, x: "Test Value" if x == 100 else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_user_attribute.return_value = ""
     with pytest.raises(KeyError):
-        del element.attributes[600]
-    cadwork.ac.get_user_attribute.assert_called_once_with(123, 600)
+        del element.attributes[200]
+    cadwork.ac.get_user_attribute.assert_called_once_with(123, 200)
+    cadwork.ac.set_user_attribute.assert_not_called()
+    del element.attributes[100]
+    cadwork.ac.get_user_attribute.assert_called_with(123, 100)
+    cadwork.ac.set_user_attribute.assert_called_with([123], 100, "")
 
-    # With value
-    cadwork.ac.get_user_attribute.return_value = "Test Value"
-    del element.attributes[700]
-    cadwork.ac.get_user_attribute.assert_called_with(123, 700)
-    cadwork.ac.set_user_attribute.assert_called_once_with([123], 700, "")
+
+def test_raises_on_iterate_attributes() -> None:
+    element = Element(123)
+    with pytest.raises(TypeError):
+        _ = list(element.attributes.keys())
+    with pytest.raises(TypeError):
+        _ = len(element.attributes)
+
+
+def test_contains_attribute_names(cadwork) -> None:
+    cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
+    assert 200 not in Element.attribute_names
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
+    assert 100 in Element.attribute_names
+    cadwork.ac.get_user_attribute_name.assert_called_with(100)
+
+
+def test_gets_attribute_names(cadwork) -> None:
+    cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
+    with pytest.raises(KeyError):
+        _ = Element.attribute_names[200]
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
+    assert Element.attribute_names[100] == "Test Value"
+    cadwork.ac.get_user_attribute_name.assert_called_with(100)
+
+
+def test_sets_attribute_names(cadwork) -> None:
+    Element.attribute_names[100] = "New Value"
+    cadwork.ac.set_user_attribute_name.assert_called_once_with(100, "New Value")
+
+
+def test_deletes_attribute_names(cadwork) -> None:
+    cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
+    with pytest.raises(KeyError):
+        del Element.attribute_names[200]
+    cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
+    cadwork.ac.set_user_attribute_name.assert_not_called()
+    del Element.attribute_names[100]
+    cadwork.ac.get_user_attribute_name.assert_called_with(100)
+    cadwork.ac.set_user_attribute_name.assert_called_with(100, "")
+
+
+def test_raises_on_iterate_attribute_names() -> None:
+    with pytest.raises(TypeError):
+        _ = list(Element.attribute_names.keys())
+    with pytest.raises(TypeError):
+        _ = len(Element.attribute_names)
 
 
 def test_contains_data(cadwork) -> None:
+    cadwork.ac.get_additional_data.side_effect = lambda _, x: "Test Value" if x == "existingKey" else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_additional_data.return_value = ""
-    assert "first" not in element.data
-    cadwork.ac.get_additional_data.assert_called_once_with(123, "first")
-
-    # With value
-    cadwork.ac.get_additional_data.return_value = "Test Value"
-    assert "second" in element.data
-    cadwork.ac.get_additional_data.assert_called_with(123, "second")
+    assert "missingKey" not in element.data
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "missingKey")
+    assert "existingKey" in element.data
+    cadwork.ac.get_additional_data.assert_called_with(123, "existingKey")
 
 
 def test_gets_data(cadwork) -> None:
+    cadwork.ac.get_additional_data.side_effect = lambda _, x: "Test Value" if x == "existingKey" else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_additional_data.return_value = ""
     with pytest.raises(KeyError):
-        _ = element.data["third"]
-    cadwork.ac.get_additional_data.assert_called_once_with(123, "third")
-    assert element.data.get("third", None) is None
-    assert element.data.get("third", "Default") == "Default"
-
-    # With value
-    cadwork.ac.get_additional_data.return_value = "Test Value"
-    assert element.data["fourth"] == "Test Value"
-    cadwork.ac.get_additional_data.assert_called_with(123, "fourth")
-    assert element.data.get("fourth", None) == "Test Value"
-    assert element.data.get("fourth", "Default") == "Test Value"
+        _ = element.data["missingKey"]
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "missingKey")
+    assert element.data["existingKey"] == "Test Value"
+    cadwork.ac.get_additional_data.assert_called_with(123, "existingKey")
 
 
 def test_sets_data(cadwork) -> None:
     element = Element(123)
-
-    # Base case
-    element.data["fifth"] = "New Value"
-    cadwork.ac.set_additional_data.assert_called_once_with([123], "fifth", "New Value")
-
-    # Without value
-    cadwork.ac.get_additional_data.side_effect = ["", "Default Value"]
-    assert element.data.setdefault("sixth", "Default Value") == "Default Value"
-    cadwork.ac.get_additional_data.assert_called_with(123, "sixth")
-    cadwork.ac.set_additional_data.assert_called_with([123], "sixth", "Default Value")
-
-    # With value
-    cadwork.ac.set_additional_data.reset_mock()
-    cadwork.ac.get_additional_data.reset_mock(side_effect=True)
-    cadwork.ac.get_additional_data.return_value = "Existing Value"
-    assert element.data.setdefault("seventh", "Default Value") == "Existing Value"
-    cadwork.ac.get_additional_data.assert_called_with(123, "seventh")
-    cadwork.ac.set_additional_data.assert_not_called()
+    element.data["newKey"] = "New Value"
+    cadwork.ac.set_additional_data.assert_called_once_with([123], "newKey", "New Value")
 
 
 def test_deletes_data(cadwork) -> None:
+    cadwork.ac.get_additional_data.side_effect = lambda _, x: "Test Value" if x == "existingKey" else ""
     element = Element(123)
-
-    # Without value
-    cadwork.ac.get_additional_data.return_value = ""
     with pytest.raises(KeyError):
-        del element.data["first"]
-    cadwork.ac.get_additional_data.assert_called_once_with(123, "first")
+        del element.data["missingKey"]
+    cadwork.ac.get_additional_data.assert_called_once_with(123, "missingKey")
+    cadwork.ac.delete_additional_data.assert_not_called()
+    del element.data["existingKey"]
+    cadwork.ac.get_additional_data.assert_called_with(123, "existingKey")
+    cadwork.ac.delete_additional_data.assert_called_with([123], "existingKey")
 
-    # With value
-    cadwork.ac.get_additional_data.return_value = "Test Value"
-    del element.data["second"]
-    cadwork.ac.get_additional_data.assert_called_with(123, "second")
-    cadwork.ac.delete_additional_data.assert_called_once_with([123], "second")
-    cadwork.ac.set_additional_data.assert_not_called()
+
+def test_raises_on_iterate_data() -> None:
+    element = Element(123)
+    with pytest.raises(TypeError):
+        _ = list(element.data.keys())
+    with pytest.raises(TypeError):
+        _ = len(element.data)
 
 
 def test_deletes_element(cadwork) -> None:

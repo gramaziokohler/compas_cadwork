@@ -218,75 +218,146 @@ def test_get_selected_elements(cadwork) -> None:
     assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
 
 
-def test_contains_attribute_names(cadwork) -> None:
+def test_contains_attributes(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute.side_effect = lambda x: "Test Value" if x == 100 else "???"
     project = Project()
+    assert 200 not in project.attributes
+    cadwork.uc.get_project_user_attribute.assert_called_once_with(200)
+    assert 100 in project.attributes
+    cadwork.uc.get_project_user_attribute.assert_called_with(100)
 
-    # Without value
-    cadwork.ac.get_user_attribute_name.return_value = "User100"
-    assert 100 not in project.attribute_names
-    cadwork.ac.get_user_attribute_name.assert_called_once_with(100)
 
-    # With value
-    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
-    assert 200 in project.attribute_names
-    cadwork.ac.get_user_attribute_name.assert_called_with(200)
+def test_gets_attributes(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute.side_effect = lambda x: "Test Value" if x == 100 else "???"
+    project = Project()
+    with pytest.raises(KeyError):
+        _ = project.attributes[200]
+    cadwork.uc.get_project_user_attribute.assert_called_once_with(200)
+    assert project.attributes[100] == "Test Value"
+    cadwork.uc.get_project_user_attribute.assert_called_with(100)
+
+
+def test_sets_attributes(cadwork) -> None:
+    project = Project()
+    project.attributes[100] = "New Value"
+    cadwork.uc.set_project_user_attribute.assert_called_once_with(100, "New Value")
+
+
+def test_deletes_attributes(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute.side_effect = lambda x: "Test Value" if x == 100 else "???"
+    project = Project()
+    with pytest.raises(KeyError):
+        del project.attributes[200]
+    cadwork.uc.get_project_user_attribute.assert_called_once_with(200)
+    cadwork.uc.set_project_user_attribute.assert_not_called()
+    del project.attributes[100]
+    cadwork.uc.get_project_user_attribute.assert_called_with(100)
+    cadwork.uc.set_project_user_attribute.assert_called_with(100, "")
+
+
+def test_raises_on_iterate_attributes() -> None:
+    project = Project()
+    with pytest.raises(TypeError):
+        _ = list(project.attributes.keys())
+    with pytest.raises(TypeError):
+        _ = len(project.attributes)
+
+
+def test_contains_attribute_names(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
+    project = Project()
+    assert 200 not in project.attribute_names
+    cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
+    assert 100 in project.attribute_names
+    cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
 
 
 def test_gets_attribute_names(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
     project = Project()
-
-    # Without value
-    cadwork.ac.get_user_attribute_name.return_value = "User300"
     with pytest.raises(KeyError):
-        _ = project.attribute_names[300]
-    cadwork.ac.get_user_attribute_name.assert_called_once_with(300)
-    assert project.attribute_names.get(300, None) is None
-    assert project.attribute_names.get(300, "Default") == "Default"
-
-    # With value
-    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
-    assert project.attribute_names[400] == "Test Value"
-    cadwork.ac.get_user_attribute_name.assert_called_with(400)
-    assert project.attribute_names.get(400, None) == "Test Value"
-    assert project.attribute_names.get(400, "Default") == "Test Value"
+        _ = project.attribute_names[200]
+    cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
+    assert project.attribute_names[100] == "Test Value"
+    cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
 
 
 def test_sets_attribute_names(cadwork) -> None:
     project = Project()
-
-    # Base case
-    project.attribute_names[500] = "New Value"
-    cadwork.ac.set_user_attribute_name.assert_called_once_with(500, "New Value")
-
-    # Without value
-    cadwork.ac.get_user_attribute_name.side_effect = ["User501", "Default Value"]
-    assert project.attribute_names.setdefault(501, "Default Value") == "Default Value"
-    cadwork.ac.get_user_attribute_name.assert_called_with(501)
-    cadwork.ac.set_user_attribute_name.assert_called_with(501, "Default Value")
-
-    # With value
-    cadwork.ac.set_user_attribute_name.reset_mock()
-    cadwork.ac.get_user_attribute_name.reset_mock(side_effect=True)
-    cadwork.ac.get_user_attribute_name.return_value = "Existing Value"
-    assert project.attribute_names.setdefault(502, "Default Value") == "Existing Value"
-    cadwork.ac.get_user_attribute_name.assert_called_with(502)
-    cadwork.ac.set_user_attribute_name.assert_not_called()
+    project.attribute_names[100] = "New Value"
+    cadwork.uc.set_project_user_attribute_name.assert_called_once_with(100, "New Value")
 
 
 def test_deletes_attribute_names(cadwork) -> None:
+    cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
     project = Project()
-
-    # Without value
-    cadwork.ac.get_user_attribute_name.return_value = "User600"
     with pytest.raises(KeyError):
-        del project.attribute_names[600]
-    cadwork.ac.get_user_attribute_name.assert_called_once_with(600)
+        del project.attribute_names[200]
+    cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
+    cadwork.uc.set_project_user_attribute_name.assert_not_called()
+    del project.attribute_names[100]
+    cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
+    cadwork.uc.set_project_user_attribute_name.assert_called_with(100, "")
 
-    # With value
-    cadwork.ac.get_user_attribute_name.return_value = "Test Value"
-    del project.attribute_names[700]
-    cadwork.ac.get_user_attribute_name.assert_called_with(700)
-    cadwork.ac.set_user_attribute_name.assert_called_once_with(700, "")
+
+def test_raises_on_iterate_attribute_names() -> None:
+    project = Project()
+    with pytest.raises(TypeError):
+        _ = list(project.attribute_names.keys())
+    with pytest.raises(TypeError):
+        _ = len(project.attribute_names)
+
+
+def test_contains_data(cadwork) -> None:
+    cadwork.uc.get_project_data.side_effect = lambda x: "Test Value" if x == "existingKey" else ""
+    project = Project()
+    assert "missingKey" not in project.data
+    cadwork.uc.get_project_data.assert_called_once_with("missingKey")
+    assert "existingKey" in project.data
+    cadwork.uc.get_project_data.assert_called_with("existingKey")
+
+
+def test_gets_data(cadwork) -> None:
+    cadwork.uc.get_project_data.side_effect = lambda x: "Test Value" if x == "existingKey" else ""
+    project = Project()
+    with pytest.raises(KeyError):
+        _ = project.data["missingKey"]
+    cadwork.uc.get_project_data.assert_called_once_with("missingKey")
+    assert project.data["existingKey"] == "Test Value"
+    cadwork.uc.get_project_data.assert_called_with("existingKey")
+
+
+def test_sets_data(cadwork) -> None:
+    project = Project()
+    project.data["newKey"] = "New Value"
+    cadwork.uc.set_project_data.assert_called_once_with("newKey", "New Value")
+
+
+def test_deletes_data(cadwork) -> None:
+    cadwork.uc.get_project_data.side_effect = lambda x: "Test Value" if x == "existingKey" else ""
+    project = Project()
+    with pytest.raises(KeyError):
+        del project.data["missingKey"]
+    cadwork.uc.get_project_data.assert_called_once_with("missingKey")
+    cadwork.uc.delete_project_data.assert_not_called()
+    del project.data["existingKey"]
+    cadwork.uc.get_project_data.assert_called_with("existingKey")
+    cadwork.uc.delete_project_data.assert_called_with("existingKey")
+
+
+def test_iterates_data(cadwork) -> None:
+    data = {
+        "1st": "First",
+        "2nd": "Second",
+        "3rd": "",
+        "4th": "Fourth",
+    }
+    cadwork.uc.get_project_data_keys.return_value = list(data.keys())
+    cadwork.uc.get_project_data.side_effect = lambda x: data[x]
+    project = Project()
+    assert len(project.data) == 3
+    assert list(project.data.keys()) == ["1st", "2nd", "4th"]
+    assert list(project.data.values()) == ["First", "Second", "Fourth"]
 
 
 def test_repr(cadwork) -> None:

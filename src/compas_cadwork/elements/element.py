@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from functools import cached_property
 from typing import TYPE_CHECKING
+from typing import ClassVar
 from typing import Final
 from typing import final
 from uuid import UUID
@@ -12,143 +13,89 @@ import cadwork
 import element_controller as ec
 
 from compas_cadwork.utils.ifc_uuid import IfcUUID
+from compas_cadwork.utils.storage import KeyValueStorage
 
 
 if TYPE_CHECKING:
     from attribute_controller import UserAttributeId
     from cadwork import ElementId
+else:
+    UserAttributeId = int  # For pytest and Sphinx
 
 
-class _ElementUserAttributes:
+class _ElementAttributes(KeyValueStorage[UserAttributeId, str]):
     """Dictionary-like accessor for element user attributes.
 
-    NOTE: User attributes can be viewed by the user when double-clicking an element in the Cadwork 3D interface.
+    NOTE: User attributes are accessible in the GUI by double-clicking an element.
     """
 
+    _KEY_TYPE = int
     _id: Final[ElementId]
 
     def __init__(self, element_id: ElementId) -> None:
         self._id = element_id
 
-    def __contains__(self, key: UserAttributeId) -> bool:
-        raw_value = ac.get_user_attribute(self._id, key)
-        return raw_value != ""
+    @staticmethod
+    def _empty(key: UserAttributeId, value: str) -> bool:
+        return value == ""
 
-    def __getitem__(self, key: UserAttributeId) -> str:
-        raw_value = ac.get_user_attribute(self._id, key)
-        if raw_value == "":
-            raise KeyError(key)
-        return raw_value
+    def _get(self, key: UserAttributeId) -> str:
+        return ac.get_user_attribute(self._id, key)
 
-    def __setitem__(self, key: UserAttributeId, value: str) -> None:
+    def _set(self, key: UserAttributeId, value: str) -> None:
         ac.set_user_attribute([self._id], key, value)
 
-    def __delitem__(self, key: UserAttributeId) -> None:
-        if key not in self:
-            raise KeyError(key)
-        ac.set_user_attribute([self._id], key, "")
-
-    def get(self, key: UserAttributeId, default: str | None = None) -> str | None:
-        """Get user attribute value.
-
-        Parameters
-        ----------
-        key : UserAttributeId
-            User attribute ID.
-        default : str | None, optional
-            Value to return if the attribute is not set.
-
-        Returns
-        -------
-        str | None
-            Attribute value, or ``default`` if the attribute is not set.
-        """
-        return self[key] if key in self else default
-
-    def setdefault(self, key: UserAttributeId, default: str) -> str:
-        """Set user attribute to ``default`` if not set, then return its value.
-
-        Parameters
-        ----------
-        key : UserAttributeId
-            User attribute ID.
-        default : str
-            Value to set if the attribute is not set.
-
-        Returns
-        -------
-        str
-            Existing attribute value, or ``default`` if the attribute was not set.
-        """
-        if key not in self:
-            self[key] = default
-        return self[key]
+    def _delete(self, key: UserAttributeId) -> None:
+        ac.set_user_attribute([self._id], key, "")  # There's no delete user attribute function
+        ac.delete_user_attribute(key)
 
 
-class _ElementAdditionalData:
-    """Dictionary-like accessor for element additional data.
+class _ElementAttributeNames(KeyValueStorage[UserAttributeId, str]):
+    """Dictionary-like accessor for element user attribute names.
 
-    NOTE: Additional data is hidden from users and only accessible via the Cadwork API.
+    NOTE: User attributes are accessible in the GUI by double-clicking an element.
     """
 
+    _KEY_TYPE = int
+
+    @staticmethod
+    def _empty(key: UserAttributeId, value: str) -> bool:
+        return value == "" or value == f"User{key}"
+
+    def _get(self, key: UserAttributeId) -> str:
+        return ac.get_user_attribute_name(key)
+
+    def _set(self, key: UserAttributeId, value: str) -> None:
+        ac.set_user_attribute_name(key, value)
+
+    def _delete(self, key: UserAttributeId) -> None:
+        ac.set_user_attribute_name(key, "")  # There's no delete user attribute name function
+
+
+class _ElementData(KeyValueStorage[str, str]):
+    """Dictionary-like accessor for element additional data.
+
+    NOTE: Element additional data is hidden from the user and only accessible via the Cadwork API.
+    """
+
+    _KEY_TYPE = str
     _id: Final[ElementId]
 
     def __init__(self, element_id: ElementId) -> None:
         self._id = element_id
 
-    def __contains__(self, key: str) -> bool:
-        raw_value = ac.get_additional_data(self._id, key)
-        return raw_value != ""
+    @staticmethod
+    def _empty(key: str, value: str) -> bool:
+        return value == ""
 
-    def __getitem__(self, key: str) -> str:
-        raw_value = ac.get_additional_data(self._id, key)
-        if raw_value == "":
-            raise KeyError(key)
-        return raw_value
+    def _get(self, key: str) -> str:
+        return ac.get_additional_data(self._id, key)
 
-    def __setitem__(self, key: str, value: str) -> None:
+    def _set(self, key: str, value: str) -> None:
         ac.set_additional_data([self._id], key, value)
 
-    def __delitem__(self, key: str) -> None:
-        if key not in self:
-            raise KeyError(key)
+    def _delete(self, key: str) -> None:
         ac.delete_additional_data([self._id], key)
-
-    def get(self, key: str, default: str | None = None) -> str | None:
-        """Get additional data.
-
-        Parameters
-        ----------
-        key : str
-            Additional data ID.
-        default : str | None, optional
-            Value to return if additional data is not set.
-
-        Returns
-        -------
-        str | None
-            Additional data value, or ``default`` if additional data is not set.
-        """
-        return self[key] if key in self else default
-
-    def setdefault(self, key: str, default: str) -> str:
-        """Set additional data to ``default`` if not set, then return its value.
-
-        Parameters
-        ----------
-        key : str
-            Additional data ID.
-        default : str
-            Value to set if additional data is not set.
-
-        Returns
-        -------
-        str
-            Existing additional data value, or ``default`` if data was not set.
-        """
-        if key not in self:
-            self[key] = default
-        return self[key]
 
 
 class Element:
@@ -160,6 +107,9 @@ class Element:
     NOTE: This identifier may change when the program is restarted.
     Do NOT rely on it as a unique ID, use ``Element.guid`` instead.
     """
+
+    attribute_names: ClassVar[_ElementAttributeNames] = _ElementAttributeNames()
+    """User attribute names."""
 
     @final
     @classmethod
@@ -251,14 +201,14 @@ class Element:
         ac.set_comment([self.id], value or "")
 
     @cached_property
-    def attributes(self) -> _ElementUserAttributes:
+    def attributes(self) -> _ElementAttributes:
         """User attributes."""
-        return _ElementUserAttributes(self.id)
+        return _ElementAttributes(self.id)
 
     @cached_property
-    def data(self) -> _ElementAdditionalData:
+    def data(self) -> _ElementData:
         """Additional data."""
-        return _ElementAdditionalData(self.id)
+        return _ElementData(self.id)
 
     def delete(self) -> None:
         """Delete element.
