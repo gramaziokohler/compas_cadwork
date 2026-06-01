@@ -1,6 +1,10 @@
 from uuid import UUID
 
 import pytest
+from compas.geometry import Frame
+from compas.geometry import Line
+from compas.geometry import Point
+from compas.geometry import Vector
 
 from compas_cadwork.elements.element import Element
 from compas_cadwork.utils.ifc_uuid import IfcUUID
@@ -292,6 +296,71 @@ def test_raises_on_iterate_data() -> None:
         _ = list(element.data.keys())
     with pytest.raises(TypeError):
         _ = len(element.data)
+
+
+def test_gets_element_frame(cadwork) -> None:
+    cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
+    cadwork.gc.get_xl.return_value = cadwork.cadwork.point_3d(-1.0, 0.0, 0.0)
+    cadwork.gc.get_yl.return_value = cadwork.cadwork.point_3d(0.0, -0.0, 1.0)
+    element = Element(123)
+    assert element.frame == Frame(Point(10.1, 20.2, 30.3), Vector(-1.0, 0.0, 0.0), Vector(0.0, -0.0, 1.0))
+    cadwork.gc.get_p1.assert_called_once_with(123)
+    cadwork.gc.get_xl.assert_called_once_with(123)
+    cadwork.gc.get_yl.assert_called_once_with(123)
+
+
+def test_gets_element_width(cadwork) -> None:
+    cadwork.gc.get_width.return_value = 1000.23
+    element = Element(123)
+    assert element.width == 1000.23
+    cadwork.gc.get_width.assert_called_once_with(123)
+
+
+def test_sets_element_width(cadwork) -> None:
+    element = Element(123)
+    element.width = 543.21
+    cadwork.gc.set_width_real.assert_called_once_with([123], 543.21)
+
+
+def test_gets_element_height(cadwork) -> None:
+    cadwork.gc.get_height.return_value = 1000.23
+    element = Element(123)
+    assert element.height == 1000.23
+    cadwork.gc.get_height.assert_called_once_with(123)
+
+
+def test_sets_element_height(cadwork) -> None:
+    element = Element(123)
+    element.height = 543.21
+    cadwork.gc.set_height_real.assert_called_once_with([123], 543.21)
+
+
+def test_gets_element_length(cadwork) -> None:
+    cadwork.gc.get_length.return_value = 1000.23
+    element = Element(123)
+    assert element.length == 1000.23
+    cadwork.gc.get_length.assert_called_once_with(123)
+
+
+def test_sets_element_length(cadwork) -> None:
+    element = Element(123)
+    element.length = 543.21
+    cadwork.gc.set_length_real.assert_called_once_with([123], 543.21)
+
+
+def test_gets_element_centerline(cadwork) -> None:
+    cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
+    cadwork.gc.get_p2.return_value = cadwork.cadwork.point_3d(100.1, 200.2, 300.3)
+    element = Element(123)
+    assert element.centerline == Line(Point(10.1, 20.2, 30.3), Point(100.1, 200.2, 300.3))
+    cadwork.gc.get_p1.assert_called_once_with(123)
+    cadwork.gc.get_p2.assert_called_once_with(123)
+
+
+def test_translates_element(cadwork) -> None:
+    element = Element(123)
+    element.translate(Vector(100.0, 200.0, 300.0))
+    cadwork.ec.move_element.assert_called_once_with([123], cadwork.cadwork.point_3d(100.0, 200.0, 300.0))
 
 
 def test_deletes_element(cadwork) -> None:

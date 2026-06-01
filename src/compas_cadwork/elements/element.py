@@ -11,7 +11,14 @@ import attribute_controller as ac
 import bim_controller as bc
 import cadwork
 import element_controller as ec
+import geometry_controller as gc
+from compas.geometry import Frame
+from compas.geometry import Line
+from compas.geometry import Vector
 
+from compas_cadwork.utils.converters import compas_to_cwpoint
+from compas_cadwork.utils.converters import cwpoint_to_point
+from compas_cadwork.utils.converters import cwpoint_to_vector
 from compas_cadwork.utils.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
@@ -209,6 +216,58 @@ class Element:
     def data(self) -> _ElementData:
         """Additional data."""
         return _ElementData(self.id)
+
+    @property
+    def frame(self) -> Frame:
+        """Reference frame."""
+        p1 = cwpoint_to_point(gc.get_p1(self.id))
+        x_axis = cwpoint_to_vector(gc.get_xl(self.id))
+        y_axis = cwpoint_to_vector(gc.get_yl(self.id))
+        return Frame(p1, x_axis, y_axis)
+
+    @property
+    def width(self) -> float:
+        """Width in millimeters."""
+        return gc.get_width(self.id)
+
+    @width.setter
+    def width(self, value: float) -> None:
+        gc.set_width_real([self.id], value)
+
+    @property
+    def height(self) -> float:
+        """Height in millimeters."""
+        return gc.get_height(self.id)
+
+    @height.setter
+    def height(self, value: float) -> None:
+        gc.set_height_real([self.id], value)
+
+    @property
+    def length(self) -> float:
+        """Length in millimeters."""
+        return gc.get_length(self.id)
+
+    @length.setter
+    def length(self, value: float) -> None:
+        gc.set_length_real([self.id], value)
+
+    @property
+    def centerline(self) -> Line:
+        """Line connecting the two points that define the element."""
+        p1 = cwpoint_to_point(gc.get_p1(self.id))
+        p2 = cwpoint_to_point(gc.get_p2(self.id))
+        return Line(p1, p2)
+
+    def translate(self, vector: Vector) -> None:
+        """Translate element by the given vector.
+
+        Parameters
+        ----------
+        vector : Vector
+            The vector by which to translate the element.
+        """
+        ec.move_element([self.id], compas_to_cwpoint(vector))
 
     def delete(self) -> None:
         """Delete element.
