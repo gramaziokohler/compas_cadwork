@@ -4,6 +4,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Final
+from typing import Self
 from typing import final
 from uuid import UUID
 
@@ -268,6 +269,24 @@ class Element:
             The vector by which to translate the element.
         """
         ec.move_element([self.id], compas_to_cwpoint(vector))
+
+    def duplicate(self, vector: Vector) -> Self:
+        """Duplicate element by the given vector.
+
+        Parameters
+        ----------
+        vector : Vector
+            The vector by which to duplicate the element.
+
+        Returns
+        -------
+        Self
+            New element.
+        """
+        new_element_ids = ec.copy_elements([self.id], compas_to_cwpoint(vector))
+        if len(new_element_ids) != 1:
+            raise RuntimeError(f"Failed to copy Cadwork element with ID {self.id}")
+        return self.__class__(new_element_ids[0])
 
     def delete(self) -> None:
         """Delete element.

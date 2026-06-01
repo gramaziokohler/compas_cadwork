@@ -363,6 +363,15 @@ def test_translates_element(cadwork) -> None:
     cadwork.ec.move_element.assert_called_once_with([123], cadwork.cadwork.point_3d(100.0, 200.0, 300.0))
 
 
+def test_duplicates_element(cadwork) -> None:
+    cadwork.ec.copy_elements.return_value = [124]
+    element = Element(123)
+    new_element = element.duplicate(Vector(100.0, 200.0, 300.0))
+    assert new_element is not element
+    assert new_element.id == 124
+    cadwork.ec.copy_elements.assert_called_once_with([123], cadwork.cadwork.point_3d(100.0, 200.0, 300.0))
+
+
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
     element.delete()
