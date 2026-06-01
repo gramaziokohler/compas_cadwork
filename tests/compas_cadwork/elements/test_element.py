@@ -10,7 +10,7 @@ from compas_cadwork.elements.element import Element
 from compas_cadwork.utils.ifc_uuid import IfcUUID
 
 
-def test_get_element_from_guid(cadwork) -> None:
+def test_creates_from_guid(cadwork) -> None:
     cadwork.ec.get_element_from_cadwork_guid.return_value = 12345
     cadwork.ec.get_element_cadwork_guid.return_value = "{2B21165D-9454-46A0-A992-6B4AA043D58D}"
     element = Element.from_guid(UUID("2b21165d-9454-46a0-a992-6b4aa043d58d"))
@@ -40,21 +40,21 @@ def test_raises_on_deleted_element(cadwork) -> None:
         _ = element.ifc_guid
 
 
-def test_gets_element_guid(cadwork) -> None:
+def test_gets_guid(cadwork) -> None:
     element = Element(123)
     cadwork.ec.get_element_cadwork_guid.return_value = "{12345678-AAAA-BBBB-CCCC-DDEE12345678}"
     assert element.guid == UUID("12345678-aaaa-bbbb-cccc-ddee12345678")
     cadwork.ec.get_element_cadwork_guid.assert_called_once_with(123)
 
 
-def test_gets_element_ifc_guid(cadwork) -> None:
+def test_gets_ifc_guid(cadwork) -> None:
     element = Element(123)
     cadwork.bc.get_ifc_guid.return_value = "{C4B98E68-62AE-42C5-AC14-436FDB8116D9}"
     assert element.ifc_guid == IfcUUID("c4b98e68-62ae-42c5-ac14-436fdb8116d9")
     cadwork.bc.get_ifc_guid.assert_called_once_with(123)
 
 
-def test_gets_element_name(cadwork) -> None:
+def test_gets_name(cadwork) -> None:
     element = Element(123)
 
     # Without value
@@ -67,7 +67,7 @@ def test_gets_element_name(cadwork) -> None:
     assert element.name == "Element Name"
 
 
-def test_sets_element_name(cadwork) -> None:
+def test_sets_name(cadwork) -> None:
     element = Element(123)
 
     # Without value
@@ -79,7 +79,7 @@ def test_sets_element_name(cadwork) -> None:
     cadwork.ac.set_name.assert_called_with([123], "Test Value")
 
 
-def test_gets_element_group_from_group(cadwork) -> None:
+def test_gets_group_from_group(cadwork) -> None:
     element = Element(123)
     cadwork.ac.get_element_grouping_type.return_value = cadwork.cadwork.element_grouping_type.group
 
@@ -96,7 +96,7 @@ def test_gets_element_group_from_group(cadwork) -> None:
     cadwork.ac.get_subgroup.assert_not_called()
 
 
-def test_sets_element_group_from_group(cadwork) -> None:
+def test_sets_group_from_group(cadwork) -> None:
     element = Element(123)
     cadwork.ac.get_element_grouping_type.return_value = cadwork.cadwork.element_grouping_type.group
 
@@ -111,7 +111,7 @@ def test_sets_element_group_from_group(cadwork) -> None:
     cadwork.ac.set_subgroup.assert_not_called()
 
 
-def test_gets_element_group_from_subgroup(cadwork) -> None:
+def test_gets_group_from_subgroup(cadwork) -> None:
     element = Element(123)
     cadwork.ac.get_element_grouping_type.return_value = cadwork.cadwork.element_grouping_type.subgroup
 
@@ -128,7 +128,7 @@ def test_gets_element_group_from_subgroup(cadwork) -> None:
     cadwork.ac.get_subgroup.assert_called_with(123)
 
 
-def test_sets_element_group_from_subgroup(cadwork) -> None:
+def test_sets_group_from_subgroup(cadwork) -> None:
     element = Element(123)
     cadwork.ac.get_element_grouping_type.return_value = cadwork.cadwork.element_grouping_type.subgroup
 
@@ -143,7 +143,7 @@ def test_sets_element_group_from_subgroup(cadwork) -> None:
     cadwork.ac.set_subgroup.assert_called_with([123], "Test Value")
 
 
-def test_gets_element_comment(cadwork) -> None:
+def test_gets_comment(cadwork) -> None:
     element = Element(123)
 
     # Without value
@@ -156,7 +156,7 @@ def test_gets_element_comment(cadwork) -> None:
     assert element.comment == "Element Comment"
 
 
-def test_sets_element_comment(cadwork) -> None:
+def test_sets_comment(cadwork) -> None:
     element = Element(123)
 
     # Without value
@@ -298,7 +298,7 @@ def test_raises_on_iterate_data() -> None:
         _ = len(element.data)
 
 
-def test_gets_element_frame(cadwork) -> None:
+def test_gets_frame(cadwork) -> None:
     cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
     cadwork.gc.get_xl.return_value = cadwork.cadwork.point_3d(-1.0, 0.0, 0.0)
     cadwork.gc.get_yl.return_value = cadwork.cadwork.point_3d(0.0, -0.0, 1.0)
@@ -309,46 +309,46 @@ def test_gets_element_frame(cadwork) -> None:
     cadwork.gc.get_yl.assert_called_once_with(123)
 
 
-def test_gets_element_width(cadwork) -> None:
+def test_gets_width(cadwork) -> None:
     cadwork.gc.get_width.return_value = 1000.23
     element = Element(123)
     assert element.width == 1000.23
     cadwork.gc.get_width.assert_called_once_with(123)
 
 
-def test_sets_element_width(cadwork) -> None:
+def test_sets_width(cadwork) -> None:
     element = Element(123)
     element.width = 543.21
     cadwork.gc.set_width_real.assert_called_once_with([123], 543.21)
 
 
-def test_gets_element_height(cadwork) -> None:
+def test_gets_height(cadwork) -> None:
     cadwork.gc.get_height.return_value = 1000.23
     element = Element(123)
     assert element.height == 1000.23
     cadwork.gc.get_height.assert_called_once_with(123)
 
 
-def test_sets_element_height(cadwork) -> None:
+def test_sets_height(cadwork) -> None:
     element = Element(123)
     element.height = 543.21
     cadwork.gc.set_height_real.assert_called_once_with([123], 543.21)
 
 
-def test_gets_element_length(cadwork) -> None:
+def test_gets_length(cadwork) -> None:
     cadwork.gc.get_length.return_value = 1000.23
     element = Element(123)
     assert element.length == 1000.23
     cadwork.gc.get_length.assert_called_once_with(123)
 
 
-def test_sets_element_length(cadwork) -> None:
+def test_sets_length(cadwork) -> None:
     element = Element(123)
     element.length = 543.21
     cadwork.gc.set_length_real.assert_called_once_with([123], 543.21)
 
 
-def test_gets_element_centerline(cadwork) -> None:
+def test_gets_centerline(cadwork) -> None:
     cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
     cadwork.gc.get_p2.return_value = cadwork.cadwork.point_3d(100.1, 200.2, 300.3)
     element = Element(123)

@@ -6,13 +6,13 @@ import pytest
 from compas_cadwork.project import Project
 
 
-def test_gets_project_guid(cadwork) -> None:
+def test_gets_guid(cadwork) -> None:
     project = Project()
     cadwork.uc.get_project_guid.return_value = "{12345678-AAAA-BBBB-CCCC-DDEE12345678}"
     assert project.guid == UUID("12345678-aaaa-bbbb-cccc-ddee12345678")
 
 
-def test_gets_project_name(cadwork) -> None:
+def test_gets_name(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -26,7 +26,7 @@ def test_gets_project_name(cadwork) -> None:
     assert project.name == "Project Name"
 
 
-def test_sets_project_name(cadwork) -> None:
+def test_sets_name(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -38,7 +38,7 @@ def test_sets_project_name(cadwork) -> None:
     cadwork.uc.set_project_name.assert_called_with("Test Value")
 
 
-def test_gets_project_part(cadwork) -> None:
+def test_gets_part(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -52,7 +52,7 @@ def test_gets_project_part(cadwork) -> None:
     assert project.part == "Project Part"
 
 
-def test_sets_project_part(cadwork) -> None:
+def test_sets_part(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -64,7 +64,7 @@ def test_sets_project_part(cadwork) -> None:
     cadwork.uc.set_project_part.assert_called_with("Test Value")
 
 
-def test_gets_project_number(cadwork) -> None:
+def test_gets_number(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -78,7 +78,7 @@ def test_gets_project_number(cadwork) -> None:
     assert project.number == "Project Number"
 
 
-def test_sets_project_number(cadwork) -> None:
+def test_sets_number(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -90,7 +90,7 @@ def test_sets_project_number(cadwork) -> None:
     cadwork.uc.set_project_number.assert_called_with("Test Value")
 
 
-def test_gets_project_deadline(cadwork) -> None:
+def test_gets_deadline(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -104,7 +104,7 @@ def test_gets_project_deadline(cadwork) -> None:
     assert project.deadline == date(2026, 12, 31)
 
 
-def test_sets_project_deadline(cadwork) -> None:
+def test_sets_deadline(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -116,7 +116,7 @@ def test_sets_project_deadline(cadwork) -> None:
     cadwork.uc.set_project_deadline.assert_called_with("12.01.2029")
 
 
-def test_gets_project_architect(cadwork) -> None:
+def test_gets_architect(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -130,7 +130,7 @@ def test_gets_project_architect(cadwork) -> None:
     assert project.architect == "Jane Doe"
 
 
-def test_sets_project_architect(cadwork) -> None:
+def test_sets_architect(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -142,7 +142,7 @@ def test_sets_project_architect(cadwork) -> None:
     cadwork.uc.set_project_architect.assert_called_with("Test Value")
 
 
-def test_gets_project_customer(cadwork) -> None:
+def test_gets_customer(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -156,7 +156,7 @@ def test_gets_project_customer(cadwork) -> None:
     assert project.customer == "John Smith"
 
 
-def test_sets_project_customer(cadwork) -> None:
+def test_sets_customer(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -168,7 +168,7 @@ def test_sets_project_customer(cadwork) -> None:
     cadwork.uc.set_project_customer.assert_called_with("Test Value")
 
 
-def test_gets_project_designer(cadwork) -> None:
+def test_gets_designer(cadwork) -> None:
     project = Project()
 
     # Without value
@@ -182,7 +182,7 @@ def test_gets_project_designer(cadwork) -> None:
     assert project.designer == "Alice Scott"
 
 
-def test_sets_project_designer(cadwork) -> None:
+def test_sets_designer(cadwork) -> None:
     project = Project()
 
     # Without value
