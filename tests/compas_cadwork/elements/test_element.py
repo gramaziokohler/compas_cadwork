@@ -10,22 +10,6 @@ from compas_cadwork.elements.element import Element
 from compas_cadwork.utils.ifc_uuid import IfcUUID
 
 
-def test_creates_from_guid(cadwork) -> None:
-    cadwork.ec.get_element_from_cadwork_guid.return_value = 12345
-    cadwork.ec.get_element_cadwork_guid.return_value = "{2B21165D-9454-46A0-A992-6B4AA043D58D}"
-    element = Element.from_guid(UUID("2b21165d-9454-46a0-a992-6b4aa043d58d"))
-    cadwork.ec.get_element_from_cadwork_guid.assert_called_once_with("{2B21165D-9454-46A0-A992-6B4AA043D58D}")
-    cadwork.ec.get_element_cadwork_guid.assert_called_once_with(12345)
-    assert element.guid == UUID("2b21165d-9454-46a0-a992-6b4aa043d58d")
-    assert element.id == 12345
-
-
-def test_raises_on_unknown_guid(cadwork) -> None:
-    cadwork.ec.get_element_from_cadwork_guid.return_value = ""
-    with pytest.raises(ValueError, match=r"Could not find a Cadwork element with GUID .+"):
-        Element.from_guid(UUID("deadbeef-0000-0000-0000-000000000000"))
-
-
 def test_raises_on_deleted_element(cadwork) -> None:
     element = Element(123)
 

@@ -4,6 +4,7 @@ from uuid import UUID
 import pytest
 
 from compas_cadwork.project import Project
+from compas_cadwork.utils.ifc_uuid import IfcUUID
 
 
 def test_gets_guid(cadwork) -> None:
@@ -194,7 +195,62 @@ def test_sets_designer(cadwork) -> None:
     cadwork.uc.set_project_designer.assert_called_with("Test Value")
 
 
-def test_get_elements(cadwork) -> None:
+def test_gets_element_by_cadwork_id(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.ec.check_element_id.return_value = False
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork element with ID #1000"):
+        _ = project.element(cadwork_id=1000)
+    cadwork.ec.check_element_id.assert_called_once_with(1000)
+
+    # With value
+    cadwork.ec.check_element_id.return_value = True
+    element = project.element(cadwork_id=12345)
+    cadwork.ec.check_element_id.assert_called_with(12345)
+    assert element.id == 12345
+
+
+def test_gets_element_by_guid(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.ec.get_element_from_cadwork_guid.return_value = 0
+    with pytest.raises(
+        ValueError,
+        match=r"Could not find a Cadwork element with GUID '{DEADBEEF-0000-0000-0000-000000000000}'",
+    ):
+        _ = project.element(guid=UUID("deadbeef-0000-0000-0000-000000000000"))
+
+    # With value
+    cadwork.ec.get_element_from_cadwork_guid.return_value = 12345
+    cadwork.ec.get_element_cadwork_guid.return_value = "{2B21165D-9454-46A0-A992-6B4AA043D58D}"
+    element = project.element(guid=UUID("2b21165d-9454-46a0-a992-6b4aa043d58d"))
+    cadwork.ec.get_element_from_cadwork_guid.assert_called_with("{2B21165D-9454-46A0-A992-6B4AA043D58D}")
+    cadwork.ec.get_element_cadwork_guid.assert_called_with(12345)
+    assert element.id == 12345
+    assert element.guid == UUID("2b21165d-9454-46a0-a992-6b4aa043d58d")
+
+
+def test_gets_element_by_ifc_guid(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.bc.get_element_id_from_base64_ifc_guid.return_value = 0
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork element with IFC GUID '3UhRxl0000000000000000'"):
+        _ = project.element(ifc_guid=IfcUUID("deadbeef-0000-0000-0000-000000000000"))
+
+    # With value
+    cadwork.bc.get_element_id_from_base64_ifc_guid.return_value = 54321
+    element = project.element(ifc_guid=IfcUUID("921ab9eb-3b21-46c8-baa4-dfffc33b59be"))
+    cadwork.bc.get_element_id_from_base64_ifc_guid.assert_called_with("2I6hdhEo56oBgat$$3Erc_")
+    assert element.id == 54321
+    cadwork.bc.get_ifc_guid.return_value = "{921AB9EB-3B21-46C8-BAA4-DFFFC33B59BE}"
+    assert element.ifc_guid == IfcUUID("921ab9eb-3b21-46c8-baa4-dfffc33b59be")
+    cadwork.bc.get_ifc_guid.assert_called_with(54321)
+
+
+def test_gets_elements(cadwork) -> None:
     project = Project()
 
     # Without elements
@@ -206,7 +262,7 @@ def test_get_elements(cadwork) -> None:
     assert [x.id for x in project.elements()] == [505, 404, 303, 202, 101]
 
 
-def test_get_selected_elements(cadwork) -> None:
+def test_gets_selected_elements(cadwork) -> None:
     project = Project()
 
     # Without elements

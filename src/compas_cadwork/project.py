@@ -1,16 +1,26 @@
+from __future__ import annotations
+
 from datetime import date
 from datetime import datetime
 from functools import cached_property
+from typing import TYPE_CHECKING
 from typing import Generator
 from typing import Iterable
+from typing import overload
 from uuid import UUID
 
+import bim_controller as bc
 import element_controller as ec
 import utility_controller as uc
 
 from compas_cadwork.elements.element import Element
+from compas_cadwork.utils.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
+
+
+if TYPE_CHECKING:
+    from cadwork import ElementId
 
 
 def _is_empty_value(raw_value: str) -> bool:
@@ -190,6 +200,93 @@ class Project:
     def data(self) -> _ProjectData:
         """Project data."""
         return _ProjectData()
+
+    @overload
+    def element(self, *, cadwork_id: ElementId) -> Element:
+        """Get element from Cadwork ID.
+
+        Parameters
+        ----------
+        cadwork_id : ElementId
+            Cadwork element ID.
+
+        Returns
+        -------
+        Element
+            Cadwork element.
+
+        Raises
+        ------
+        ValueError
+            If the element does not exist.
+        """
+
+    @overload
+    def element(self, *, guid: UUID) -> Element:
+        """Get element from Cadwork GUID.
+
+        Parameters
+        ----------
+        guid : UUID
+            Cadwork element GUID.
+
+        Returns
+        -------
+        Element
+            Cadwork element.
+
+        Raises
+        ------
+        ValueError
+            If the element does not exist.
+        """
+
+    @overload
+    def element(self, *, ifc_guid: IfcUUID) -> Element:
+        """Get element from IFC GUID.
+
+        Parameters
+        ----------
+        ifc_guid : IfcUUID
+            Element IFC GUID.
+
+        Returns
+        -------
+        Element
+            Cadwork element.
+
+        Raises
+        ------
+        ValueError
+            If the element does not exist.
+        """
+
+    def element(
+        self,
+        *,
+        cadwork_id: ElementId | None = None,
+        guid: UUID | None = None,
+        ifc_guid: IfcUUID | None = None,
+    ) -> Element:
+        # GUID to Cadwork ID
+        if guid is not None:
+            raw_guid = "{" + str(guid).upper() + "}"
+            cadwork_id = ec.get_element_from_cadwork_guid(raw_guid)
+            if ec.get_element_cadwork_guid(cadwork_id) != raw_guid:
+                raise ValueError(f"Could not find a Cadwork element with GUID {raw_guid!r}")
+
+        # IFC GUID to Cadwork ID
+        if ifc_guid is not None:
+            raw_guid = ifc_guid.base64
+            cadwork_id = bc.get_element_id_from_base64_ifc_guid(raw_guid)
+            if cadwork_id == 0:
+                raise ValueError(f"Could not find a Cadwork element with IFC GUID {raw_guid!r}")
+
+        # Cadwork ID to element
+        assert cadwork_id is not None
+        if not ec.check_element_id(cadwork_id):
+            raise ValueError(f"Could not find a Cadwork element with ID #{cadwork_id}")
+        return Element(cadwork_id)
 
     def elements(self) -> Generator[Element, None, None]:
         """Get all elements in the project.

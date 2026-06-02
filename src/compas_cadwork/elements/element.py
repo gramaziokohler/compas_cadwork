@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Final
 from typing import Self
-from typing import final
 from uuid import UUID
 
 import attribute_controller as ac
@@ -118,32 +117,6 @@ class Element:
 
     attribute_names: ClassVar[_ElementAttributeNames] = _ElementAttributeNames()
     """User attribute names."""
-
-    @final
-    @classmethod
-    def from_guid(cls, guid: UUID) -> Element:
-        """Get element from Cadwork GUID.
-
-        Parameters
-        ----------
-        guid : UUID
-            Cadwork element GUID.
-
-        Returns
-        -------
-        Element
-            Cadwork element.
-
-        Raises
-        ------
-        ValueError
-            If the element does not exist.
-        """
-        raw_guid = "{" + str(guid).upper() + "}"
-        cadwork_id = ec.get_element_from_cadwork_guid(raw_guid)
-        if ec.get_element_cadwork_guid(cadwork_id) != raw_guid:
-            raise ValueError(f"Could not find a Cadwork element with GUID {raw_guid}")
-        return cls(cadwork_id)
 
     def __init__(self, cadwork_id: ElementId) -> None:
         """Create new instance wrapping an existing Cadwork element.
