@@ -42,9 +42,13 @@ class CadworkMocks:
         self._apply_custom_patches()
 
     def _apply_custom_patches(self) -> None:
+        self.cadwork.element_type.is_circular_beam.return_value = False
+        self.cadwork.element_type.is_rectangular_beam.return_value = False
+        self.cadwork.element_type.is_wall.return_value = False
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.element_grouping_type.group = 1
         self.cadwork.element_grouping_type.subgroup = 2
+        self.ac.get_element_type.return_value = self.cadwork.element_type
 
 
 @pytest.fixture
