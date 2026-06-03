@@ -42,9 +42,37 @@ class CadworkMocks:
         self._apply_custom_patches()
 
     def _apply_custom_patches(self) -> None:
+        self.cadwork.element_type.is_additional_element.return_value = False
+        self.cadwork.element_type.is_auxiliary.return_value = False
+        self.cadwork.element_type.is_cadwork.return_value = False
+        self.cadwork.element_type.is_circular_axis.return_value = False
         self.cadwork.element_type.is_circular_beam.return_value = False
+        self.cadwork.element_type.is_connector_axis.return_value = False
+        self.cadwork.element_type.is_connector_node.return_value = False
+        self.cadwork.element_type.is_container.return_value = False
+        self.cadwork.element_type.is_dimension.return_value = False
+        self.cadwork.element_type.is_drilling_axis.return_value = False
+        self.cadwork.element_type.is_eave_axis.return_value = False
+        self.cadwork.element_type.is_export_solid.return_value = False
+        self.cadwork.element_type.is_export_solid_scene.return_value = False
+        self.cadwork.element_type.is_floor.return_value = False
+        self.cadwork.element_type.is_global_cut.return_value = False
+        self.cadwork.element_type.is_line.return_value = False
+        self.cadwork.element_type.is_nesting_parent.return_value = False
+        self.cadwork.element_type.is_none.return_value = False
+        self.cadwork.element_type.is_normal_node.return_value = False
+        self.cadwork.element_type.is_opening.return_value = False
+        self.cadwork.element_type.is_panel.return_value = False
+        self.cadwork.element_type.is_rectangular_axis.return_value = False
         self.cadwork.element_type.is_rectangular_beam.return_value = False
+        self.cadwork.element_type.is_roof.return_value = False
+        self.cadwork.element_type.is_room.return_value = False
+        self.cadwork.element_type.is_rotation_element.return_value = False
+        self.cadwork.element_type.is_section_trace.return_value = False
+        self.cadwork.element_type.is_surface.return_value = False
+        self.cadwork.element_type.is_text_document.return_value = False
         self.cadwork.element_type.is_wall.return_value = False
+        self.cadwork.element_type.is_wire_axis.return_value = False
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.element_grouping_type.group = 1
         self.cadwork.element_grouping_type.subgroup = 2

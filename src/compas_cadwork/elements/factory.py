@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from typing import Literal
 from typing import TypeAlias
 
 import attribute_controller as ac
@@ -8,6 +9,7 @@ import element_controller as ec
 
 from .beam import Beam
 from .element import Element
+from .element_type import ElementType
 from .wall import Wall
 
 
@@ -15,7 +17,38 @@ if TYPE_CHECKING:
     from cadwork import ElementId
 
 
-AnyElement: TypeAlias = Element | Beam | Wall
+_GenericElementTypes: TypeAlias = Literal[
+    ElementType.ADDITIONAL,
+    ElementType.AUXILIARY,
+    ElementType.CADWORK,
+    ElementType.CIRCULAR_AXIS,
+    ElementType.CONNECTOR_AXIS,
+    ElementType.CONNECTOR_NODE,
+    ElementType.CONTAINER,
+    ElementType.DIMENSION,
+    ElementType.DRILLING_AXIS,
+    ElementType.EAVE_AXIS,
+    ElementType.EXPORT_SOLID,
+    ElementType.EXPORT_SOLID_SCENE,
+    ElementType.FLOOR,
+    ElementType.GLOBAL_CUT,
+    ElementType.LINE,
+    ElementType.NESTING_PARENT,
+    ElementType.NONE,
+    ElementType.NORMAL_NODE,
+    ElementType.OPENING,
+    ElementType.PANEL,
+    ElementType.RECTANGULAR_AXIS,
+    ElementType.ROOF,
+    ElementType.ROOM,
+    ElementType.ROTATION_ELEMENT,
+    ElementType.SECTION_TRACE,
+    ElementType.SURFACE,
+    ElementType.TEXT_DOCUMENT,
+    ElementType.WIRE_AXIS,
+]
+
+AnyElement: TypeAlias = Element[_GenericElementTypes] | Beam | Wall
 
 
 def get_element_instance(cadwork_id: ElementId) -> AnyElement:
@@ -34,13 +67,14 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
     Raises
     ------
     ValueError
-        If the element does not exist.
+        If the element does not exist or has an unknown type.
     """
     if not ec.check_element_id(cadwork_id):
         raise ValueError(f"Could not find a Cadwork element with ID #{cadwork_id}")
     raw_type = ac.get_element_type(cadwork_id)
-    if raw_type.is_circular_beam() or raw_type.is_rectangular_beam():
+    element_type = ElementType.from_cadwork(raw_type)
+    if element_type == ElementType.CIRCULAR_BEAM or element_type == ElementType.RECTANGULAR_BEAM:
         return Beam(cadwork_id)
-    if raw_type.is_wall():
+    if element_type == ElementType.WALL:
         return Wall(cadwork_id)
     return Element(cadwork_id)

@@ -2,13 +2,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from .base_element import BaseElement
+from .element import Element
 from .element_type import ElementType
 
 
-class Wall(BaseElement):
+class Wall(Element[Literal[ElementType.WALL]]):
     """Wall element."""
-
-    @property
-    def type(self) -> Literal[ElementType.WALL]:
-        return ElementType.WALL
