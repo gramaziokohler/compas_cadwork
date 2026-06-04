@@ -1,8 +1,11 @@
-********************************************************************************
+**************************
 compas_cadwork.conversions
-********************************************************************************
+**************************
 
 .. currentmodule:: compas_cadwork.conversions
+
+.. deprecated:: 1.0.0
+   Use :mod:`compas_cadwork.utils.converters` instead.
 
 Functions
 =========

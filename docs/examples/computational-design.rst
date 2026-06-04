@@ -1,6 +1,6 @@
-********************************************************************************
-Basic.2 Computational Design
-********************************************************************************
+********************
+Computational Design
+********************
 
 This is a simple example of how `compas_cadwork` can be used in a computational design workflow, utilizing COMPAS's pure Python geometry kernel.
 

@@ -1,8 +1,11 @@
-********************************************************************************
+************************
 compas_cadwork.datamodel
-********************************************************************************
+************************
 
 .. currentmodule:: compas_cadwork.datamodel
+
+.. deprecated:: 1.0.0
+   Use :mod:`compas_cadwork.elements` instead.
 
 Classes
 =======
@@ -11,9 +14,8 @@ Classes
     :toctree: generated/
     :nosignatures:
 
-    ElementGroupingType
-    ElementGroup
-    Element
-
     AnchorPoint
     Dimension
+    Element
+    ElementGroup
+    ElementGroupingType

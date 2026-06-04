@@ -1,6 +1,6 @@
-********************************************************************************
+**************
 COMPAS cadwork
-********************************************************************************
+**************
 
 .. rst-class:: lead
 
@@ -10,10 +10,8 @@ COMPAS cadwork
      :figclass: figure
      :class: figure-img img-fluid
 
-.. rst-class:: lead
-
-    Make use of COMPAS' extensive geometry kernel, data structures, and algorithms to create, manipulate, and analyze your 3d models in cadwork.
-    Gain access to the COMPAS ecosystem which includes a wide range of tools and libraries engineered for the AEC industry.
+Make use of COMPAS' extensive geometry kernel, data structures, and algorithms to create, manipulate, and analyze your 3D models in cadwork.
+Gain access to the COMPAS ecosystem which includes a wide range of tools and libraries engineered for the AEC industry.
 
 Table of Contents
 =================
@@ -22,15 +20,15 @@ Table of Contents
    :maxdepth: 2
    :titlesonly:
 
-   Introduction <self>
-   installation
-   examples
-   api
+   Home <self>
+   getting-started/index
+   examples/index
+   api/index
    license
 
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
+* :ref:`search`

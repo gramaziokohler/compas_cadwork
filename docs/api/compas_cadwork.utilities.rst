@@ -1,11 +1,14 @@
-********************************************************************************
+************************
 compas_cadwork.utilities
-********************************************************************************
+************************
 
 .. currentmodule:: compas_cadwork.utilities
 
+.. deprecated:: 1.0.0
+   Use :mod:`compas_cadwork.utils` instead.
+
 Classes
-=========
+=======
 
 .. autosummary::
     :toctree: generated/

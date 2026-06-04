@@ -32,10 +32,11 @@ else:
 # -- Extension configuration ------------------------------------------------
 
 extensions = sphinx_compas2_theme.default_extensions
+extensions = [x for x in extensions if x != "sphinx.ext.linkcode"]  # Prevent crashing when using `members : True`
 
 # numpydoc options
 
-numpydoc_show_class_members = False
+numpydoc_show_class_members = True
 numpydoc_class_members_toctree = False
 numpydoc_attributes_as_param_list = True
 numpydoc_show_inherited_class_members = False
@@ -48,7 +49,9 @@ autodoc_type_aliases = {}  # type: ignore[var-annotated]
 autodoc_typehints_description_target = "documented"
 autodoc_mock_imports = sphinx_compas2_theme.default_mock_imports
 autodoc_default_options = {
+    "members": True,
     "undoc-members": True,
+    "inherited-members": True,
     "show-inheritance": True,
 }
 autodoc_member_order = "groupwise"
@@ -124,13 +127,13 @@ html_theme_options = {
         },
         {
             "name": "Discourse",
-            "url": "http://forum.compas-framework.org/",
+            "url": "https://forum.compas-framework.org/",
             "icon": "fa-brands fa-discourse",
             "type": "fontawesome",
         },
         {
             "name": "PyPI",
-            "url": f"https://pypi.org/project/{package}/",
+            "url": f"https://pypi.org/project/{package.replace('_', '-')}/",
             "icon": "fa-brands fa-python",
             "type": "fontawesome",
         },
