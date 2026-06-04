@@ -37,7 +37,7 @@ To install `compas_cadwork` to this path, open a terminal and run following comm
 
 .. code-block:: bash
 
-    set CADWORK_SITE_PACKAGES="C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages"
+    set CADWORK_SITE_PACKAGES="C:\Program Files\cadwork.dir\EXE_2025\Pclib.x64\python312\site-packages"
 
     pip install compas_cadwork --target %CADWORK_SITE_PACKAGES% --upgrade
 
