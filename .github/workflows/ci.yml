@@ -22,7 +22,7 @@ jobs:
         run: uv run inv setup
 
       - name: Run linter
-        run: uv run inv lint
+        run: uv run inv precommit
 
       - name: Run tests
         run: uv run inv test
