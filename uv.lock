@@ -261,7 +261,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
   {name = "bump-my-version", specifier = ">=1.3.0"},
-  {name = "compas-invocations2", specifier = ">=1.1.0"},
+  {name = "compas-invocations2", specifier = ">=1.1.2"},
   {name = "cwapi3d", specifier = "==32.443.10"},
   {name = "invoke", specifier = ">=3.0.3"},
   {name = "pre-commit", specifier = ">=4.6.0"},
@@ -275,11 +275,11 @@ dependencies = [
   {name = "tomlkit"}
 ]
 name = "compas-invocations2"
-sdist = {url = "https://files.pythonhosted.org/packages/30/bc/e42596ac5a4eb83cf9c0b3fa735da6f928f72fcc0eb1c8fbd2dca7581334/compas_invocations2-1.1.0.tar.gz", hash = "sha256:66ff6fd4c349a61b890c0b3e4071e1536128a3d29940e183585d32444fc9d947", size = 13140, upload-time = "2026-04-01T13:25:56.645Z"}
+sdist = {url = "https://files.pythonhosted.org/packages/59/cc/575bea307d39a0236d1eaa0cfa5cf7a3a666e10b33ed53e18267d1349fc3/compas_invocations2-1.1.2.tar.gz", hash = "sha256:bc597fd967298bd74e897e11641b3ac74611d8cca17a911007961406915ba1fa", size = 14045, upload-time = "2026-06-15T08:05:16.86Z"}
 source = {registry = "https://pypi.org/simple"}
-version = "1.1.0"
+version = "1.1.2"
 wheels = [
-  {url = "https://files.pythonhosted.org/packages/d8/23/e9c3f2d81082bd83c8c518f134162448a40475c1c4bfd480957926fb169a/compas_invocations2-1.1.0-py3-none-any.whl", hash = "sha256:587970c2e4ac0d5c9523e2181b1c5756e846145eade255f699b6d06c34d96015", size = 13411, upload-time = "2026-04-01T13:25:55.517Z"}
+  {url = "https://files.pythonhosted.org/packages/be/50/ba007e6f1c77d0cb117e5e8dd00822906940cb54c52bc029f6f9af0ec661/compas_invocations2-1.1.2-py3-none-any.whl", hash = "sha256:60bb7ef0011892bf7ebb58c65a946e4be67f6c7c4e19545420de77592b9a17c5", size = 14283, upload-time = "2026-06-15T08:05:15.785Z"}
 ]
 
 [[package]]
