@@ -10,16 +10,17 @@ on:
 
 jobs:
   ci:
+    if: "!contains(github.event.pull_request.labels.*.name, 'docs-only')"
     runs-on: ubuntu-slim
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
       - name: Setup uv
-        uses: astral-sh/setup-uv@v8.2.0
-
-      - name: Setup project
-        run: uv run inv setup
+        uses: josemmo/compas-actions.build@feat/uv-support
+        with:
+          python: 3.12
+          management_tool: uv
+          invoke_lint: false
+          check_import: false
+          invoke_test: false
 
       - name: Run linter
         run: uv run inv precommit
