@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Setup uv
-        uses: josemmo/compas-actions.build@feat/uv-support
+        uses: compas-dev/compas-actions.build@4cb665d4a23d78aa71a78b2fbe000de34f507b49
         with:
           python: 3.12
           management_tool: uv
