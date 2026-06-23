@@ -23,7 +23,7 @@ jobs:
           invoke_test: false
 
       - name: Run linter
-        run: uv run inv precommit
+        run: uv run inv lint
 
       - name: Run tests
         run: uv run inv test
