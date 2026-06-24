@@ -1,2 +1,0 @@
-cwapi3d>=30.498.0
-compas_timber>=0.11.0

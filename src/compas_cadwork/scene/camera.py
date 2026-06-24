@@ -35,7 +35,8 @@ class ProjectionType(Enum):
 
 
 class Camera(Data):
-    """This class is a wrapper for cadwork's camera data which allows to get information and manipulate the camera settings in an object-oriented way.
+    """This class is a wrapper for cadwork's camera data which allows to get information and manipulate the camera
+    settings in an object-oriented way.
 
     ..note::
         While the cadwork document might use millimeters as the unit of length, the camera data is expected in meters.
@@ -100,7 +101,9 @@ class Camera(Data):
             "projection_type": self._projection_type,
         }
 
-    def __init__(self, frame: Frame, fov: float, fwidth: float, fheight: float, target: Point, projection_type: ProjectionType) -> None:
+    def __init__(
+        self, frame: Frame, fov: float, fwidth: float, fheight: float, target: Point, projection_type: ProjectionType
+    ) -> None:
         super().__init__()
         self._frame = frame
         self._fov = fov
@@ -110,7 +113,7 @@ class Camera(Data):
         self._projection_type = projection_type
 
     def __repr__(self) -> str:
-        return f"Camera({self._frame}, {self._fov}, {self._fwidth}, {self._fheight}, {self._target}, {self._projection_type})"
+        return f"Camera({self._frame}, {self._fov}, {self._fwidth}, {self._fheight}, {self._target}, {self._projection_type})"  # noqa: E501
 
     @property
     def fov(self) -> float:
@@ -192,7 +195,9 @@ class Camera(Data):
         """
         camera_to_target = Vector.from_start_end(self.position, target)
         if not TOL.is_zero(camera_to_target.dot(up_vector)):
-            raise ValueError(f"up vector and camera-to-target vector must be orthogonal. camera_to_target: {camera_to_target}, up_vector: {up_vector}")
+            raise ValueError(
+                f"up vector and camera-to-target vector must be orthogonal. camera_to_target: {camera_to_target}, up_vector: {up_vector}"  # noqa: E501
+            )
 
         self._frame = self._frame_from_camera_data(self.position, target, up_vector)
         self._target = target

@@ -13,6 +13,7 @@ from compas_cadwork.conversions import vector_to_compas
 
 from .element import Element
 
+
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)
 
 
@@ -35,7 +36,7 @@ class AnchorPoint:
     distance: float
     direction: Vector
 
-    def __eq__(self, other: AnchorPoint) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, AnchorPoint):
             return False
 
@@ -51,7 +52,7 @@ class AnchorPoint:
 class Dimension(Element):
     """Represents a cadwork dimension"""
 
-    def __init__(self, id):
+    def __init__(self, id):  # noqa: A002
         super().__init__(id)
         self._frame = None
         # not lazy-instantiating this so that it can be used to compare the modified instances of the same dimension
@@ -64,7 +65,7 @@ class Dimension(Element):
     def __hash__(self):
         return hash(self.cadwork_guid)
 
-    def __eq__(self, other: Dimension):
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Dimension):
             return False
 
@@ -74,7 +75,7 @@ class Dimension(Element):
         if len(self.anchors) != len(other.anchors):
             return False
 
-        for point_self, point_other in zip(self.anchors, other.anchors):
+        for point_self, point_other in zip(self.anchors, other.anchors):  # noqa: B905
             if point_self != point_other:
                 return False
         return True

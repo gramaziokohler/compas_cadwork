@@ -1,14 +1,15 @@
 import os
 
+
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, "data")
 
 
 def find_top_corner_of_group_wall_with_name(target_group):
     # find the wall element
+    import attribute_controller as ac
     import cadwork
     import element_controller as ec
-    import attribute_controller as ac
     import geometry_controller as gc
 
     grouping_type = ac.get_element_grouping_type()
@@ -37,9 +38,9 @@ def find_top_corner_of_group_wall_with_name(target_group):
     return cadwork.point_3d(top_corner)
 
 
-def find_top_corner_of_group_wall_with_name(target_group):
-    from compas_cadwork.utilities import get_element_groups
+def find_top_corner_of_group_wall_with_name_2(target_group):
     from compas_cadwork.conversions import point_to_cadwork
+    from compas_cadwork.utilities import get_element_groups
 
     groups = get_element_groups()
     group = groups.get(target_group)
@@ -53,7 +54,7 @@ def find_top_corner_of_group_wall_with_name(target_group):
     return point_to_cadwork(point)
 
 
-def side_as_surface(beam, side_index):
+def side_as_surface(beam, side_index):  # type: ignore[syntax]
     # type: (int) -> compas.geometry.PlanarSurface
     """Returns the requested side of the beam as a parametric planar surface.
     Parameters
@@ -86,6 +87,7 @@ def beam_face_parametric_traverse():
 
     # identify beam..
     import element_controller as ec
+
     from compas_cadwork.conversions import point_to_cadwork
 
     beam = model.beams[6]

@@ -1,20 +1,20 @@
 from compas.plugins import plugin
 from compas.scene import register
-
 from compas_timber.elements import Beam
 
-from .camera import Camera
-from .scene import CadworkSceneObject
-from .instructionobject import Text3dSceneObject
-from .instructionobject import LinearDimensionSceneObject
 from .beamobject import BeamSceneObject
+from .camera import Camera
+from .instructionobject import LinearDimensionSceneObject
+from .instructionobject import Text3dSceneObject
+from .scene import CadworkSceneObject
+
 
 __all__ = [
-    "Camera",
-    "CadworkSceneObject",
-    "Text3dSceneObject",
-    "LinearDimensionSceneObject",
     "BeamSceneObject",
+    "CadworkSceneObject",
+    "Camera",
+    "LinearDimensionSceneObject",
+    "Text3dSceneObject",
 ]
 
 
@@ -35,11 +35,11 @@ def after_draw(*args, **kwargs):
 def register_scene_objects():
     register(Beam, BeamSceneObject, context=CONTEXT)
     try:
-        from compas_monosashi.sequencer import Text3d
         from compas_monosashi.sequencer import LinearDimension
+        from compas_monosashi.sequencer import Text3d
 
         # These should move to monosashi probably
         register(Text3d, Text3dSceneObject, context=CONTEXT)
         register(LinearDimension, LinearDimensionSceneObject, context=CONTEXT)
-    except Exception:
+    except Exception:  # noqa: S110
         pass

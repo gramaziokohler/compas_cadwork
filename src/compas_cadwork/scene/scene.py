@@ -8,10 +8,11 @@ from compas_cadwork.datamodel import Element
 class CadworkSceneObject(SceneObject):
     """Base class for all of cadwork's SceneObject."""
 
-    DRAWN_ELEMENTS = []
+    DRAWN_ELEMENTS = []  # type: ignore[var-annotated]  # noqa: RUF012
 
     def add_element(self, element_id) -> Element:
-        """Records the given element_id to track elements added by the :class:`~compas_cadwork.scene.CadworkSceneObject`.
+        """Records the given element_id to track elements added by the
+        :class:`~compas_cadwork.scene.CadworkSceneObject`.
 
         Parameters
         ----------
@@ -30,7 +31,8 @@ class CadworkSceneObject(SceneObject):
 
     @classmethod
     def clear(cls, *args, **kwargs):
-        """Removes all elements tracked by the :class:`~compas_cadwork.scene.CadworkSceneObject` from the cadwork model."""
+        """Removes all elements tracked by the :class:`~compas_cadwork.scene.CadworkSceneObject` from the
+        cadwork model."""
         if cls.DRAWN_ELEMENTS:
             ec.delete_elements(cls.DRAWN_ELEMENTS)
             vc.refresh()

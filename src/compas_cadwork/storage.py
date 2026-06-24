@@ -9,6 +9,7 @@ from compas.data import json_loads
 from utility_controller import get_project_data
 from utility_controller import set_project_data
 
+
 LOG = logging.getLogger(__name__)
 
 
@@ -111,7 +112,7 @@ class FileStorage(Storage):
             json_dump(data, self.filepath, pretty=True)
             LOG.debug("Data saved successfully to file.")
         except Exception as e:
-            raise StorageError(f"Failed to save data to file: {e}")
+            raise StorageError(f"Failed to save data to file: {e}")  # noqa: B904
 
     def load(self) -> Dict | Data:
         """Load the data from the file.
@@ -129,4 +130,4 @@ class FileStorage(Storage):
         try:
             return json_load(self.filepath)
         except Exception as e:
-            raise StorageError(f"Failed to load data from file: {e}")
+            raise StorageError(f"Failed to load data from file: {e}")  # noqa: B904

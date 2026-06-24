@@ -1,11 +1,10 @@
 from compas.datastructures import Mesh
-from compas.geometry import Point
-from compas.geometry import Plane
-from compas.geometry import is_point_infrontof_plane
-from compas.geometry import Sphere
 from compas.geometry import Line
+from compas.geometry import Plane
+from compas.geometry import Point
+from compas.geometry import Sphere
+from compas.geometry import is_point_infrontof_plane
 from compas.scene import Scene
-
 from compas_timber.elements import Beam
 
 
