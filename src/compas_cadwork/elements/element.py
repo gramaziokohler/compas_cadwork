@@ -16,9 +16,9 @@ from compas.geometry import Frame
 from compas.geometry import Line
 from compas.geometry import Vector
 
-from compas_cadwork.utils.converters import compas_to_cwpoint
-from compas_cadwork.utils.converters import cwpoint_to_point
-from compas_cadwork.utils.converters import cwpoint_to_vector
+from compas_cadwork.conversions.primitives import point_to_compas
+from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.conversions.primitives import vector_to_compas
 from compas_cadwork.utils.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
@@ -194,9 +194,9 @@ class Element:
     @property
     def frame(self) -> Frame:
         """Reference frame."""
-        p1 = cwpoint_to_point(gc.get_p1(self.id))
-        x_axis = cwpoint_to_vector(gc.get_xl(self.id))
-        y_axis = cwpoint_to_vector(gc.get_yl(self.id))
+        p1 = point_to_compas(gc.get_p1(self.id))
+        x_axis = vector_to_compas(gc.get_xl(self.id))
+        y_axis = vector_to_compas(gc.get_yl(self.id))
         return Frame(p1, x_axis, y_axis)
 
     @property
@@ -229,8 +229,8 @@ class Element:
     @property
     def centerline(self) -> Line:
         """Line connecting the two points that define the element."""
-        p1 = cwpoint_to_point(gc.get_p1(self.id))
-        p2 = cwpoint_to_point(gc.get_p2(self.id))
+        p1 = point_to_compas(gc.get_p1(self.id))
+        p2 = point_to_compas(gc.get_p2(self.id))
         return Line(p1, p2)
 
     def translate(self, vector: Vector) -> None:
@@ -241,7 +241,7 @@ class Element:
         vector : Vector
             The vector by which to translate the element.
         """
-        ec.move_element([self.id], compas_to_cwpoint(vector))
+        ec.move_element([self.id], vector_to_cadwork(vector))
 
     def duplicate(self, vector: Vector) -> Self:
         """Duplicate element by the given vector.
@@ -256,7 +256,7 @@ class Element:
         Self
             New element.
         """
-        new_element_ids = ec.copy_elements([self.id], compas_to_cwpoint(vector))
+        new_element_ids = ec.copy_elements([self.id], vector_to_cadwork(vector))
         if len(new_element_ids) != 1:
             raise RuntimeError(f"Failed to copy Cadwork element with ID {self.id}")
         return self.__class__(new_element_ids[0])
