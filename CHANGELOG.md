@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added new `Element`, `Project`, and `IfcUUID` classes.
+
 ### Changed
 
 - Switched project to Astral's uv project manager.
-- Added new `Element`, `Project`, and `IfcUUID` classes.
+- Deprecated `compas_cadwork.storage`, `compas_cadwork.datamodel`, `compas_cadwork.scene`, and `compas_cadwork.utilities`.
 
 ### Removed
 
