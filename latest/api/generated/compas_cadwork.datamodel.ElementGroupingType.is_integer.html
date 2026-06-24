@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
     <link rel="icon" href="../../_static/compas.ico" type="image/x-icon">
-    <title>save_project_file &#8212; COMPAS cadwork</title>
+    <title>ElementGroupingType.is_integer &#8212; COMPAS cadwork</title>
   
   
   
@@ -52,15 +52,15 @@
     <script src="../../_static/togglebutton.js"></script>
     <script src="../../_static/design-tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/compas_cadwork.utilities.save_project_file';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/compas_cadwork.datamodel.ElementGroupingType.is_integer';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://gramaziokohler.github.io/compas_cadwork/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
         </script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="zoom_active_elements" href="compas_cadwork.utilities.zoom_active_elements.html" />
-    <link rel="prev" title="remove_elements" href="compas_cadwork.utilities.remove_elements.html" />
+    <link rel="next" title="ElementGroupingType.to_bytes" href="compas_cadwork.datamodel.ElementGroupingType.to_bytes.html" />
+    <link rel="prev" title="ElementGroupingType.from_bytes" href="compas_cadwork.datamodel.ElementGroupingType.from_bytes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -472,9 +472,9 @@ document.write(`
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../compas_cadwork.conversions.html">compas_cadwork.conversions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../compas_cadwork.datamodel.html">compas_cadwork.datamodel</a></li>
+<li class="toctree-l2 current active"><a class="reference internal" href="../compas_cadwork.datamodel.html">compas_cadwork.datamodel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../compas_cadwork.scene.html">compas_cadwork.scene</a></li>
-<li class="toctree-l2 current active"><a class="reference internal" href="../compas_cadwork.utilities.html">compas_cadwork.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compas_cadwork.utilities.html">compas_cadwork.utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
@@ -513,6 +513,8 @@ document.write(`
 
 
 
+
+
 <nav aria-label="Breadcrumbs">
   <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
     
@@ -525,9 +527,12 @@ document.write(`
     <li class="breadcrumb-item"><a href="../../api.html" class="nav-link">API Reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../compas_cadwork.utilities.html" class="nav-link">compas_cadwork.utilities</a></li>
+    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
     
-    <li class="breadcrumb-item active" aria-current="page">save_project_file</li>
+    
+    <li class="breadcrumb-item"><a href="compas_cadwork.datamodel.ElementGroupingType.html" class="nav-link">ElementGroupingType</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">ElementGroupingType.is_integer</li>
   </ul>
 </nav>
 </div>
@@ -544,12 +549,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="save-project-file">
-<h1>save_project_file</h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="compas_cadwork.utilities.save_project_file">
-<span class="sig-prename descclassname"><span class="pre">compas_cadwork.utilities.</span></span><span class="sig-name descname"><span class="pre">save_project_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/gramaziokohler/compas_cadwork/blob/ab61256/src/compas_cadwork/utilities/__init__.py#L361"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Saves the current cadwork project file.</p>
+  <section id="elementgroupingtype-is-integer">
+<h1>ElementGroupingType.is_integer</h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_cadwork.datamodel.ElementGroupingType.is_integer">
+<span class="sig-prename descclassname"><span class="pre">ElementGroupingType.</span></span><span class="sig-name descname"><span class="pre">is_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Returns True. Exists for duck type compatibility with float.is_integer.</p>
 </dd></dl>
 
 </section>
@@ -575,7 +580,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compas_cadwork.utilities.save_project_file"><code class="docutils literal notranslate"><span class="pre">save_project_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compas_cadwork.datamodel.ElementGroupingType.is_integer"><code class="docutils literal notranslate"><span class="pre">ElementGroupingType.is_integer()</span></code></a></li>
 </ul>
   </nav></div>
 
