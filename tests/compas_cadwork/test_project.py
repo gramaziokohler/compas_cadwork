@@ -3,8 +3,8 @@ from uuid import UUID
 
 import pytest
 
+from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.project import Project
-from compas_cadwork.utils.ifc_uuid import IfcUUID
 
 
 def test_gets_guid(cadwork) -> None:

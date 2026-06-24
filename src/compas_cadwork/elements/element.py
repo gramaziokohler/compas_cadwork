@@ -19,7 +19,7 @@ from compas.geometry import Vector
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_compas
-from compas_cadwork.utils.ifc_uuid import IfcUUID
+from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
 

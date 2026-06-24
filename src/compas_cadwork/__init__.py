@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 from datetime import datetime
 
+from .ifc_uuid import IfcUUID
 from .project import Project
 
 
@@ -27,6 +28,7 @@ __all__ = [
     "DOCS",
     "HOME",
     "TEMP",
+    "IfcUUID",
     "Project",
     "__author__",
     "__author_email__",

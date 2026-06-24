@@ -1,4 +1,4 @@
-from compas_cadwork.utils.ifc_uuid import IfcUUID
+from compas_cadwork.ifc_uuid import IfcUUID
 
 
 def test_generates_ifc_base64_guids() -> None:

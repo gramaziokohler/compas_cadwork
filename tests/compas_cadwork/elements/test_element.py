@@ -7,7 +7,7 @@ from compas.geometry import Point
 from compas.geometry import Vector
 
 from compas_cadwork.elements.element import Element
-from compas_cadwork.utils.ifc_uuid import IfcUUID
+from compas_cadwork.ifc_uuid import IfcUUID
 
 
 def test_raises_on_deleted_element(cadwork) -> None:

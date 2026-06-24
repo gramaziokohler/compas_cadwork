@@ -14,7 +14,7 @@ import element_controller as ec
 import utility_controller as uc
 
 from compas_cadwork.elements.element import Element
-from compas_cadwork.utils.ifc_uuid import IfcUUID
+from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
 
