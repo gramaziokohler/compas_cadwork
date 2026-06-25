@@ -33,8 +33,8 @@ class ElementType(Enum):
     NORMAL_NODE = auto()
     OPENING = auto()
     PANEL = auto()
+    POLYGONAL_BEAM = auto()
     RECTANGULAR_AXIS = auto()
-    RECTANGULAR_BEAM = auto()
     ROOF = auto()
     ROOM = auto()
     ROTATION_ELEMENT = auto()
@@ -108,7 +108,7 @@ class ElementType(Enum):
         if raw_type.is_rectangular_axis():
             return cls.RECTANGULAR_AXIS
         if raw_type.is_rectangular_beam():
-            return cls.RECTANGULAR_BEAM
+            return cls.POLYGONAL_BEAM
         if raw_type.is_roof():
             return cls.ROOF
         if raw_type.is_room():

@@ -14,7 +14,7 @@ def test_gets_the_correct_element_class(cadwork) -> None:
     cadwork.cadwork.element_type.is_rectangular_beam.return_value = True
     cadwork.ec.check_element_id.return_value = True
     element = get_element_instance(123)
-    assert element.type == ElementType.RECTANGULAR_BEAM
+    assert element.type == ElementType.POLYGONAL_BEAM
     assert_type(element, Beam)
     assert isinstance(element, Beam)
     cadwork.cadwork.element_type.is_rectangular_beam.return_value = False

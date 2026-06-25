@@ -6,5 +6,5 @@ from .element import Element
 from .element_type import ElementType
 
 
-class Beam(Element[Literal[ElementType.CIRCULAR_BEAM, ElementType.RECTANGULAR_BEAM]]):
+class Beam(Element[Literal[ElementType.CIRCULAR_BEAM, ElementType.POLYGONAL_BEAM]]):
     """Beam element."""

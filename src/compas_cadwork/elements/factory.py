@@ -73,7 +73,7 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         raise ValueError(f"Could not find a Cadwork element with ID #{cadwork_id}")
     raw_type = ac.get_element_type(cadwork_id)
     element_type = ElementType.from_cadwork(raw_type)
-    if element_type == ElementType.CIRCULAR_BEAM or element_type == ElementType.RECTANGULAR_BEAM:
+    if element_type == ElementType.CIRCULAR_BEAM or element_type == ElementType.POLYGONAL_BEAM:
         return Beam(cadwork_id)
     if element_type == ElementType.WALL:
         return Wall(cadwork_id)
