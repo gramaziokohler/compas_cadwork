@@ -10,6 +10,7 @@ import element_controller as ec
 from .beam import Beam
 from .element import Element
 from .element_type import ElementType
+from .panel import Panel
 from .wall import Wall
 
 
@@ -37,7 +38,6 @@ _GenericElementTypes: TypeAlias = Literal[
     ElementType.NONE,
     ElementType.NORMAL_NODE,
     ElementType.OPENING,
-    ElementType.PANEL,
     ElementType.RECTANGULAR_AXIS,
     ElementType.ROOF,
     ElementType.ROOM,
@@ -48,7 +48,7 @@ _GenericElementTypes: TypeAlias = Literal[
     ElementType.WIRE_AXIS,
 ]
 
-AnyElement: TypeAlias = Element[_GenericElementTypes] | Beam | Wall
+AnyElement: TypeAlias = Element[_GenericElementTypes] | Beam | Panel | Wall
 
 
 def get_element_instance(cadwork_id: ElementId) -> AnyElement:
@@ -75,6 +75,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
     element_type = ElementType.from_cadwork(raw_type)
     if element_type == ElementType.CIRCULAR_BEAM or element_type == ElementType.POLYGONAL_BEAM:
         return Beam(cadwork_id)
+    if element_type == ElementType.PANEL:
+        return Panel(cadwork_id)
     if element_type == ElementType.WALL:
         return Wall(cadwork_id)
     return Element(cadwork_id)
