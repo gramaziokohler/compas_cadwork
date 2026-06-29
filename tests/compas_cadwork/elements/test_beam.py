@@ -139,9 +139,3 @@ def test_creates_rectangular_beam(cadwork) -> None:
         cadwork.cadwork.point_3d(0.0, 1.0, 0.0),
         cadwork.cadwork.point_3d(1.0, 0.0, 0.0),
     )
-
-
-def test_repr(cadwork) -> None:
-    element = Beam(123)
-    cadwork.ac.get_name.return_value = "Something"
-    assert repr(element) == "Beam(id=123, name='Something')"

@@ -12,11 +12,11 @@ from compas.geometry import bounding_box_xy
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 
-from .element import Element
+from .dimensional_element import DimensionalElement
 from .element_type import ElementType
 
 
-class Panel(Element[Literal[ElementType.PANEL]]):
+class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
     """Panel element."""
 
     @classmethod

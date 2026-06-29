@@ -5,22 +5,15 @@ from typing import TYPE_CHECKING
 from typing import ClassVar
 from typing import Final
 from typing import Generic
-from typing import Self
 from typing import TypeVar
+from typing import final
 from uuid import UUID
 
 import attribute_controller as ac
 import bim_controller as bc
 import cadwork
 import element_controller as ec
-import geometry_controller as gc
-from compas.geometry import Frame
-from compas.geometry import Line
-from compas.geometry import Vector
 
-from compas_cadwork.conversions.primitives import point_to_compas
-from compas_cadwork.conversions.primitives import vector_to_cadwork
-from compas_cadwork.conversions.primitives import vector_to_compas
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
@@ -109,10 +102,10 @@ class _ElementData(KeyValueStorage[str, str]):
         ac.delete_additional_data([self._id], key)
 
 
-_T = TypeVar("_T", bound=ElementType)
+T = TypeVar("T", bound=ElementType)
 
 
-class Element(Generic[_T]):
+class Element(Generic[T]):
     """Generic Cadwork element."""
 
     id: Final[ElementId]
@@ -125,6 +118,7 @@ class Element(Generic[_T]):
     attribute_keys: ClassVar[_ElementAttributeKeys] = _ElementAttributeKeys()
     """User attribute keys (i.e., names)."""
 
+    @final
     def __init__(self, cadwork_id: ElementId) -> None:
         """Create new instance wrapping an existing Cadwork element.
 
@@ -154,7 +148,7 @@ class Element(Generic[_T]):
         return IfcUUID(ifc_guid)
 
     @property
-    def type(self) -> _T:
+    def type(self) -> T:
         """Element type."""
         raw_type = ac.get_element_type(self.id)
         return ElementType.from_cadwork(raw_type)  # type: ignore[return-value]
@@ -206,76 +200,6 @@ class Element(Generic[_T]):
         """Additional data."""
         return _ElementData(self.id)
 
-    @property
-    def frame(self) -> Frame:
-        """Reference frame."""
-        p1 = point_to_compas(gc.get_p1(self.id))
-        x_axis = vector_to_compas(gc.get_xl(self.id))
-        y_axis = vector_to_compas(gc.get_yl(self.id))
-        return Frame(p1, x_axis, y_axis)
-
-    @property
-    def width(self) -> float:
-        """Width in millimeters."""
-        return gc.get_width(self.id)
-
-    @width.setter
-    def width(self, value: float) -> None:
-        gc.set_width_real([self.id], value)
-
-    @property
-    def height(self) -> float:
-        """Height in millimeters."""
-        return gc.get_height(self.id)
-
-    @height.setter
-    def height(self, value: float) -> None:
-        gc.set_height_real([self.id], value)
-
-    @property
-    def length(self) -> float:
-        """Length in millimeters."""
-        return gc.get_length(self.id)
-
-    @length.setter
-    def length(self, value: float) -> None:
-        gc.set_length_real([self.id], value)
-
-    @property
-    def centerline(self) -> Line:
-        """Line connecting the two points that define the element."""
-        p1 = point_to_compas(gc.get_p1(self.id))
-        p2 = point_to_compas(gc.get_p2(self.id))
-        return Line(p1, p2)
-
-    def translate(self, vector: Vector) -> None:
-        """Translate element by the given vector.
-
-        Parameters
-        ----------
-        vector : Vector
-            The vector by which to translate the element.
-        """
-        ec.move_element([self.id], vector_to_cadwork(vector))
-
-    def duplicate(self, vector: Vector) -> Self:
-        """Duplicate element by the given vector.
-
-        Parameters
-        ----------
-        vector : Vector
-            The vector by which to duplicate the element.
-
-        Returns
-        -------
-        Self
-            New element.
-        """
-        new_element_ids = ec.copy_elements([self.id], vector_to_cadwork(vector))
-        if len(new_element_ids) != 1:
-            raise RuntimeError(f"Failed to copy Cadwork element with ID {self.id}")
-        return self.__class__(new_element_ids[0])
-
     def delete(self) -> None:
         """Delete element.
 
@@ -283,6 +207,7 @@ class Element(Generic[_T]):
         """
         ec.delete_elements([self.id])
 
+    @final
     def __repr__(self) -> str:
         class_name = type(self).__name__
         return f"{class_name}(id={self.id!r}, name={self.name!r})"

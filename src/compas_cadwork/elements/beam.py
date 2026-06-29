@@ -12,11 +12,11 @@ from compas.geometry import bounding_box_xy
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 
-from .element import Element
+from .dimensional_element import DimensionalElement
 from .element_type import ElementType
 
 
-class Beam(Element[Literal[ElementType.CIRCULAR_BEAM, ElementType.POLYGONAL_BEAM]]):
+class Beam(DimensionalElement[Literal[ElementType.CIRCULAR_BEAM, ElementType.POLYGONAL_BEAM]]):
     """Beam element."""
 
     @classmethod
