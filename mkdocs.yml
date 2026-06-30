@@ -142,6 +142,8 @@ nav:
       - Cadwork's Python Shell: getting-started/shell.md
       - Standalone Plugin: getting-started/plugin.md
   - Examples:
+      - Beams Showcase: examples/beams-showcase.md
+      - Panels Showcase: examples/panels-showcase.md
       - Computational Design: examples/computational-design.md
   - API Reference:
       - compas_cadwork: api/compas_cadwork.md
