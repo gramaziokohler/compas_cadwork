@@ -39,8 +39,8 @@ def _is_empty_value(raw_value: str) -> bool:
     return raw_value == "" or raw_value == "???"
 
 
-class _ProjectAttributes(KeyValueStorage[int, str]):
-    """Dictionary-like accessor for project user attributes.
+class _ProjectAttributeValues(KeyValueStorage[int, str]):
+    """Dictionary-like accessor for project user attribute values.
 
     NOTE: The first 10 user attributes are accessible in the GUI under "Preferences" > "Project data".
     """
@@ -61,8 +61,8 @@ class _ProjectAttributes(KeyValueStorage[int, str]):
         uc.set_project_user_attribute(key, "")  # There's no delete project user attribute function
 
 
-class _ProjectAttributeNames(KeyValueStorage[int, str]):
-    """Dictionary-like accessor for project user attribute names.
+class _ProjectAttributeKeys(KeyValueStorage[int, str]):
+    """Dictionary-like accessor for project user attribute keys (i.e., names).
 
     NOTE: The first 10 user attributes are accessible in the GUI under "Preferences" > "Project data".
     """
@@ -187,14 +187,14 @@ class Project:
         uc.set_project_designer(value or "")
 
     @cached_property
-    def attributes(self) -> _ProjectAttributes:
-        """Project user attributes."""
-        return _ProjectAttributes()
+    def attributes(self) -> _ProjectAttributeValues:
+        """Project user attributes values."""
+        return _ProjectAttributeValues()
 
     @cached_property
-    def attribute_names(self) -> _ProjectAttributeNames:
-        """Project user attribute names."""
-        return _ProjectAttributeNames()
+    def attribute_keys(self) -> _ProjectAttributeKeys:
+        """Project user attribute keys (i.e., names)."""
+        return _ProjectAttributeKeys()
 
     @cached_property
     def data(self) -> _ProjectData:

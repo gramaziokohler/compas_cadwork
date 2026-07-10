@@ -30,8 +30,8 @@ else:
     UserAttributeId = int  # For pytest and Sphinx
 
 
-class _ElementAttributes(KeyValueStorage[UserAttributeId, str]):
-    """Dictionary-like accessor for element user attributes.
+class _ElementAttributeValues(KeyValueStorage[UserAttributeId, str]):
+    """Dictionary-like accessor for element user attribute values.
 
     NOTE: User attributes are accessible in the GUI by double-clicking an element.
     """
@@ -57,8 +57,8 @@ class _ElementAttributes(KeyValueStorage[UserAttributeId, str]):
         ac.delete_user_attribute(key)
 
 
-class _ElementAttributeNames(KeyValueStorage[UserAttributeId, str]):
-    """Dictionary-like accessor for element user attribute names.
+class _ElementAttributeKeys(KeyValueStorage[UserAttributeId, str]):
+    """Dictionary-like accessor for element user attribute keys (i.e., names).
 
     NOTE: User attributes are accessible in the GUI by double-clicking an element.
     """
@@ -115,8 +115,8 @@ class Element:
     Do NOT rely on it as a unique ID, use ``Element.guid`` instead.
     """
 
-    attribute_names: ClassVar[_ElementAttributeNames] = _ElementAttributeNames()
-    """User attribute names."""
+    attribute_keys: ClassVar[_ElementAttributeKeys] = _ElementAttributeKeys()
+    """User attribute keys (i.e., names)."""
 
     def __init__(self, cadwork_id: ElementId) -> None:
         """Create new instance wrapping an existing Cadwork element.
@@ -182,9 +182,9 @@ class Element:
         ac.set_comment([self.id], value or "")
 
     @cached_property
-    def attributes(self) -> _ElementAttributes:
-        """User attributes."""
-        return _ElementAttributes(self.id)
+    def attributes(self) -> _ElementAttributeValues:
+        """User attribute values."""
+        return _ElementAttributeValues(self.id)
 
     @cached_property
     def data(self) -> _ElementData:

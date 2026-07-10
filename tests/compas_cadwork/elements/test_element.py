@@ -197,44 +197,44 @@ def test_raises_on_iterate_attributes() -> None:
         _ = len(element.attributes)
 
 
-def test_contains_attribute_names(cadwork) -> None:
+def test_contains_attribute_keys(cadwork) -> None:
     cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
-    assert 200 not in Element.attribute_names
+    assert 200 not in Element.attribute_keys
     cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
-    assert 100 in Element.attribute_names
+    assert 100 in Element.attribute_keys
     cadwork.ac.get_user_attribute_name.assert_called_with(100)
 
 
-def test_gets_attribute_names(cadwork) -> None:
+def test_gets_attribute_keys(cadwork) -> None:
     cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
     with pytest.raises(KeyError):
-        _ = Element.attribute_names[200]
+        _ = Element.attribute_keys[200]
     cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
-    assert Element.attribute_names[100] == "Test Value"
+    assert Element.attribute_keys[100] == "Test Value"
     cadwork.ac.get_user_attribute_name.assert_called_with(100)
 
 
-def test_sets_attribute_names(cadwork) -> None:
-    Element.attribute_names[100] = "New Value"
+def test_sets_attribute_keys(cadwork) -> None:
+    Element.attribute_keys[100] = "New Value"
     cadwork.ac.set_user_attribute_name.assert_called_once_with(100, "New Value")
 
 
-def test_deletes_attribute_names(cadwork) -> None:
+def test_deletes_attribute_keys(cadwork) -> None:
     cadwork.ac.get_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else f"User{x}"
     with pytest.raises(KeyError):
-        del Element.attribute_names[200]
+        del Element.attribute_keys[200]
     cadwork.ac.get_user_attribute_name.assert_called_once_with(200)
     cadwork.ac.set_user_attribute_name.assert_not_called()
-    del Element.attribute_names[100]
+    del Element.attribute_keys[100]
     cadwork.ac.get_user_attribute_name.assert_called_with(100)
     cadwork.ac.set_user_attribute_name.assert_called_with(100, "")
 
 
-def test_raises_on_iterate_attribute_names() -> None:
+def test_raises_on_iterate_attribute_keys() -> None:
     with pytest.raises(TypeError):
-        _ = list(Element.attribute_names.keys())
+        _ = list(Element.attribute_keys.keys())
     with pytest.raises(TypeError):
-        _ = len(Element.attribute_names)
+        _ = len(Element.attribute_keys)
 
 
 def test_contains_data(cadwork) -> None:

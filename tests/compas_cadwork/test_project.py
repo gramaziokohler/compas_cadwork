@@ -319,49 +319,49 @@ def test_raises_on_iterate_attributes() -> None:
         _ = len(project.attributes)
 
 
-def test_contains_attribute_names(cadwork) -> None:
+def test_contains_attribute_keys(cadwork) -> None:
     cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
     project = Project()
-    assert 200 not in project.attribute_names
+    assert 200 not in project.attribute_keys
     cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
-    assert 100 in project.attribute_names
+    assert 100 in project.attribute_keys
     cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
 
 
-def test_gets_attribute_names(cadwork) -> None:
+def test_gets_attribute_keys(cadwork) -> None:
     cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
     project = Project()
     with pytest.raises(KeyError):
-        _ = project.attribute_names[200]
+        _ = project.attribute_keys[200]
     cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
-    assert project.attribute_names[100] == "Test Value"
+    assert project.attribute_keys[100] == "Test Value"
     cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
 
 
-def test_sets_attribute_names(cadwork) -> None:
+def test_sets_attribute_keys(cadwork) -> None:
     project = Project()
-    project.attribute_names[100] = "New Value"
+    project.attribute_keys[100] = "New Value"
     cadwork.uc.set_project_user_attribute_name.assert_called_once_with(100, "New Value")
 
 
-def test_deletes_attribute_names(cadwork) -> None:
+def test_deletes_attribute_keys(cadwork) -> None:
     cadwork.uc.get_project_user_attribute_name.side_effect = lambda x: "Test Value" if x == 100 else ""
     project = Project()
     with pytest.raises(KeyError):
-        del project.attribute_names[200]
+        del project.attribute_keys[200]
     cadwork.uc.get_project_user_attribute_name.assert_called_once_with(200)
     cadwork.uc.set_project_user_attribute_name.assert_not_called()
-    del project.attribute_names[100]
+    del project.attribute_keys[100]
     cadwork.uc.get_project_user_attribute_name.assert_called_with(100)
     cadwork.uc.set_project_user_attribute_name.assert_called_with(100, "")
 
 
-def test_raises_on_iterate_attribute_names() -> None:
+def test_raises_on_iterate_attribute_keys() -> None:
     project = Project()
     with pytest.raises(TypeError):
-        _ = list(project.attribute_names.keys())
+        _ = list(project.attribute_keys.keys())
     with pytest.raises(TypeError):
-        _ = len(project.attribute_names)
+        _ = len(project.attribute_keys)
 
 
 def test_contains_data(cadwork) -> None:
