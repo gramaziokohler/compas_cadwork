@@ -29,8 +29,8 @@ class KeyValueStorage(MutableMapping[_K, _V]):
         value : _V
             Value to check.
 
-        Return
-        ------
+        Returns
+        -------
         bool
             Whether value is considered empty.
         """
@@ -123,7 +123,7 @@ class IterableKeyValueStorage(KeyValueStorage[_K, _V]):
 
     def __len__(self) -> int:
         count = 0
-        for key in self.keys():
+        for key in self._keys():
             raw_value = self._get(key)
             if not self._empty(key, raw_value):
                 count += 1
