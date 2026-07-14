@@ -249,7 +249,8 @@ dev = [
   {name = "invoke"},
   {name = "pre-commit"},
   {name = "pytest"},
-  {name = "sphinx-compas2-theme"}
+  {name = "sphinx-compas2-theme"},
+  {name = "typing-extensions"}
 ]
 
 [package.metadata]
@@ -266,7 +267,8 @@ dev = [
   {name = "invoke", specifier = ">=3.0.3"},
   {name = "pre-commit", specifier = ">=4.6.0"},
   {name = "pytest", specifier = ">=9.0.3"},
-  {name = "sphinx-compas2-theme", specifier = ">=0.1.10"}
+  {name = "sphinx-compas2-theme", specifier = ">=0.1.10"},
+  {name = "typing-extensions", specifier = ">=4.15.0"}
 ]
 
 [[package]]
