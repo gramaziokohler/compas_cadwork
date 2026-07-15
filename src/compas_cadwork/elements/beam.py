@@ -119,7 +119,7 @@ class Beam(DimensionalElement[Literal[ElementType.CIRCULAR_BEAM, ElementType.POL
         width : float
             Section width in millimeters (along Y-axis).
         height : float
-            Section weight in millimeters (along Z-axis).
+            Section height in millimeters (along Z-axis).
 
         Returns
         -------

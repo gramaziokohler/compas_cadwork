@@ -53,7 +53,7 @@ class Panel(DimensionalElement[_P]):
         if thickness <= 0:
             raise ValueError("The element thickness must be positive")
 
-        # Normalize section to center it at the origin
+        # Normalize outline to center it at the origin
         outline_bbox = bounding_box_xy(outline.points)
         outline_cx = (outline_bbox[0][0] + outline_bbox[2][0]) / 2
         outline_cy = (outline_bbox[0][1] + outline_bbox[2][1]) / 2
