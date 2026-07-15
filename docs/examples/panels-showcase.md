@@ -1,6 +1,6 @@
 # Panels Showcase
 
-This simple examples shows you how to work with panels and programmatically creating them using the constructors from the `Panel` class.
+This simple example shows you how to work with panels and programmatically create them using the constructors of the `Panel` class.
 
 ```python
 --8<--

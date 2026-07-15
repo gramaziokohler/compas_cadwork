@@ -48,7 +48,7 @@ import sys
 from pathlib import Path
 
 # Add your local virtual environment to Python's search path
-deps_path = str(Path(__file__).parent / ".venv")
+deps_path = str(Path(__file__).parent / ".venv" / "Lib" / "site-packages")
 if deps_path not in sys.path:
     sys.path.append(deps_path)
 

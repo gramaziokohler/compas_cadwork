@@ -1,6 +1,6 @@
 # Beams Showcase
 
-This simple examples shows you how to work with beams and programmatically creating them using the constructors from the `Beam` class.
+This simple example shows you how to work with beams and programmatically create them using the constructors of the `Beam` class.
 
 ```python
 --8<--
