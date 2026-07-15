@@ -14,7 +14,7 @@ def test_raises_on_invalid_parameters_for_polygonal_panel() -> None:
             outline=Polygon([(0, 0), (200, 0, -123), (100, 173.2)]),
             thickness=20.0,
         )
-    with pytest.raises(ValueError, match=r"The panel thickness must be positive"):
+    with pytest.raises(ValueError, match=r"The element thickness must be positive"):
         _ = Panel.polygonal(
             frame=Frame(Point(0, 0, 0), Vector(1, 0, 0), Vector(0, 0, 1)),
             outline=Polygon([(0, 0), (200, 0), (100, 173.2)]),
@@ -69,21 +69,21 @@ def test_creates_polygonal_panel(cadwork) -> None:
 
 
 def test_raises_on_invalid_parameters_for_rectangular_panel() -> None:
-    with pytest.raises(ValueError, match=r"The panel length must be positive"):
+    with pytest.raises(ValueError, match=r"The element length must be positive"):
         _ = Panel.rectangular(
             frame=Frame(Point(0, 0, 0), Vector(1, 0, 0), Vector(0, 0, 1)),
             length=0.0,
             width=0.123,
             thickness=1000.0,
         )
-    with pytest.raises(ValueError, match=r"The panel width must be positive"):
+    with pytest.raises(ValueError, match=r"The element width must be positive"):
         _ = Panel.rectangular(
             frame=Frame(Point(0, 0, 0), Vector(1, 0, 0), Vector(0, 0, 1)),
             length=20.0,
             width=-5.0,
             thickness=10.0,
         )
-    with pytest.raises(ValueError, match=r"The panel thickness must be positive"):
+    with pytest.raises(ValueError, match=r"The element thickness must be positive"):
         _ = Panel.rectangular(
             frame=Frame(Point(0, 0, 0), Vector(1, 0, 0), Vector(0, 0, 1)),
             length=20.0,

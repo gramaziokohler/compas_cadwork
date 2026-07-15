@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Literal
+from typing import Self
 
 import cadwork
 import element_controller as ec
@@ -8,6 +9,7 @@ from compas.geometry import Frame
 from compas.geometry import Polygon
 from compas.geometry import Translation
 from compas.geometry import bounding_box_xy
+from typing_extensions import TypeVar
 
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
@@ -16,12 +18,15 @@ from .dimensional_element import DimensionalElement
 from .element_type import ElementType
 
 
-class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
+_P = TypeVar("_P", bound=ElementType, default=Literal[ElementType.PANEL])
+
+
+class Panel(DimensionalElement[_P]):
     """Panel element."""
 
     @classmethod
-    def polygonal(cls, frame: Frame, outline: Polygon, thickness: float) -> Panel:
-        """Create polygonal panel.
+    def polygonal(cls, frame: Frame, outline: Polygon, thickness: float) -> Self:
+        """Create polygonal element.
 
         Parameters
         ----------
@@ -34,8 +39,8 @@ class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
 
         Returns
         -------
-        Panel
-            New panel element.
+        Self
+            New element.
 
         Raises
         ------
@@ -46,7 +51,7 @@ class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
             if point.z != 0:
                 raise ValueError("The Z coordinate of all polygon points defining the outline must be zero")
         if thickness <= 0:
-            raise ValueError("The panel thickness must be positive")
+            raise ValueError("The element thickness must be positive")
 
         # Normalize section to center it at the origin
         outline_bbox = bounding_box_xy(outline.points)
@@ -71,8 +76,8 @@ class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
         return cls(element_id)
 
     @classmethod
-    def rectangular(cls, frame: Frame, length: float, width: float, thickness: float) -> Panel:
-        """Create rectangular panel.
+    def rectangular(cls, frame: Frame, length: float, width: float, thickness: float) -> Self:
+        """Create rectangular element.
 
         Parameters
         ----------
@@ -87,8 +92,8 @@ class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
 
         Returns
         -------
-        Panel
-            New panel element.
+        Self
+            New element.
 
         Raises
         ------
@@ -96,11 +101,11 @@ class Panel(DimensionalElement[Literal[ElementType.PANEL]]):
             If any of the dimensions are not positive.
         """
         if length <= 0:
-            raise ValueError("The panel length must be positive")
+            raise ValueError("The element length must be positive")
         if width <= 0:
-            raise ValueError("The panel width must be positive")
+            raise ValueError("The element width must be positive")
         if thickness <= 0:
-            raise ValueError("The panel thickness must be positive")
+            raise ValueError("The element thickness must be positive")
         element_id = ec.create_rectangular_panel_vectors(
             width,
             thickness,
