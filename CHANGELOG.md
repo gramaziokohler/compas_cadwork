@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new `Element`, `Project`, and `IfcUUID` classes.
 - Added "do not merge" workflow check to CI/CD pipeline.
 - Added `ElementType` enumeration to be used with `Element.type` property.
-- Added initial `Beam`, `Panel`, and `Wall` classes.
+- Added initial `Beam`, `Container`, `Panel`, and `Wall` classes.
 
 ### Changed
 
