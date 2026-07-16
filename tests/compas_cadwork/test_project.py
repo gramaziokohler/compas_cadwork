@@ -279,6 +279,52 @@ def test_gets_selected_elements(cadwork) -> None:
     assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
 
 
+def test_gets_material_by_cadwork_id(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_name.return_value = ""
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork material with ID #1000"):
+        _ = project.material(cadwork_id=1000)
+    cadwork.mc.get_name.assert_called_once_with(1000)
+
+    # With value
+    cadwork.mc.get_name.return_value = "Material Name"
+    material = project.material(cadwork_id=12345)
+    cadwork.mc.get_name.assert_called_with(12345)
+    assert material.id == 12345
+
+
+def test_gets_material_by_name(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_material_id.return_value = 0
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork material with name 'Test Value'"):
+        _ = project.material(name="Test Value")
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
+
+    # With value
+    cadwork.mc.get_material_id.return_value = 12345
+    cadwork.mc.get_name.return_value = "Material Name"
+    material = project.material(name="Material Name")
+    cadwork.mc.get_material_id.assert_called_with("Material Name")
+    cadwork.mc.get_name.assert_called_with(12345)
+    assert material.id == 12345
+
+
+def test_gets_materials(cadwork) -> None:
+    project = Project()
+
+    # Without materials
+    cadwork.mc.get_all_materials.return_value = []
+    assert len(list(project.materials())) == 0
+
+    # With materials
+    cadwork.mc.get_all_materials.return_value = [100, 200, 300, 301]
+    assert [x.id for x in project.materials()] == [100, 200, 300, 301]
+
+
 def test_contains_attributes(cadwork) -> None:
     cadwork.uc.get_project_user_attribute.side_effect = lambda x: "Test Value" if x == 100 else "???"
     project = Project()

@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 
 from .ifc_uuid import IfcUUID
+from .material import Material
 from .project import Project
 
 
@@ -29,6 +30,7 @@ __all__ = [
     "HOME",
     "TEMP",
     "IfcUUID",
+    "Material",
     "Project",
     "__author__",
     "__author_email__",

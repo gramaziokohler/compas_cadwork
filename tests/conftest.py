@@ -54,7 +54,9 @@ class CadworkMocks:
         self.bc = MagicMock()
         self.ec = MagicMock()
         self.gc = MagicMock()
+        self.mc = MagicMock()
         self.uc = MagicMock()
+        self.vc = MagicMock()
 
         # Apply custom patches
         self._apply_custom_patches()
@@ -65,7 +67,9 @@ class CadworkMocks:
         sys.modules["bim_controller"] = self.bc
         sys.modules["element_controller"] = self.ec
         sys.modules["geometry_controller"] = self.gc
+        sys.modules["material_controller"] = self.mc
         sys.modules["utility_controller"] = self.uc
+        sys.modules["visualization_controller"] = self.vc
 
     def reset(self) -> None:
         self.cadwork.reset_mock(return_value=True, side_effect=True)
@@ -73,7 +77,9 @@ class CadworkMocks:
         self.bc.reset_mock(return_value=True, side_effect=True)
         self.ec.reset_mock(return_value=True, side_effect=True)
         self.gc.reset_mock(return_value=True, side_effect=True)
+        self.mc.reset_mock(return_value=True, side_effect=True)
         self.uc.reset_mock(return_value=True, side_effect=True)
+        self.vc.reset_mock(return_value=True, side_effect=True)
         self._apply_custom_patches()
 
     def _apply_custom_patches(self) -> None:
