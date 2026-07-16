@@ -17,10 +17,9 @@ import utility_controller as uc
 from compas_cadwork.elements.factory import AnyElement
 from compas_cadwork.elements.factory import get_element_instance
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.materials.material import Material
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
-
-from .material import Material
 
 
 if TYPE_CHECKING:

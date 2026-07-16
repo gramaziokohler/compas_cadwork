@@ -3,7 +3,7 @@ from compas.geometry import Line
 from compas.geometry import Point
 
 from compas_cadwork.elements.dimensional_element import DimensionalElement
-from compas_cadwork.material import Material
+from compas_cadwork.materials.material import Material
 
 
 def test_gets_width(cadwork) -> None:

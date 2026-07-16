@@ -1,6 +1,6 @@
 import pytest
 
-from compas_cadwork.material import Material
+from compas_cadwork.materials.material import Material
 
 
 def test_raises_on_deleted_material(cadwork) -> None:

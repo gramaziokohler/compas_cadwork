@@ -3,7 +3,7 @@ import visualization_controller as vc
 from compas.geometry import Line
 
 from compas_cadwork.conversions.primitives import point_to_compas
-from compas_cadwork.material import Material
+from compas_cadwork.materials.material import Material
 
 from .element import T
 from .oriented_element import OrientedElement
