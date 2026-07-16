@@ -288,6 +288,17 @@ def test_deletes_element(cadwork) -> None:
     cadwork.ec.delete_elements.assert_called_once_with([123])
 
 
+def test_equals() -> None:
+    a = Element(123)
+    b = FakeElementForRepr(123)
+    c = Element(456)
+    assert a == a
+    assert a == b
+    assert a != c
+    assert b != c
+    assert a is not b
+
+
 def test_repr(cadwork) -> None:
     cadwork.ac.get_name.return_value = "Something"
     element = Element(123)

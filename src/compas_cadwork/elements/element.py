@@ -208,6 +208,10 @@ class Element(Generic[T]):
         ec.delete_elements([self.id])
 
     @final
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Element) and self.id == other.id
+
+    @final
     def __repr__(self) -> str:
         class_name = type(self).__name__
         return f"{class_name}(id={self.id!r}, name={self.name!r})"
