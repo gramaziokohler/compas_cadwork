@@ -10,10 +10,54 @@ if TYPE_CHECKING:
     from cadwork import MaterialId
 
 
+def _validate_name(name: str) -> None:
+    """Validate material name.
+
+    Parameters
+    ----------
+    name : str
+        Material name.
+
+    Raises
+    ------
+    ValueError
+        If material name is empty or already in use.
+    """
+    if name == "":
+        raise ValueError("Material name cannot be empty")
+    for material_id in mc.get_all_materials():
+        material_name = mc.get_name(material_id)
+        if material_name == name:
+            raise ValueError(f"Name is already in use in material #{material_id}")
+
+
 class Material:
     """A material used in a Cadwork project."""
 
     id: Final[MaterialId]
+
+    @classmethod
+    def create(cls, name: str) -> Material:
+        """Create new material.
+
+        Parameters
+        ----------
+        name : str
+            New material name.
+
+        Returns
+        -------
+        Material
+            New material instance.
+
+        Raises
+        ------
+        ValueError
+            If material name is empty or already in use.
+        """
+        _validate_name(name)
+        cadwork_id = mc.create_material(name)
+        return cls(cadwork_id)
 
     def __init__(self, cadwork_id: MaterialId) -> None:
         """Create new instance wrapping a Cadwork material.
@@ -40,12 +84,7 @@ class Material:
 
     @name.setter
     def name(self, value: str) -> None:
-        if value == "":
-            raise ValueError("Material name cannot be empty")
-        for material_id in mc.get_all_materials():
-            material_name = mc.get_name(material_id)
-            if material_name == value:
-                raise ValueError(f"New name is already in use in material #{material_id}")
+        _validate_name(value)
         mc.set_name(self.id, value)
 
     @property

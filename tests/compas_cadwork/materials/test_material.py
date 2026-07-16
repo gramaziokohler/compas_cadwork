@@ -3,6 +3,26 @@ import pytest
 from compas_cadwork.materials.material import Material
 
 
+def test_creates_material(cadwork) -> None:
+    cadwork.mc.get_all_materials.return_value = [100, 200, 300]
+    cadwork.mc.get_name.side_effect = lambda x: {100: "Wood", 200: "Glass", 300: "Paper"}[x]
+
+    # Empty name
+    with pytest.raises(ValueError, match=r"Material name cannot be empty"):
+        Material.create("")
+
+    # Duplicate name
+    with pytest.raises(ValueError, match=r"Name is already in use in material #300"):
+        Material.create("Paper")
+    cadwork.mc.create_material.assert_not_called()
+
+    # Unused name
+    cadwork.mc.create_material.return_value = 123
+    material = Material.create("Test Value")
+    assert material.id == 123
+    cadwork.mc.create_material.assert_called_once_with("Test Value")
+
+
 def test_raises_on_deleted_material(cadwork) -> None:
     material = Material(123)
     cadwork.mc.get_name.return_value = ""
@@ -35,7 +55,7 @@ def test_raises_on_duplicate_name(cadwork) -> None:
     cadwork.mc.get_all_materials.return_value = [100, 200, 300]
     cadwork.mc.get_name.side_effect = lambda x: {100: "Wood", 200: "Glass", 300: "Paper"}[x]
     material = Material(123)
-    with pytest.raises(ValueError, match=r"New name is already in use in material #200"):
+    with pytest.raises(ValueError, match=r"Name is already in use in material #200"):
         material.name = "Glass"
     cadwork.mc.set_name.assert_not_called()
 
