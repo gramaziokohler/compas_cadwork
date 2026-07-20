@@ -8,7 +8,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/compas_dev?style=social)](https://twitter.com/compas_dev)
 [![Made with COMPAS](https://compas.dev/badge.svg)](https://compas.dev/)
 
-![COMPAS Cadwork](https://raw.githubusercontent.com/gramaziokohler/compas_cadwork/refs/heads/main/docs/assets/images/dome.jpg)
+![COMPAS Cadwork](https://raw.githubusercontent.com/gramaziokohler/compas_cadwork/refs/heads/main/docs/assets/images/half-dome.png)
 
 COMPAS cadwork is an open-source Python package which allows you to harness the power of the COMPAS framework inside cadwork 3d.
 Make use of COMPAS' extensive geometry kernel, data structures, and algorithms to create, manipulate, and analyze your 3d models in cadwork.

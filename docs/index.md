@@ -1,6 +1,6 @@
 # COMPAS cadwork
 
-![Featured image](assets/images/dome.jpg)
+![Featured image](assets/images/half-dome.png)
 
 COMPAS cadwork is an open-source Python package that brings the COMPAS framework into cadwork 3D.
 
