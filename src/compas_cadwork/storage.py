@@ -6,6 +6,7 @@ from compas.data import json_dump
 from compas.data import json_dumps
 from compas.data import json_load
 from compas.data import json_loads
+from typing_extensions import deprecated
 from utility_controller import get_project_data
 from utility_controller import set_project_data
 
@@ -13,12 +14,14 @@ from utility_controller import set_project_data
 LOG = logging.getLogger(__name__)
 
 
+@deprecated("Subject to removal, avoid using")
 class StorageError(Exception):
     """Indicates a failed save operation to persistent storage."""
 
     pass
 
 
+@deprecated("Subject to removal, avoid using")
 class Storage:
     """Base class for storage implementations."""
 
@@ -31,6 +34,7 @@ class Storage:
         raise NotImplementedError
 
 
+@deprecated("Subject to removal, avoid using")
 class ProjectStorage(Storage):
     """Saves stuff to persistency using the project data storage.
 
@@ -83,6 +87,7 @@ class ProjectStorage(Storage):
         return json_loads(data_str)
 
 
+@deprecated("Subject to removal, avoid using")
 class FileStorage(Storage):
     """Saves stuff to a local file.
 

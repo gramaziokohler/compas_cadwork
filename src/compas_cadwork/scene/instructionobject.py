@@ -11,6 +11,7 @@ except ImportError:
 
 import dimension_controller as dc
 import element_controller as ec
+from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import point_to_compas
@@ -18,6 +19,7 @@ from compas_cadwork.conversions import vector_to_cadwork
 from compas_cadwork.scene.scene import CadworkSceneObject
 
 
+@deprecated("Subject to removal, avoid using")
 class Text3dSceneObject(CadworkSceneObject):
     """Draws a 3d text volume instruction onto the view.
 
@@ -103,6 +105,7 @@ class Text3dSceneObject(CadworkSceneObject):
         return [element_id]
 
 
+@deprecated("Subject to removal, avoid using")
 class LinearDimensionSceneObject(CadworkSceneObject):
     """Draw a linear dimension instruction.
 

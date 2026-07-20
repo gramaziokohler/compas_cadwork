@@ -1,9 +1,12 @@
+from typing_extensions import deprecated
+
 from compas_cadwork.datamodel import Element
 
 from . import get_all_element_ids
 from . import get_dimensions
 
 
+@deprecated("Subject to removal, avoid using")
 class ElementDelta:
     """Helper for detecting changes in the available element collection"""
 
@@ -30,6 +33,7 @@ class ElementDelta:
         self._known_element_ids = set(get_all_element_ids())
 
 
+@deprecated("Subject to removal, avoid using")
 class DimensionsDelta:
     """Helper for detecting edits to the dimensions in the document
 
