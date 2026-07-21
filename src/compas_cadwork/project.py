@@ -357,7 +357,7 @@ class Project:
         *,
         cadwork_id: MaterialId | None = None,
         name: str | None = None,
-    ):
+    ) -> Material:
         # Name to Cadwork ID
         if name is not None:
             cadwork_id = mc.get_material_id(name)
