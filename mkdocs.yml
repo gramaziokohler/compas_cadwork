@@ -150,6 +150,7 @@ nav:
       - compas_cadwork.conversions: api/compas_cadwork.conversions.md
       - compas_cadwork.datamodel: api/compas_cadwork.datamodel.md
       - compas_cadwork.elements: api/compas_cadwork.elements.md
+      - compas_cadwork.materials: api/compas_cadwork.materials.md
       - compas_cadwork.scene: api/compas_cadwork.scene.md
       - compas_cadwork.utilities: api/compas_cadwork.utilities.md
   - License: license.md
