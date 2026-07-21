@@ -7,11 +7,14 @@ import attribute_controller as ac
 from compas.geometry import Frame
 from compas.geometry import Polygon
 
+from compas_cadwork.materials.layer_stack import WallLayerStack
+
 from .element_type import ElementType
+from .mixins.layered_mixin import LayeredMixin
 from .panel import Panel
 
 
-class Wall(Panel[Literal[ElementType.WALL]]):
+class Wall(Panel[Literal[ElementType.WALL]], LayeredMixin[WallLayerStack]):
     """Wall element."""
 
     @classmethod
@@ -25,3 +28,7 @@ class Wall(Panel[Literal[ElementType.WALL]]):
         element = super().rectangular(frame, length, width, thickness)
         ac.set_framed_wall([element.id])
         return element
+
+    @property
+    def _layer_stack_type(self) -> type[WallLayerStack]:
+        return WallLayerStack
