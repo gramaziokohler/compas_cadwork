@@ -16,23 +16,23 @@ if TYPE_CHECKING:
     from cadwork import ElementId
 
 
-T = TypeVar("T", bound=LayerStack)
-T_co = TypeVar("T_co", bound=LayerStack, covariant=True)
+_T = TypeVar("_T", bound=LayerStack)
+_T_co = TypeVar("_T_co", bound=LayerStack, covariant=True)
 
 
-class _ElementLike(Protocol[T_co]):
+class _ElementLike(Protocol[_T_co]):
     id: Final[ElementId]  # type: ignore[misc]
 
     @property
-    def _layer_stack_type(self) -> type[T_co]: ...
+    def _layer_stack_type(self) -> type[_T_co]: ...
 
 
-class LayeredMixin(Generic[T]):
+class LayeredMixin(Generic[_T]):
     """Mixin for elements that support having layers of materials."""
 
     @property
     @abstractmethod
-    def _layer_stack_type(self) -> type[T]:
+    def _layer_stack_type(self) -> type[_T]:
         """Layer stack type.
 
         NOTE: Will be used by the `LayeredMixin.layers` getter to instantiate the proper layer stack type.
@@ -44,7 +44,7 @@ class LayeredMixin(Generic[T]):
         """
 
     @property
-    def layers(self: _ElementLike[T]) -> T | None:
+    def layers(self: _ElementLike[_T]) -> _T | None:
         """Element layers."""
         layer_set_id = mlc.get_element_multi_layer_set(self.id)
         if layer_set_id == 0:
@@ -52,5 +52,5 @@ class LayeredMixin(Generic[T]):
         return self._layer_stack_type(layer_set_id)
 
     @layers.setter
-    def layers(self: _ElementLike[T], value: T) -> None:
+    def layers(self: _ElementLike[_T], value: _T) -> None:
         mlc.set_element_multi_layer_set(self.id, value.id)
