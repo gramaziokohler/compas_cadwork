@@ -145,6 +145,7 @@ nav:
       - Half Dome: examples/half-dome.md
       - Beams Showcase: examples/beams-showcase.md
       - Panels Showcase: examples/panels-showcase.md
+      - Wall Layers: examples/wall-layers.md
   - API Reference:
       - compas_cadwork: api/compas_cadwork.md
       - compas_cadwork.conversions: api/compas_cadwork.conversions.md
