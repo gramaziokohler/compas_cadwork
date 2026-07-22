@@ -59,32 +59,32 @@ def test_gets_all_instances(cadwork) -> None:
 
 
 def test_gets_name(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     cadwork.mlc.get_multi_layer_set_name.return_value = "Test Value"
     assert layers.name == "Test Value"
     cadwork.mlc.get_multi_layer_set_name.assert_called_once_with(123)
 
 
 def test_sets_name(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     layers.name = "Test Value"
     cadwork.mlc.set_multi_layer_set_name.assert_called_with(123, "Test Value")
 
 
 def test_gets_length(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     cadwork.mlc.get_layer_count.return_value = 7
     assert len(layers) == 7
     cadwork.mlc.get_layer_count.assert_called_with(123)
 
 
 def test_iterates_over_layers(expected_layers) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     assert list(layers) == expected_layers
 
 
 def test_gets_layers(cadwork, expected_layers) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
 
     # Single index
     for i in [*list(range(len(expected_layers))), -1, -2, -3]:
@@ -108,7 +108,7 @@ def test_gets_layers(cadwork, expected_layers) -> None:
 
 
 def test_sets_layers(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     cadwork.mlc.get_layer_count.return_value = 4
 
     # Single index
@@ -157,7 +157,7 @@ def test_sets_layers(cadwork) -> None:
 
 
 def test_adds_layers_to_empty_stack(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     new_layer = Layer(name="New Layer", type=LayerType.COVERING, material=Material(1000), thickness=22.0)
     cadwork.mlc.get_layer_count.return_value = 0
     layers.append(new_layer)
@@ -175,7 +175,7 @@ def test_adds_layers_to_empty_stack(cadwork) -> None:
 
 
 def test_inserts_layers(cadwork, expected_layers) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
 
     # At the end
     new_layer = Layer(name="End Layer", type=LayerType.COVERING, material=Material(1000), thickness=22.0)
@@ -244,15 +244,15 @@ def test_inserts_layers(cadwork, expected_layers) -> None:
 
 # TODO(josemmo): update test when deletion is implemented
 def test_deletes_layers(cadwork) -> None:
-    layers = LayerStack(123)
+    layers = FloorLayerStack(123)
     with pytest.raises(NotImplementedError):
         del layers[0]
 
 
 def test_equals() -> None:
-    a = LayerStack(123)
+    a = FloorLayerStack(123)
     b = WallLayerStack(123)
-    c = LayerStack(456)
+    c = FloorLayerStack(456)
     assert a == a
     assert a == b
     assert a != c
