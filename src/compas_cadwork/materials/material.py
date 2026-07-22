@@ -103,6 +103,9 @@ class Material:
     @name.setter
     def name(self, value: str) -> None:
         _ensure_name_is_valid(value)
+        if self.name == value:
+            # Nothing to change
+            return
         _ensure_name_is_unused(value)
         mc.set_name(self.id, value)
 

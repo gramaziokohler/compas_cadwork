@@ -41,11 +41,25 @@ def test_gets_name(cadwork) -> None:
 
 
 def test_sets_name(cadwork) -> None:
+    # Different value
+    cadwork.mc.get_name.return_value = "Old Value"
     cadwork.mc.get_material_id.return_value = 0
     material = Material(123)
     material.name = "Test Value"
+    cadwork.mc.get_name.assert_called_once_with(123)
     cadwork.mc.get_material_id.assert_called_once_with("Test Value")
     cadwork.mc.set_name.assert_called_with(123, "Test Value")
+    cadwork.mc.get_name.reset_mock()
+    cadwork.mc.get_material_id.reset_mock()
+    cadwork.mc.set_name.reset_mock()
+
+    # Same value (does nothing)
+    cadwork.mc.get_name.return_value = "Same Value"
+    material = Material(456)
+    material.name = "Same Value"
+    cadwork.mc.get_name.assert_called_once_with(456)
+    cadwork.mc.get_material_id.assert_not_called()
+    cadwork.mc.set_name.assert_not_called()
 
 
 def test_raises_on_set_empty_name(cadwork) -> None:
