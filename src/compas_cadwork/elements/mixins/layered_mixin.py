@@ -52,5 +52,7 @@ class LayeredMixin(Generic[_T]):
         return self._layer_stack_type(layer_set_id)
 
     @layers.setter
-    def layers(self: _ElementLike[_T], value: _T) -> None:
+    def layers(self: _ElementLike[_T], value: _T | None) -> None:
+        if value is None:
+            raise NotImplementedError()  # TODO(josemmo): implement when Cadwork adds an API to handle this
         mlc.set_element_multi_layer_set(self.id, value.id)
