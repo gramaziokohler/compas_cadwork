@@ -27,6 +27,26 @@ def expected_layers(cadwork) -> list[Layer]:
     return layers
 
 
+def test_creates_layer_stack(cadwork) -> None:
+    # Floors
+    cadwork.mlc.create_multi_layer_framed_floor.return_value = 1000
+    layer_stack = FloorLayerStack.create("Floor Layer Stack")
+    assert layer_stack == FloorLayerStack(1000)
+    cadwork.mlc.create_multi_layer_framed_floor.assert_called_once_with("Floor Layer Stack")
+
+    # Roofs
+    cadwork.mlc.create_multi_layer_framed_roof.return_value = 2000
+    layer_stack = RoofLayerStack.create("Roof Layer Stack")
+    assert layer_stack == RoofLayerStack(2000)
+    cadwork.mlc.create_multi_layer_framed_roof.assert_called_once_with("Roof Layer Stack")
+
+    # Walls
+    cadwork.mlc.create_multi_layer_framed_wall.return_value = 3000
+    layer_stack = WallLayerStack.create("Wall Layer Stack")
+    assert layer_stack == WallLayerStack(3000)
+    cadwork.mlc.create_multi_layer_framed_wall.assert_called_once_with("Wall Layer Stack")
+
+
 def test_gets_all_instances(cadwork) -> None:
     # Floors
     cadwork.mlc.get_multi_layer_framed_floors.return_value = [100]

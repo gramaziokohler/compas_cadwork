@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import abstractmethod
 from collections.abc import MutableSequence
 from typing import TYPE_CHECKING
 from typing import Final
@@ -29,6 +30,22 @@ class LayerStack(MutableSequence[Layer]):
     """
 
     id: Final[MultiLayerSetId]
+
+    @classmethod
+    @abstractmethod
+    def create(cls, name: str) -> Self:
+        """Create new layer stack.
+
+        Parameters
+        ----------
+        name : str
+            New layer stack name.
+
+        Returns
+        -------
+        Self
+            New layer stack instance.
+        """
 
     @classmethod
     def _get_all(cls) -> Generator[AnyLayerStack, None, None]:
@@ -235,6 +252,11 @@ class LayerStack(MutableSequence[Layer]):
 
 class FloorLayerStack(LayerStack):
     @classmethod
+    def create(cls, name: str) -> Self:
+        cadwork_id = mlc.create_multi_layer_framed_floor(name)
+        return cls(cadwork_id)
+
+    @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
         for cadwork_id in [*mlc.get_multi_layer_framed_floors(), *mlc.get_multi_layer_solid_floors()]:
             yield cls(cadwork_id)
@@ -242,12 +264,22 @@ class FloorLayerStack(LayerStack):
 
 class RoofLayerStack(LayerStack):
     @classmethod
+    def create(cls, name: str) -> Self:
+        cadwork_id = mlc.create_multi_layer_framed_roof(name)
+        return cls(cadwork_id)
+
+    @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
         for cadwork_id in [*mlc.get_multi_layer_framed_roofs(), *mlc.get_multi_layer_solid_roofs()]:
             yield cls(cadwork_id)
 
 
 class WallLayerStack(LayerStack):
+    @classmethod
+    def create(cls, name: str) -> Self:
+        cadwork_id = mlc.create_multi_layer_framed_wall(name)
+        return cls(cadwork_id)
+
     @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
         for cadwork_id in [
