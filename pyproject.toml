@@ -45,7 +45,7 @@ requires-python = ">=3.12"
 
 [project.urls]
 Changelog = "https://github.com/gramaziokohler/compas_cadwork/blob/main/CHANGELOG.md"
-Homepage = "https://gramaziokohler.github.io/compas_cadwork/latest/"
+Homepage = "https://gramaziokohler.github.io/compas_cadwork/"
 Issues = "https://github.com/gramaziokohler/compas_cadwork/issues"
 Repository = "https://github.com/gramaziokohler/compas_cadwork"
 
