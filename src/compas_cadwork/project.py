@@ -340,13 +340,15 @@ class Project:
         """
 
     @overload
-    def material(self, *, name: str) -> Material:
-        """Get material from name.
+    def material(self, *, name: str, create: bool = False) -> Material:
+        """Get or create material from name.
 
         Parameters
         ----------
         name: str
             Material name.
+        create : bool
+            Whether to create a new material if it doesn't already exist in the project.
 
         Returns
         -------
@@ -364,11 +366,14 @@ class Project:
         *,
         cadwork_id: MaterialId | None = None,
         name: str | None = None,
+        create: bool = False,
     ) -> Material:
         # Name to Cadwork ID
         if name is not None:
             cadwork_id = mc.get_material_id(name)
             if cadwork_id == 0:
+                if create:
+                    return Material.create(name, raise_on_duplicate=False)
                 raise ValueError(f"Could not find a Cadwork material with name {name!r}")
 
         # Cadwork ID to material

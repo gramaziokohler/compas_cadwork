@@ -10,8 +10,8 @@ if TYPE_CHECKING:
     from cadwork import MaterialId
 
 
-def _validate_name(name: str) -> None:
-    """Validate material name.
+def _ensure_name_is_valid(name: str) -> None:
+    """Ensure material name is valid.
 
     Parameters
     ----------
@@ -21,10 +21,25 @@ def _validate_name(name: str) -> None:
     Raises
     ------
     ValueError
-        If material name is empty or already in use.
+        If material name is empty.
     """
     if name == "":
         raise ValueError("Material name cannot be empty")
+
+
+def _ensure_name_is_unused(name: str) -> None:
+    """Ensure material name is unused.
+
+    Parameters
+    ----------
+    name : str
+        Material name.
+
+    Raises
+    ------
+    ValueError
+        If material name is already in use.
+    """
     material_id = mc.get_material_id(name)
     if material_id != 0:
         raise ValueError(f"Name is already in use in material #{material_id}")
@@ -36,13 +51,15 @@ class Material:
     id: Final[MaterialId]
 
     @classmethod
-    def create(cls, name: str) -> Material:
+    def create(cls, name: str, raise_on_duplicate: bool = True) -> Material:
         """Create new material.
 
         Parameters
         ----------
         name : str
             New material name.
+        raise_on_duplicate : bool
+            Whether to raise an error if the material name is already in use. Otherwise, returns the existing material.
 
         Returns
         -------
@@ -54,8 +71,10 @@ class Material:
         ValueError
             If material name is empty or already in use.
         """
-        _validate_name(name)
-        cadwork_id = mc.create_material(name)
+        _ensure_name_is_valid(name)
+        if raise_on_duplicate:
+            _ensure_name_is_unused(name)
+        cadwork_id = mc.create_material(name)  # Cadwork returns the existing ID for existing material names
         return cls(cadwork_id)
 
     def __init__(self, cadwork_id: MaterialId) -> None:
@@ -83,7 +102,8 @@ class Material:
 
     @name.setter
     def name(self, value: str) -> None:
-        _validate_name(value)
+        _ensure_name_is_valid(value)
+        _ensure_name_is_unused(value)
         mc.set_name(self.id, value)
 
     @property

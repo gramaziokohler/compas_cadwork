@@ -317,6 +317,28 @@ def test_gets_material_by_name(cadwork) -> None:
     assert material.id == 12345
 
 
+def test_creates_material_by_name(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_material_id.return_value = 0
+    cadwork.mc.create_material.return_value = 1000
+    material = project.material(name="Test Value", create=True)
+    assert material.id == 1000
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
+    cadwork.mc.create_material.assert_called_once_with("Test Value")
+    cadwork.mc.get_material_id.reset_mock()
+    cadwork.mc.create_material.reset_mock()
+
+    # With value
+    cadwork.mc.get_material_id.return_value = 2000
+    cadwork.mc.create_material.return_value = 2000
+    material = project.material(name="Existing Name", create=True)
+    assert material.id == 2000
+    cadwork.mc.get_material_id.assert_called_once_with("Existing Name")
+    cadwork.mc.create_material.assert_not_called()
+
+
 def test_gets_materials(cadwork) -> None:
     project = Project()
 
