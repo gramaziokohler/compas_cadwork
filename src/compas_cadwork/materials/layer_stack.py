@@ -232,7 +232,7 @@ class LayerStack(MutableSequence[Layer]):
         mlc.set_layer_thickness(self.id, index, layer.thickness)
 
     def _add_layer(self, layer: Layer) -> None:
-        """Add layer at the end of the stack (i.e., `index = len(self)`).
+        """Add layer at the end of the stack (i.e., ``index = len(self)``).
 
         Parameters
         ----------

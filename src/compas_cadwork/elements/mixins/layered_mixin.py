@@ -35,7 +35,7 @@ class LayeredMixin(Generic[_T]):
     def _layer_stack_type(self) -> type[_T]:
         """Layer stack type.
 
-        NOTE: Will be used by the `LayeredMixin.layers` getter to instantiate the proper layer stack type.
+        NOTE: Will be used by the ``LayeredMixin.layers`` getter to instantiate the proper layer stack type.
 
         Returns
         -------
