@@ -296,7 +296,7 @@ class Project:
             Generator of elements.
         """
         for cadwork_id in ec.get_all_identifiable_element_ids():
-            yield self.element(cadwork_id=cadwork_id)
+            yield get_element_instance(cadwork_id)
 
     def selected_elements(self) -> Generator[AnyElement, None, None]:
         """Get currently selected (active) elements.
@@ -307,7 +307,7 @@ class Project:
             Generator of elements.
         """
         for cadwork_id in ec.get_active_identifiable_element_ids():
-            yield self.element(cadwork_id=cadwork_id)
+            yield get_element_instance(cadwork_id)
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"
