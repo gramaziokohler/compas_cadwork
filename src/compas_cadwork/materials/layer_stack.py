@@ -63,7 +63,7 @@ class LayerStack(MutableSequence[Layer]):
     def __init__(self, cadwork_id: MultiLayerSetId) -> None:
         """Create new instance wrapping a Cadwork multi-layer set.
 
-        NOTE: Avoid calling directly, use ``Project.layer_stacks()`` instead to get an error in case of invalid ID.
+        NOTE: Avoid calling directly, use ``Project.layer_stack()`` instead to get an error in case of invalid ID.
 
         Parameters
         ----------

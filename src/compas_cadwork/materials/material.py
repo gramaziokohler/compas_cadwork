@@ -123,4 +123,7 @@ class Material:
         return isinstance(other, Material) and self.id == other.id
 
     def __repr__(self) -> str:
-        return f"Material(id={self.id!r}, name={self.name!r})"
+        try:
+            return f"Material(id={self.id!r}, name={self.name!r})"
+        except RuntimeError:
+            return f"Material(id={self.id!r}, name=<invalid>)"

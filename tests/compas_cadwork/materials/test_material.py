@@ -116,5 +116,11 @@ def test_equals() -> None:
 
 def test_repr(cadwork) -> None:
     material = Material(123)
+
+    # With value
     cadwork.mc.get_name.return_value = "Some name"
     assert repr(material) == "Material(id=123, name='Some name')"
+
+    # Without value
+    cadwork.mc.get_name.return_value = ""
+    assert repr(material) == "Material(id=123, name=<invalid>)"
