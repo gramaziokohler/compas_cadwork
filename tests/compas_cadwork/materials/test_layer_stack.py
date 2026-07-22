@@ -5,6 +5,7 @@ import pytest
 from compas_cadwork.materials.layer import Layer
 from compas_cadwork.materials.layer_stack import FloorLayerStack
 from compas_cadwork.materials.layer_stack import LayerStack
+from compas_cadwork.materials.layer_stack import RoofLayerStack
 from compas_cadwork.materials.layer_stack import WallLayerStack
 from compas_cadwork.materials.layer_type import LayerType
 from compas_cadwork.materials.material import Material
@@ -24,6 +25,37 @@ def expected_layers(cadwork) -> list[Layer]:
     cadwork.mlc.get_layer_material.side_effect = lambda _, i: layers[i].material.id
     cadwork.mlc.get_layer_thickness.side_effect = lambda _, i: layers[i].thickness
     return layers
+
+
+def test_gets_all_instances(cadwork) -> None:
+    # Floors
+    cadwork.mlc.get_multi_layer_framed_floors.return_value = [100]
+    cadwork.mlc.get_multi_layer_solid_floors.return_value = [200, 300]
+    assert list(FloorLayerStack._get_all()) == [FloorLayerStack(100), FloorLayerStack(200), FloorLayerStack(300)]
+
+    # Roofs
+    cadwork.mlc.get_multi_layer_framed_roofs.return_value = [400, 500]
+    cadwork.mlc.get_multi_layer_solid_roofs.return_value = [600]
+    assert list(RoofLayerStack._get_all()) == [RoofLayerStack(400), RoofLayerStack(500), RoofLayerStack(600)]
+
+    # Walls
+    cadwork.mlc.get_multi_layer_walls.return_value = [700]
+    cadwork.mlc.get_multi_layer_log_walls.return_value = [800]
+    cadwork.mlc.get_multi_layer_solid_walls.return_value = [900]
+    assert list(WallLayerStack._get_all()) == [WallLayerStack(700), WallLayerStack(800), WallLayerStack(900)]
+
+    # All
+    assert list(LayerStack._get_all()) == [
+        FloorLayerStack(100),
+        FloorLayerStack(200),
+        FloorLayerStack(300),
+        RoofLayerStack(400),
+        RoofLayerStack(500),
+        RoofLayerStack(600),
+        WallLayerStack(700),
+        WallLayerStack(800),
+        WallLayerStack(900),
+    ]
 
 
 def test_gets_name(cadwork) -> None:

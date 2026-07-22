@@ -9,15 +9,15 @@ from typing import TypeVar
 
 import multi_layer_cover_controller as mlc
 
-from compas_cadwork.materials.layer_stack import LayerStack
+from compas_cadwork.materials.layer_stack import AnyLayerStack
 
 
 if TYPE_CHECKING:
     from cadwork import ElementId
 
 
-_T = TypeVar("_T", bound=LayerStack)
-_T_co = TypeVar("_T_co", bound=LayerStack, covariant=True)
+_T = TypeVar("_T", bound=AnyLayerStack)
+_T_co = TypeVar("_T_co", bound=AnyLayerStack, covariant=True)
 
 
 class _ElementLike(Protocol[_T_co]):

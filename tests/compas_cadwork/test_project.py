@@ -1,9 +1,13 @@
 from datetime import date
+from typing import assert_type
 from uuid import UUID
 
 import pytest
 
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.materials.layer_stack import RoofLayerStack
+from compas_cadwork.materials.layer_stack import WallLayerStack
 from compas_cadwork.project import Project
 
 
@@ -323,6 +327,31 @@ def test_gets_materials(cadwork) -> None:
     # With materials
     cadwork.mc.get_all_materials.return_value = [100, 200, 300, 301]
     assert [x.id for x in project.materials()] == [100, 200, 300, 301]
+
+
+def test_gets_layer_stack_by_cadwork_id(cadwork) -> None:
+    cadwork.mlc.get_multi_layer_framed_floors.return_value = [100]
+    cadwork.mlc.get_multi_layer_solid_floors.return_value = [200, 300]
+    cadwork.mlc.get_multi_layer_framed_roofs.return_value = [400, 500]
+    cadwork.mlc.get_multi_layer_solid_roofs.return_value = [600]
+    cadwork.mlc.get_multi_layer_walls.return_value = [700]
+    cadwork.mlc.get_multi_layer_log_walls.return_value = [800]
+    cadwork.mlc.get_multi_layer_solid_walls.return_value = [900]
+    project = Project()
+
+    # Without value
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork layer stack with ID #101"):
+        _ = project.layer_stack(cadwork_id=101)
+
+    # Without type filter
+    layer_stack = project.layer_stack(cadwork_id=800)
+    assert_type(layer_stack, AnyLayerStack)
+    assert layer_stack == WallLayerStack(800)
+
+    # With type filter
+    layer_stack = project.layer_stack(cadwork_id=500, stack_type=RoofLayerStack)
+    assert_type(layer_stack, RoofLayerStack)
+    assert layer_stack == RoofLayerStack(500)
 
 
 def test_contains_attributes(cadwork) -> None:

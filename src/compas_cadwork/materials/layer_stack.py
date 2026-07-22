@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 from typing import Final
 from typing import Generator
 from typing import Iterable
+from typing import Self
+from typing import TypeAlias
 from typing import final
 from typing import overload
 
@@ -27,6 +29,19 @@ class LayerStack(MutableSequence[Layer]):
     """
 
     id: Final[MultiLayerSetId]
+
+    @classmethod
+    def _get_all(cls) -> Generator[AnyLayerStack, None, None]:
+        """Get all layer stacks of this type in the project.
+
+        Returns
+        -------
+        Generator[AnyLayerStack, None, None]
+            Generator of layer stacks.
+        """
+        yield from FloorLayerStack._get_all()
+        yield from RoofLayerStack._get_all()
+        yield from WallLayerStack._get_all()
 
     def __init__(self, cadwork_id: MultiLayerSetId) -> None:
         """Create new instance wrapping a Cadwork multi-layer set.
@@ -218,10 +233,29 @@ class LayerStack(MutableSequence[Layer]):
         return f"{class_name}(id={self.id!r}, name={self.name!r})"
 
 
-class FloorLayerStack(LayerStack): ...
+class FloorLayerStack(LayerStack):
+    @classmethod
+    def _get_all(cls) -> Generator[Self, None, None]:
+        for cadwork_id in [*mlc.get_multi_layer_framed_floors(), *mlc.get_multi_layer_solid_floors()]:
+            yield cls(cadwork_id)
 
 
-class RoofLayerStack(LayerStack): ...
+class RoofLayerStack(LayerStack):
+    @classmethod
+    def _get_all(cls) -> Generator[Self, None, None]:
+        for cadwork_id in [*mlc.get_multi_layer_framed_roofs(), *mlc.get_multi_layer_solid_roofs()]:
+            yield cls(cadwork_id)
 
 
-class WallLayerStack(LayerStack): ...
+class WallLayerStack(LayerStack):
+    @classmethod
+    def _get_all(cls) -> Generator[Self, None, None]:
+        for cadwork_id in [
+            *mlc.get_multi_layer_walls(),
+            *mlc.get_multi_layer_log_walls(),
+            *mlc.get_multi_layer_solid_walls(),
+        ]:
+            yield cls(cadwork_id)
+
+
+AnyLayerStack: TypeAlias = FloorLayerStack | RoofLayerStack | WallLayerStack

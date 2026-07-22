@@ -6,6 +6,7 @@ from datetime import date
 from datetime import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING
+from typing import TypeVar
 from typing import overload
 from uuid import UUID
 
@@ -17,6 +18,8 @@ import utility_controller as uc
 from compas_cadwork.elements.factory import AnyElement
 from compas_cadwork.elements.factory import get_element_instance
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.materials.layer_stack import LayerStack
 from compas_cadwork.materials.material import Material
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
@@ -25,6 +28,10 @@ from compas_cadwork.utils.storage import KeyValueStorage
 if TYPE_CHECKING:
     from cadwork import ElementId
     from cadwork import MaterialId
+    from cadwork import MultiLayerSetId
+
+
+_L = TypeVar("_L", bound=AnyLayerStack)
 
 
 def _is_empty_value(raw_value: str) -> bool:
@@ -380,6 +387,89 @@ class Project:
         """
         for material_id in mc.get_all_materials():
             yield Material(material_id)
+
+    @overload
+    def layer_stacks(self, stack_type: None = None) -> Generator[AnyLayerStack, None, None]:
+        """Get all layer stacks in the project.
+
+        Returns
+        -------
+        Generator[AnyLayerStack, None, None]
+            Generator of layer stacks.
+        """
+
+    @overload
+    def layer_stacks(self, stack_type: type[_L]) -> Generator[_L, None, None]:
+        """Get all layer stacks of a given type in the project.
+
+        Parameters
+        ----------
+        stack_type : type[_L]
+            Layer stack type to filter.
+
+        Returns
+        -------
+        Generator[_L, None, None]
+            Generator of layer stacks.
+        """
+
+    def layer_stacks(self, stack_type: type[AnyLayerStack] | None = None) -> Generator[AnyLayerStack, None, None]:
+        if stack_type is None:
+            return LayerStack._get_all()
+        return stack_type._get_all()
+
+    @overload
+    def layer_stack(self, *, cadwork_id: MultiLayerSetId, stack_type: None = None) -> AnyLayerStack:
+        """Get layer stack from Cadwork ID.
+
+        Parameters
+        ----------
+        cadwork_id : MultiLayerSetId
+            Cadwork multi-layer set ID.
+
+        Returns
+        -------
+        AnyLayerStack
+            Cadwork layer stack.
+
+        Raises
+        ------
+        ValueError
+            If the layer stack does not exist.
+        """
+
+    @overload
+    def layer_stack(self, *, cadwork_id: MultiLayerSetId, stack_type: type[_L]) -> _L:
+        """Get layer stack from Cadwork ID.
+
+        Parameters
+        ----------
+        cadwork_id : MultiLayerSetId
+            Cadwork multi-layer set ID.
+        stack_type : type[_L]
+            Expected layer stack type.
+
+        Returns
+        -------
+        AnyLayerStack
+            Cadwork layer stack.
+
+        Raises
+        ------
+        ValueError
+            If the layer stack does not exist.
+        """
+
+    def layer_stack(
+        self,
+        *,
+        cadwork_id: MultiLayerSetId,
+        stack_type: type[AnyLayerStack] | None = None,
+    ) -> AnyLayerStack:
+        for layer_stack in self.layer_stacks(stack_type):
+            if layer_stack.id == cadwork_id:
+                return layer_stack
+        raise ValueError(f"Could not find a Cadwork layer stack with ID #{cadwork_id}")
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"
