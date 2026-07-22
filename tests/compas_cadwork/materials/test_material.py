@@ -4,22 +4,25 @@ from compas_cadwork.materials.material import Material
 
 
 def test_creates_material(cadwork) -> None:
-    cadwork.mc.get_all_materials.return_value = [100, 200, 300]
-    cadwork.mc.get_name.side_effect = lambda x: {100: "Wood", 200: "Glass", 300: "Paper"}[x]
-
     # Empty name
     with pytest.raises(ValueError, match=r"Material name cannot be empty"):
         Material.create("")
+    cadwork.mc.get_material_id.assert_not_called()
 
     # Duplicate name
+    cadwork.mc.get_material_id.return_value = 300
     with pytest.raises(ValueError, match=r"Name is already in use in material #300"):
         Material.create("Paper")
+    cadwork.mc.get_material_id.assert_called_once_with("Paper")
     cadwork.mc.create_material.assert_not_called()
+    cadwork.mc.get_material_id.reset_mock()
 
     # Unused name
+    cadwork.mc.get_material_id.return_value = 0
     cadwork.mc.create_material.return_value = 123
     material = Material.create("Test Value")
     assert material.id == 123
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
     cadwork.mc.create_material.assert_called_once_with("Test Value")
 
 
@@ -38,25 +41,26 @@ def test_gets_name(cadwork) -> None:
 
 
 def test_sets_name(cadwork) -> None:
-    cadwork.mc.get_all_materials.return_value = []
+    cadwork.mc.get_material_id.return_value = 0
     material = Material(123)
     material.name = "Test Value"
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
     cadwork.mc.set_name.assert_called_with(123, "Test Value")
 
 
-def test_raises_on_empty_name(cadwork) -> None:
+def test_raises_on_set_empty_name(cadwork) -> None:
     material = Material(123)
     with pytest.raises(ValueError, match=r"Material name cannot be empty"):
         material.name = ""
     cadwork.mc.set_name.assert_not_called()
 
 
-def test_raises_on_duplicate_name(cadwork) -> None:
-    cadwork.mc.get_all_materials.return_value = [100, 200, 300]
-    cadwork.mc.get_name.side_effect = lambda x: {100: "Wood", 200: "Glass", 300: "Paper"}[x]
+def test_raises_on_set_duplicate_name(cadwork) -> None:
+    cadwork.mc.get_material_id.return_value = 200
     material = Material(123)
     with pytest.raises(ValueError, match=r"Name is already in use in material #200"):
         material.name = "Glass"
+    cadwork.mc.get_material_id.assert_called_once_with("Glass")
     cadwork.mc.set_name.assert_not_called()
 
 

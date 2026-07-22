@@ -25,10 +25,9 @@ def _validate_name(name: str) -> None:
     """
     if name == "":
         raise ValueError("Material name cannot be empty")
-    for material_id in mc.get_all_materials():
-        material_name = mc.get_name(material_id)
-        if material_name == name:
-            raise ValueError(f"Name is already in use in material #{material_id}")
+    material_id = mc.get_material_id(name)
+    if material_id != 0:
+        raise ValueError(f"Name is already in use in material #{material_id}")
 
 
 class Material:
