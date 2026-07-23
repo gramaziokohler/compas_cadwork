@@ -3,11 +3,9 @@ from typing import assert_type
 import pytest
 
 from compas_cadwork.elements.beam import Beam
-from compas_cadwork.elements.dimensional_element import DimensionalElement
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.element_type import ElementType
 from compas_cadwork.elements.factory import _BasicElementTypes
-from compas_cadwork.elements.factory import _DimensionalElementTypes
 from compas_cadwork.elements.factory import _OrientedElementTypes
 from compas_cadwork.elements.factory import get_element_instance
 from compas_cadwork.elements.oriented_element import OrientedElement
@@ -48,14 +46,6 @@ def test_gets_the_correct_element_class(cadwork) -> None:
     assert_type(element, OrientedElement[_OrientedElementTypes])
     assert type(element) is OrientedElement
     cadwork.cadwork.element_type.is_wire_axis.return_value = False
-
-    # For generic dimensional elements
-    cadwork.cadwork.element_type.is_opening.return_value = True
-    element = get_element_instance(123)
-    assert element.type == ElementType.OPENING
-    assert_type(element, DimensionalElement[_DimensionalElementTypes])
-    assert type(element) is DimensionalElement
-    cadwork.cadwork.element_type.is_opening.return_value = False
 
 
 def test_raises_on_invalid_cadwork_id(cadwork) -> None:

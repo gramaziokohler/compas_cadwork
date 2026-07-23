@@ -4,6 +4,7 @@ from .element import Element
 from .element_type import ElementType
 from .factory import AnyElement
 from .floor import Floor
+from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
 from .roof import Roof
@@ -17,6 +18,7 @@ __all__ = [
     "Element",
     "ElementType",
     "Floor",
+    "Opening",
     "OrientedElement",
     "Panel",
     "Roof",

@@ -10,10 +10,10 @@ import attribute_controller as ac
 import element_controller as ec
 
 from .beam import Beam
-from .dimensional_element import DimensionalElement
 from .element import Element
 from .element_type import ElementType
 from .floor import Floor
+from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
 from .roof import Roof
@@ -53,22 +53,12 @@ _OrientedElementTypes: TypeAlias = Literal[
     ElementType.WIRE_AXIS,
 ]
 
-_DimensionalElementTypes: TypeAlias = Literal[ElementType.OPENING]
-
 AnyElement: TypeAlias = (
-    Element[_BasicElementTypes]
-    | OrientedElement[_OrientedElementTypes]
-    | DimensionalElement[_DimensionalElementTypes]
-    | Beam
-    | Floor
-    | Panel
-    | Roof
-    | Wall
+    Element[_BasicElementTypes] | OrientedElement[_OrientedElementTypes] | Beam | Floor | Opening | Panel | Roof | Wall
 )
 
 _BASIC_ELEMENT_TYPES: Final = frozenset(get_args(_BasicElementTypes))
 _ORIENTED_ELEMENT_TYPES: Final = frozenset(get_args(_OrientedElementTypes))
-_DIMENSIONAL_ELEMENT_TYPES: Final = frozenset(get_args(_DimensionalElementTypes))
 
 
 def get_element_instance(cadwork_id: ElementId) -> AnyElement:
@@ -99,6 +89,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Beam(cadwork_id)
     if element_type == ElementType.FLOOR:
         return Floor(cadwork_id)
+    if element_type == ElementType.OPENING:
+        return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
         return Panel(cadwork_id)
     if element_type == ElementType.ROOF:
@@ -111,8 +103,6 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Element(cadwork_id)
     if element_type in _ORIENTED_ELEMENT_TYPES:
         return OrientedElement(cadwork_id)
-    if element_type in _DIMENSIONAL_ELEMENT_TYPES:
-        return DimensionalElement(cadwork_id)
 
     # Base case (this should never happen)
     raise ValueError(f"Unmapped type {element_type.name!r} for Cadwork element with ID #{cadwork_id}")
