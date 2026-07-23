@@ -8,11 +8,10 @@ from compas.geometry import Frame
 from compas.geometry import Polygon
 
 from .element_type import ElementType
-from .mixins.aggregate_mixin import AggregateMixin
 from .panel import Panel
 
 
-class Wall(Panel[Literal[ElementType.WALL]], AggregateMixin):
+class Wall(Panel[Literal[ElementType.WALL]]):
     """Wall element."""
 
     @classmethod

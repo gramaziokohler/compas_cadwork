@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
+from collections.abc import MutableSet
 from functools import cached_property
 from typing import TYPE_CHECKING
 from typing import ClassVar
@@ -23,8 +25,11 @@ from .element_type import ElementType
 if TYPE_CHECKING:
     from attribute_controller import UserAttributeId
     from cadwork import ElementId
+
+    from .factory import AnyElement
 else:
-    UserAttributeId = int  # For pytest and Sphinx
+    UserAttributeId = int
+    AnyElement = object
 
 
 class _ElementAttributeValues(KeyValueStorage[UserAttributeId, str]):
@@ -100,6 +105,53 @@ class _ElementData(KeyValueStorage[str, str]):
 
     def _delete(self, key: str) -> None:
         ac.delete_additional_data([self._id], key)
+
+
+class _ElementChildren(MutableSet[AnyElement]):
+    """Mutable set of the child elements contained in a host element."""
+
+    _id: Final[ElementId]
+
+    def __init__(self, element_id: ElementId) -> None:
+        self._id = element_id
+
+    def __contains__(self, value: object) -> bool:
+        if isinstance(value, Element):
+            return value.id in self._children_ids()
+        return False
+
+    def __iter__(self) -> Iterator[AnyElement]:
+        from .factory import get_element_instance
+
+        for element_id in self._children_ids():
+            yield get_element_instance(element_id)
+
+    def __len__(self) -> int:
+        return len(self._children_ids())
+
+    def add(self, value: AnyElement) -> None:
+        if value.id == self._id:
+            raise ValueError(f"Cannot add {value!r} as a child of Cadwork element #{self._id}")
+        children_ids = self._children_ids()
+        if value.id not in children_ids:
+            children_ids.add(value.id)
+            ec.set_container_contents(self._id, list(children_ids))
+
+    def discard(self, value: AnyElement) -> None:
+        children_ids = self._children_ids()
+        if value.id in children_ids:
+            children_ids.remove(value.id)
+            ec.set_container_contents(self._id, list(children_ids))
+
+    def _children_ids(self) -> set[ElementId]:
+        """Get element IDs of children.
+
+        Returns
+        -------
+        set[ElementId]
+            Cadwork element IDs.
+        """
+        return set(ec.get_container_content_elements(self._id))
 
 
 T = TypeVar("T", bound=ElementType)
@@ -199,6 +251,11 @@ class Element(Generic[T]):
     def data(self) -> _ElementData:
         """Additional data."""
         return _ElementData(self.id)
+
+    @cached_property
+    def children(self) -> _ElementChildren:
+        """Element children."""
+        return _ElementChildren(self.id)
 
     def delete(self) -> None:
         """Delete element.

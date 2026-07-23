@@ -3,6 +3,7 @@ from uuid import UUID
 import pytest
 
 from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.wall import Wall
 from compas_cadwork.ifc_uuid import IfcUUID
 
 
@@ -280,6 +281,66 @@ def test_raises_on_iterate_data() -> None:
         _ = list(element.data.keys())
     with pytest.raises(TypeError):
         _ = len(element.data)
+
+
+def test_raises_on_adding_self_to_children() -> None:
+    parent = Element(123)
+    with pytest.raises(ValueError, match=r"Cannot add Element.+ as a child of Cadwork element #123"):
+        parent.children.add(parent)
+
+
+def test_gets_children(cadwork) -> None:
+    parent = Element(123)
+
+    # Without value
+    cadwork.ec.get_container_content_elements.return_value = []
+    assert len(parent.children) == 0
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    assert list(parent.children) == []
+    assert Element(789) not in parent.children
+    cadwork.ec.get_container_content_elements.reset_mock()
+
+    # With value
+    cadwork.cadwork.element_type.is_wall.return_value = True
+    cadwork.ec.get_container_content_elements.return_value = [456, 789]
+    assert len(parent.children) == 2
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    assert {x.id for x in parent.children} == {456, 789}
+    assert Wall(789) in parent.children
+    assert Wall(100) not in parent.children
+
+
+def test_adds_children(cadwork) -> None:
+    cadwork.ec.get_container_content_elements.return_value = [456]
+    parent = Element(123)
+
+    # Existing child
+    parent.children.add(Element(456))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_not_called()
+    cadwork.ec.get_container_content_elements.reset_mock()
+
+    # Non-existing child
+    parent.children.add(Element(789))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_called_once_with(123, [456, 789])
+
+
+def test_removes_children(cadwork) -> None:
+    cadwork.ec.get_container_content_elements.return_value = [456]
+    parent = Element(123)
+
+    # Existing child
+    parent.children.discard(Element(456))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_called_once_with(123, [])
+    cadwork.ec.get_container_content_elements.reset_mock()
+    cadwork.ec.set_container_contents.reset_mock()
+
+    # Non-existing child
+    parent.children.discard(Element(789))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_not_called()
 
 
 def test_deletes_element(cadwork) -> None:

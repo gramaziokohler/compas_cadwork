@@ -10,7 +10,6 @@ import attribute_controller as ac
 import element_controller as ec
 
 from .beam import Beam
-from .container import Container
 from .dimensional_element import DimensionalElement
 from .element import Element
 from .element_type import ElementType
@@ -28,6 +27,7 @@ _BasicElementTypes: TypeAlias = Literal[
     ElementType.AUXILIARY,
     ElementType.CADWORK,
     ElementType.CONNECTOR_NODE,
+    ElementType.CONTAINER,
     ElementType.EXPORT_SOLID,
     ElementType.EXPORT_SOLID_SCENE,
     ElementType.NESTING_PARENT,
@@ -63,7 +63,6 @@ AnyElement: TypeAlias = (
     | OrientedElement[_OrientedElementTypes]
     | DimensionalElement[_DimensionalElementTypes]
     | Beam
-    | Container
     | Panel
     | Wall
 )
@@ -99,8 +98,6 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
     # Specific elements
     if element_type in (ElementType.CIRCULAR_BEAM, ElementType.POLYGONAL_BEAM):
         return Beam(cadwork_id)
-    if element_type == ElementType.CONTAINER:
-        return Container(cadwork_id)
     if element_type == ElementType.PANEL:
         return Panel(cadwork_id)
     if element_type == ElementType.WALL:
