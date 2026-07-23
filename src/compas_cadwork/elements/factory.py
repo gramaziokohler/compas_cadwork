@@ -13,8 +13,10 @@ from .beam import Beam
 from .dimensional_element import DimensionalElement
 from .element import Element
 from .element_type import ElementType
+from .floor import Floor
 from .oriented_element import OrientedElement
 from .panel import Panel
+from .roof import Roof
 from .wall import Wall
 
 
@@ -51,18 +53,16 @@ _OrientedElementTypes: TypeAlias = Literal[
     ElementType.WIRE_AXIS,
 ]
 
-_DimensionalElementTypes: TypeAlias = Literal[
-    ElementType.FLOOR,
-    ElementType.OPENING,
-    ElementType.ROOF,
-]
+_DimensionalElementTypes: TypeAlias = Literal[ElementType.OPENING]
 
 AnyElement: TypeAlias = (
     Element[_BasicElementTypes]
     | OrientedElement[_OrientedElementTypes]
     | DimensionalElement[_DimensionalElementTypes]
     | Beam
+    | Floor
     | Panel
+    | Roof
     | Wall
 )
 
@@ -97,8 +97,12 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
     # Specific elements
     if element_type in (ElementType.CIRCULAR_BEAM, ElementType.POLYGONAL_BEAM):
         return Beam(cadwork_id)
+    if element_type == ElementType.FLOOR:
+        return Floor(cadwork_id)
     if element_type == ElementType.PANEL:
         return Panel(cadwork_id)
+    if element_type == ElementType.ROOF:
+        return Roof(cadwork_id)
     if element_type == ElementType.WALL:
         return Wall(cadwork_id)
 

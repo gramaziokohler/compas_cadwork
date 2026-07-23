@@ -50,12 +50,12 @@ def test_gets_the_correct_element_class(cadwork) -> None:
     cadwork.cadwork.element_type.is_wire_axis.return_value = False
 
     # For generic dimensional elements
-    cadwork.cadwork.element_type.is_floor.return_value = True
+    cadwork.cadwork.element_type.is_opening.return_value = True
     element = get_element_instance(123)
-    assert element.type == ElementType.FLOOR
+    assert element.type == ElementType.OPENING
     assert_type(element, DimensionalElement[_DimensionalElementTypes])
     assert type(element) is DimensionalElement
-    cadwork.cadwork.element_type.is_floor.return_value = False
+    cadwork.cadwork.element_type.is_opening.return_value = False
 
 
 def test_raises_on_invalid_cadwork_id(cadwork) -> None:
