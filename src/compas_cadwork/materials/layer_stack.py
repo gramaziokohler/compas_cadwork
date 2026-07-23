@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from collections.abc import Generator
+from collections.abc import Iterable
 from collections.abc import MutableSequence
 from typing import TYPE_CHECKING
 from typing import Final
-from typing import Generator
-from typing import Iterable
 from typing import Self
 from typing import TypeAlias
 from typing import final

@@ -7,10 +7,10 @@ import attribute_controller as ac
 from compas.geometry import Frame
 from compas.geometry import Polygon
 
+from compas_cadwork.elements.mixins.layered_mixin import LayeredMixin
 from compas_cadwork.materials.layer_stack import WallLayerStack
 
 from .element_type import ElementType
-from .mixins.layered_mixin import LayeredMixin
 from .panel import Panel
 
 
