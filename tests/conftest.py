@@ -1,6 +1,6 @@
 import sys
-from typing import Generator
-from typing import Iterator
+from collections.abc import Generator
+from collections.abc import Iterator
 from unittest.mock import MagicMock
 
 import pytest

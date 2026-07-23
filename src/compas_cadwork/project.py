@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Generator
+from collections.abc import Iterable
 from datetime import date
 from datetime import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING
-from typing import Generator
-from typing import Iterable
 from typing import overload
 from uuid import UUID
 
