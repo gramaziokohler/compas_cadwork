@@ -21,6 +21,7 @@ from compas_cadwork.utils.storage import KeyValueStorage
 
 from .element_type import ElementType
 from .ifc_element_type import IfcElementType
+from .ifc_predefined_type import IfcPredefinedType
 
 
 if TYPE_CHECKING:
@@ -215,6 +216,16 @@ class Element(Generic[T]):
     @ifc_element_type.setter
     def ifc_element_type(self, value: IfcElementType) -> None:
         bc.set_ifc2x3_element_type([self.id], value.to_cadwork())
+
+    @property
+    def ifc_predefined_type(self) -> IfcPredefinedType:
+        """IFC predefined type."""
+        raw_type = bc.get_ifc_predefined_type(self.id)
+        return IfcPredefinedType.from_cadwork(raw_type)
+
+    @ifc_predefined_type.setter
+    def ifc_predefined_type(self, value: IfcPredefinedType) -> None:
+        bc.set_ifc_predefined_type([self.id], value.to_cadwork())
 
     @property
     def name(self) -> str | None:

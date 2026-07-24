@@ -4,6 +4,7 @@ import pytest
 
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.ifc_element_type import IfcElementType
+from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
 from compas_cadwork.elements.wall import Wall
 from compas_cadwork.ifc_uuid import IfcUUID
 
@@ -53,6 +54,20 @@ def test_sets_ifc_element_type(cadwork) -> None:
     element.ifc_element_type = IfcElementType.DOOR
     cadwork.bc.set_ifc2x3_element_type.assert_called_once_with([123], cadwork.cadwork.ifc_2x3_element_type())
     cadwork.cadwork.ifc_2x3_element_type.return_value.set_ifc_door.assert_called_once()
+
+
+def test_gets_ifc_predefined_type(cadwork) -> None:
+    element = Element(123)
+    cadwork.cadwork.ifc_predefined_type.return_value.is_molding.return_value = True
+    assert element.ifc_predefined_type == IfcPredefinedType.MOLDING
+    cadwork.bc.get_ifc_predefined_type.assert_called_once_with(123)
+
+
+def test_sets_ifc_predefined_type(cadwork) -> None:
+    element = Element(123)
+    element.ifc_predefined_type = IfcPredefinedType.GUARDRAIL
+    cadwork.bc.set_ifc_predefined_type.assert_called_once_with([123], cadwork.cadwork.ifc_predefined_type())
+    cadwork.cadwork.ifc_predefined_type.return_value.set_guardrail.assert_called_once()
 
 
 def test_gets_name(cadwork) -> None:
