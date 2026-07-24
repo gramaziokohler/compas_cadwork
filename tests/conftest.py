@@ -133,6 +133,37 @@ class CadworkMocks:
         self.cadwork.element_type.return_value.is_wall.return_value = False
         self.cadwork.element_type.return_value.is_wire_axis.return_value = False
 
+        self.cadwork.ifc_2x3_element_type.return_value.is_none.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_beam.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_column.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_curtain_wall.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_door.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_member.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_plate.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_railing.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_ramp.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_ramp_flight.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_roof.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_slab.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_stair.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_stair_flight.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_wall.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_wall_standard_case.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_window.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_building_element_proxy.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_chimney.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_covering.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_footing.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_furnishing_element.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_opening_element.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_space.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_flow_segment.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_building_element_part.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_discrete_accessory.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_fastener.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_mechanical_fastener.return_value = False
+        self.cadwork.ifc_2x3_element_type.return_value.is_ifc_element_assembly.return_value = False
+
         self.cadwork.multi_layer_type = MockMultiLayerType
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.vertex_list = MockVertexList

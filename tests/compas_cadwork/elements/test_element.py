@@ -42,7 +42,8 @@ def test_gets_ifc_guid(cadwork) -> None:
 
 def test_gets_ifc_element_type(cadwork) -> None:
     element = Element(123)
-    cadwork.cadwork.ifc_2x3_element_type.return_value = "Chimney"
+    cadwork.cadwork.ifc_2x3_element_type.return_value.__str__.return_value = "Chimney"
+    cadwork.cadwork.ifc_2x3_element_type.return_value.is_ifc_chimney.return_value = True
     assert element.ifc_element_type == IfcElementType.CHIMNEY
     cadwork.bc.get_ifc2x3_element_type.assert_called_once_with(123)
 
