@@ -99,6 +99,7 @@ class CadworkMocks:
         self.cadwork.element_grouping_type.group = 1
         self.cadwork.element_grouping_type.subgroup = 2
         self.ac.get_element_type.return_value = self.cadwork.element_type
+        self.bc.get_ifc2x3_element_type = self.cadwork.ifc_2x3_element_type
 
         self.cadwork.element_type.is_additional_element.return_value = False
         self.cadwork.element_type.is_auxiliary.return_value = False

@@ -20,6 +20,7 @@ from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
 from .element_type import ElementType
+from .ifc_element_type import IfcElementType
 
 
 if TYPE_CHECKING:
@@ -204,6 +205,16 @@ class Element(Generic[T]):
         """Element type."""
         raw_type = ac.get_element_type(self.id)
         return ElementType.from_cadwork(raw_type)  # type: ignore[return-value]
+
+    @property
+    def ifc_element_type(self) -> IfcElementType:
+        """IFC element type."""
+        raw_type = bc.get_ifc2x3_element_type(self.id)
+        return IfcElementType.from_cadwork(raw_type)
+
+    @ifc_element_type.setter
+    def ifc_element_type(self, value: IfcElementType) -> None:
+        bc.set_ifc2x3_element_type([self.id], value.to_cadwork())
 
     @property
     def name(self) -> str | None:
