@@ -316,7 +316,7 @@ def test_gets_children(cadwork) -> None:
     cadwork.ec.get_container_content_elements.reset_mock()
 
     # With value
-    cadwork.cadwork.element_type.is_wall.return_value = True
+    cadwork.cadwork.element_type.return_value.is_wall.return_value = True
     cadwork.ec.get_container_content_elements.return_value = [456, 789]
     assert len(parent.children) == 2
     cadwork.ec.get_container_content_elements.assert_called_once_with(123)

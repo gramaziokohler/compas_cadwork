@@ -5,7 +5,7 @@ from compas_cadwork.elements.element_type import ElementType
 
 
 def test_gets_value_from_cadwork(cadwork) -> None:
-    cadwork.cadwork.element_type.is_wall.return_value = True
+    cadwork.cadwork.element_type.return_value.is_wall.return_value = True
     raw_type = ac.get_element_type(123)
     assert ElementType.from_cadwork(raw_type) == ElementType.WALL
 
