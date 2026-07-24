@@ -33,9 +33,6 @@ class IfcPredefinedType(Enum):
     LANDING = auto()
     ROOF = auto()
     BEAM = auto()
-    HOLLOWCORE = auto()
-    JOIST = auto()
-    LINTEL = auto()
     SPANDREL = auto()
     TBEAM = auto()
     COMPLEX = auto()
@@ -238,7 +235,6 @@ class IfcPredefinedType(Enum):
             return cls.ROOF
         if raw_type.is_beam():
             return cls.BEAM
-        # TODO(josemmo): add checks for HOLLOWCORE, JOIST and LINTEL once getters are added to the Cadwork API
         if raw_type.is_spandrel():
             return cls.SPANDREL
         if raw_type.is_tbeam():
@@ -567,12 +563,6 @@ class IfcPredefinedType(Enum):
                 raw_type.set_roof()
             case IfcPredefinedType.BEAM:
                 raw_type.set_beam()
-            case IfcPredefinedType.HOLLOWCORE:
-                raw_type.set_hollowcore()
-            case IfcPredefinedType.JOIST:
-                raw_type.set_joist()
-            case IfcPredefinedType.LINTEL:
-                raw_type.set_lintel()
             case IfcPredefinedType.SPANDREL:
                 raw_type.set_spandrel()
             case IfcPredefinedType.TBEAM:
