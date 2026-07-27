@@ -269,6 +269,10 @@ class Element(Generic[T]):
         return isinstance(other, Element) and self.id == other.id
 
     @final
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    @final
     def __repr__(self) -> str:
         class_name = type(self).__name__
         return f"{class_name}(id={self.id!r}, name={self.name!r})"
