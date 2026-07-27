@@ -1,28 +1,37 @@
-import bim_controller as bc
 import pytest
 
 from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
 
 
-def test_gets_value_from_cadwork(cadwork) -> None:
-    cadwork.cadwork.ifc_predefined_type.return_value.is_glue.return_value = True
-    raw_type = bc.get_ifc_predefined_type(123)
-    assert IfcPredefinedType.from_cadwork(raw_type) == IfcPredefinedType.GLUE
+@pytest.mark.parametrize("expected_type", list(IfcPredefinedType))
+def test_gets_value_from_cadwork(cadwork, expected_type) -> None:
+    expected_method = f"is_{expected_type.name.lower()}"
+    getattr(cadwork.cadwork.ifc_predefined_type.return_value, expected_method).return_value = True
+    raw_type = cadwork.cadwork.ifc_predefined_type()
+    assert IfcPredefinedType.from_cadwork(raw_type) == expected_type
 
 
 def test_raises_on_unknown_cadwork_type(cadwork) -> None:
-    raw_type = bc.get_ifc_predefined_type(123)
+    raw_type = cadwork.cadwork.ifc_predefined_type()
     with pytest.raises(ValueError, match=r"Unknown Cadwork IFC predefined type"):
         _ = IfcPredefinedType.from_cadwork(raw_type)
 
 
-def test_exports_value_to_cadwork(cadwork) -> None:
-    _ = IfcPredefinedType.PARKING.to_cadwork()
-    cadwork.cadwork.ifc_predefined_type.return_value.set_parking.assert_called_once()
-    cadwork.cadwork.ifc_predefined_type.return_value.set_none.assert_not_called()
-    cadwork.cadwork.ifc_predefined_type.return_value.set_beam.assert_not_called()
+@pytest.mark.parametrize("expected_type", list(IfcPredefinedType))
+def test_exports_value_to_cadwork(cadwork, expected_type) -> None:
+    raw_type = expected_type.to_cadwork()
+    match expected_type:
+        case IfcPredefinedType.NAIL_PLATE:
+            expected_method = "set_nailplate"
+        case IfcPredefinedType.SHEAR_CONNECTOR:
+            expected_method = "set_shearconnector"
+        case IfcPredefinedType.STUD_SHEAR_CONNECTOR:
+            expected_method = "set_studshearconnector"
+        case _:
+            expected_method = f"set_{expected_type.name.lower()}"
+    getattr(raw_type, expected_method).assert_called_once()
 
 
-def test_repr() -> None:
-    assert repr(IfcPredefinedType.NONE) == "<IfcPredefinedType.NONE>"
-    assert repr(IfcPredefinedType.ARCH) == "<IfcPredefinedType.ARCH>"
+@pytest.mark.parametrize("expected_type", list(IfcPredefinedType))
+def test_repr(expected_type) -> None:
+    assert repr(expected_type) == f"<IfcPredefinedType.{expected_type.name}>"
