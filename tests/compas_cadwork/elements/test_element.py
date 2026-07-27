@@ -2,6 +2,7 @@ from uuid import UUID
 
 import pytest
 
+from compas_cadwork.batch_update import BatchUpdate
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.ifc_element_type import IfcElementType
 from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
@@ -376,8 +377,19 @@ def test_removes_children(cadwork) -> None:
 
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
+
+    # Outside batch update context
     element.delete()
     cadwork.ec.delete_elements.assert_called_once_with([123])
+    cadwork.ec.delete_elements_with_undo.assert_not_called()
+    cadwork.ec.delete_elements.reset_mock()
+    cadwork.ec.delete_elements_with_undo.reset_mock()
+
+    # Inside batch update context
+    with BatchUpdate():
+        element.delete()
+    cadwork.ec.delete_elements.assert_not_called()
+    cadwork.ec.delete_elements_with_undo.assert_called_once_with([123])
 
 
 def test_equals() -> None:

@@ -5,6 +5,8 @@ import geometry_controller as gc
 from compas.geometry import Frame
 from compas.geometry import Vector
 
+from compas_cadwork.batch_update import notify_element_creation
+from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_compas
@@ -33,6 +35,7 @@ class OrientedElement(Element[T]):
             The vector by which to translate the element.
         """
         ec.move_element([self.id], vector_to_cadwork(vector))
+        notify_element_modification(self.id)
 
     def duplicate(self, vector: Vector) -> Self:
         """Duplicate element by the given vector.
@@ -50,4 +53,5 @@ class OrientedElement(Element[T]):
         new_element_ids = ec.copy_elements([self.id], vector_to_cadwork(vector))
         if len(new_element_ids) != 1:
             raise RuntimeError(f"Failed to copy Cadwork element with ID {self.id}")
+        notify_element_creation(new_element_ids[0])
         return self.__class__(new_element_ids[0])

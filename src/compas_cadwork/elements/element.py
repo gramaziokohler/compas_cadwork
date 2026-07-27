@@ -16,6 +16,8 @@ import bim_controller as bc
 import cadwork
 import element_controller as ec
 
+from compas_cadwork.batch_update import is_inside_context
+from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import KeyValueStorage
 
@@ -55,10 +57,12 @@ class _ElementAttributeValues(KeyValueStorage[UserAttributeId, str]):
 
     def _set(self, key: UserAttributeId, value: str) -> None:
         ac.set_user_attribute([self._id], key, value)
+        notify_element_modification(self._id)
 
     def _delete(self, key: UserAttributeId) -> None:
         ac.set_user_attribute([self._id], key, "")  # There's no delete user attribute function
         ac.delete_user_attribute(key)
+        notify_element_modification(self._id)
 
 
 class _ElementAttributeKeys(KeyValueStorage[UserAttributeId, str]):
@@ -104,9 +108,11 @@ class _ElementData(KeyValueStorage[str, str]):
 
     def _set(self, key: str, value: str) -> None:
         ac.set_additional_data([self._id], key, value)
+        notify_element_modification(self._id)
 
     def _delete(self, key: str) -> None:
         ac.delete_additional_data([self._id], key)
+        notify_element_modification(self._id)
 
 
 class _ElementChildren(MutableSet[AnyElement]):
@@ -216,6 +222,7 @@ class Element(Generic[T]):
     @ifc_element_type.setter
     def ifc_element_type(self, value: IfcElementType) -> None:
         bc.set_ifc2x3_element_type([self.id], value.to_cadwork())
+        notify_element_modification(self.id)
 
     @property
     def ifc_predefined_type(self) -> IfcPredefinedType:
@@ -226,6 +233,7 @@ class Element(Generic[T]):
     @ifc_predefined_type.setter
     def ifc_predefined_type(self, value: IfcPredefinedType) -> None:
         bc.set_ifc_predefined_type([self.id], value.to_cadwork())
+        notify_element_modification(self.id)
 
     @property
     def name(self) -> str | None:
@@ -236,6 +244,7 @@ class Element(Generic[T]):
     @name.setter
     def name(self, value: str | None) -> None:
         ac.set_name([self.id], value or "")
+        notify_element_modification(self.id)
 
     @property
     def group(self) -> str | None:
@@ -253,6 +262,7 @@ class Element(Generic[T]):
             ac.set_subgroup([self.id], value or "")
         else:
             ac.set_group([self.id], value or "")
+        notify_element_modification(self.id)
 
     @property
     def comment(self) -> str | None:
@@ -263,6 +273,7 @@ class Element(Generic[T]):
     @comment.setter
     def comment(self, value: str | None) -> None:
         ac.set_comment([self.id], value or "")
+        notify_element_modification(self.id)
 
     @cached_property
     def attributes(self) -> _ElementAttributeValues:
@@ -284,7 +295,10 @@ class Element(Generic[T]):
 
         NOTE: Once called, this element instance becomes unusable.
         """
-        ec.delete_elements([self.id])
+        if is_inside_context():
+            ec.delete_elements_with_undo([self.id])
+        else:
+            ec.delete_elements([self.id])
 
     @final
     def __eq__(self, other: object) -> bool:
