@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 from datetime import datetime
 
+from .batch_update import BatchUpdate
 from .ifc_uuid import IfcUUID
 from .project import Project
 
@@ -28,6 +29,7 @@ __all__ = [
     "DOCS",
     "HOME",
     "TEMP",
+    "BatchUpdate",
     "IfcUUID",
     "Project",
     "__author__",
