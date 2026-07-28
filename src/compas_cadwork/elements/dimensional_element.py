@@ -2,9 +2,9 @@ import geometry_controller as gc
 import visualization_controller as vc
 from compas.geometry import Line
 
-from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.materials.material import Material
+from compas_cadwork.transaction import notify_element_modification
 
 from .element import T
 from .oriented_element import OrientedElement

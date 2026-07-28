@@ -3,9 +3,9 @@ from __future__ import print_function
 import os
 from datetime import datetime
 
-from .batch_update import BatchUpdate
 from .ifc_uuid import IfcUUID
 from .project import Project
+from .transaction import Transaction
 
 
 __title__ = "compas_cadwork"
@@ -29,9 +29,9 @@ __all__ = [
     "DOCS",
     "HOME",
     "TEMP",
-    "BatchUpdate",
     "IfcUUID",
     "Project",
+    "Transaction",
     "__author__",
     "__author_email__",
     "__copyright__",

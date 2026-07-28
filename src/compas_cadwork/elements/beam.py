@@ -9,9 +9,9 @@ from compas.geometry import Polygon
 from compas.geometry import Translation
 from compas.geometry import bounding_box_xy
 
-from compas_cadwork.batch_update import notify_element_creation
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.transaction import notify_element_creation
 
 from .dimensional_element import DimensionalElement
 from .element_type import ElementType

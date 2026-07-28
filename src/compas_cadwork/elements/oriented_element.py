@@ -5,11 +5,11 @@ import geometry_controller as gc
 from compas.geometry import Frame
 from compas.geometry import Vector
 
-from compas_cadwork.batch_update import notify_element_creation
-from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_compas
+from compas_cadwork.transaction import notify_element_creation
+from compas_cadwork.transaction import notify_element_modification
 
 from .element import Element
 from .element import T

@@ -8,7 +8,7 @@ from compas.geometry import Vector
 from compas.geometry import cross_vectors
 from compas.geometry import is_point_infrontof_plane
 
-from compas_cadwork import BatchUpdate
+from compas_cadwork import Transaction
 from compas_cadwork.elements import Beam
 
 
@@ -43,8 +43,8 @@ for edge in mesh.edges():
     lines_and_normals.append((line, Vector(*z_vector)))
 
 # Create beams from the lines and normals and add them to the list
-batch = BatchUpdate()
-with batch:
+tx = Transaction()
+with tx:
     for line, z_vector in lines_and_normals:
         xaxis = line.direction
         yaxis = Vector(*cross_vectors(z_vector, xaxis))
@@ -52,4 +52,4 @@ with batch:
         Beam.rectangular(frame, line.length, BEAM_WIDTH, BEAM_HEIGHT)
 
 # Log created beams to console
-print(list(batch.created_elements))
+print(list(tx.created_elements))

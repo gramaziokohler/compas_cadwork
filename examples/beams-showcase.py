@@ -10,7 +10,7 @@ from compas.geometry import Polygon
 from compas.geometry import Rotation
 from compas.geometry import Vector
 
-from compas_cadwork import BatchUpdate
+from compas_cadwork import Transaction
 from compas_cadwork.elements import Beam
 
 
@@ -31,7 +31,7 @@ def create_hexagon_section(radius: float) -> Polygon:
     return Polygon(points)
 
 
-with BatchUpdate():
+with Transaction():
     frame = Frame(Point(0, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1))
 
     for i in range(4):

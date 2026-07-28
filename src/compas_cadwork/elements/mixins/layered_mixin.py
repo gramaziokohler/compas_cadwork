@@ -9,8 +9,8 @@ from typing import TypeVar
 
 import multi_layer_cover_controller as mlc
 
-from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.transaction import notify_element_modification
 
 
 if TYPE_CHECKING:

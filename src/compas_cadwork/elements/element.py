@@ -16,9 +16,9 @@ import bim_controller as bc
 import cadwork
 import element_controller as ec
 
-from compas_cadwork.batch_update import is_inside_context
-from compas_cadwork.batch_update import notify_element_modification
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.transaction import is_inside_transaction
+from compas_cadwork.transaction import notify_element_modification
 from compas_cadwork.utils.storage import KeyValueStorage
 
 from .element_type import ElementType
@@ -295,7 +295,7 @@ class Element(Generic[T]):
 
         NOTE: Once called, this element instance becomes unusable.
         """
-        if is_inside_context():
+        if is_inside_transaction():
             ec.delete_elements_with_undo([self.id])
         else:
             ec.delete_elements([self.id])
