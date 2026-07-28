@@ -1,34 +1,30 @@
-name: release
+name: Release
 
 on:
   push:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+
 jobs:
-  Build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python: ['3.10']
-
+  publish:
+    runs-on: ubuntu-slim
+    environment:
+      name: pypi
+      url: https://pypi.org/p/compas-cadwork
+    permissions:
+      id-token: write
     steps:
-      - uses: compas-dev/compas-actions.build@v5
-        with:
-          invoke_lint: true
-          check_import: false
-          use_conda: false
-          invoke_test: false
-          python: ${{ matrix.python }}
+      - name: Checkout
+        uses: actions/checkout@v6
 
-  Publish:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: compas-dev/compas-actions.publish@v3
-        with:
-          publish_to_pypi: true
-          pypi_token: ${{ secrets.PYPI }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          python: '3.10'
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v9.0.0
+
+      - name: Build project
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
