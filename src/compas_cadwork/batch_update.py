@@ -132,8 +132,8 @@ class BatchUpdate:
             ec.recreate_elements(list(all_elements))
 
         # Restore current instance to its previous value
-        if self._token is not None:
-            _CURRENT_INSTANCE.reset(self._token)
-            self._token = None
+        assert self._token is not None
+        _CURRENT_INSTANCE.reset(self._token)
+        self._token = None
 
         return False

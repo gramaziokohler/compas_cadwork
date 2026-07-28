@@ -12,7 +12,7 @@ def test_raises_on_reentry_context() -> None:
     with batch:
         with pytest.raises(RuntimeError, match=r"Instance is already in use"):
             with batch:
-                pass
+                pass  # pragma: no cover
 
 
 def test_sets_up_and_tears_down_context(cadwork) -> None:
