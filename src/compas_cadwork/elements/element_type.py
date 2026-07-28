@@ -14,7 +14,6 @@ class ElementType(Enum):
 
     ADDITIONAL = auto()
     AUXILIARY = auto()
-    CADWORK = auto()
     CIRCULAR_AXIS = auto()
     CIRCULAR_BEAM = auto()
     CONNECTOR_AXIS = auto()
@@ -67,8 +66,6 @@ class ElementType(Enum):
             return cls.ADDITIONAL
         if raw_type.is_auxiliary():
             return cls.AUXILIARY
-        if raw_type.is_cadwork():
-            return cls.CADWORK
         if raw_type.is_circular_axis():
             return cls.CIRCULAR_AXIS
         if raw_type.is_circular_beam():

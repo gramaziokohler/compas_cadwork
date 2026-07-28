@@ -25,7 +25,6 @@ if TYPE_CHECKING:
 _BasicElementTypes: TypeAlias = Literal[
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
-    ElementType.CADWORK,
     ElementType.CONNECTOR_NODE,
     ElementType.CONTAINER,
     ElementType.EXPORT_SOLID,
