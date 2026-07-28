@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `Floor`, `Opening`, and `Roof` classes.
 - Added `IfcElementType` and `IfcPredefinedType` enumerations.
 - Added `Transaction` context manager.
+- Added User Guide and Developer Guide to documentation.
 
 ### Changed
 
