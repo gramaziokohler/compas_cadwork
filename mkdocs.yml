@@ -141,6 +141,9 @@ nav:
       - Overview: getting-started/index.md
       - Cadwork's Python Shell: getting-started/shell.md
       - Standalone Plugin: getting-started/plugin.md
+  - User Guide:
+      - Overview: user-guide/index.md
+      - Elements Hierarchy: user-guide/elements-hierarchy.md
   - Examples:
       - Half Dome: examples/half-dome.md
       - Beams Showcase: examples/beams-showcase.md
