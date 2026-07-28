@@ -1,13 +1,14 @@
 from uuid import UUID
 
 import pytest
-from compas.geometry import Frame
-from compas.geometry import Line
-from compas.geometry import Point
-from compas.geometry import Vector
 
 from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.wall import Wall
 from compas_cadwork.ifc_uuid import IfcUUID
+
+
+class FakeElementForRepr(Element):
+    pass
 
 
 def test_raises_on_deleted_element(cadwork) -> None:
@@ -282,78 +283,64 @@ def test_raises_on_iterate_data() -> None:
         _ = len(element.data)
 
 
-def test_gets_frame(cadwork) -> None:
-    cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
-    cadwork.gc.get_xl.return_value = cadwork.cadwork.point_3d(-1.0, 0.0, 0.0)
-    cadwork.gc.get_yl.return_value = cadwork.cadwork.point_3d(0.0, -0.0, 1.0)
-    element = Element(123)
-    assert element.frame == Frame(Point(10.1, 20.2, 30.3), Vector(-1.0, 0.0, 0.0), Vector(0.0, -0.0, 1.0))
-    cadwork.gc.get_p1.assert_called_once_with(123)
-    cadwork.gc.get_xl.assert_called_once_with(123)
-    cadwork.gc.get_yl.assert_called_once_with(123)
+def test_raises_on_adding_self_to_children() -> None:
+    parent = Element(123)
+    with pytest.raises(ValueError, match=r"Cannot add Element.+ as a child of Cadwork element #123"):
+        parent.children.add(parent)
 
 
-def test_gets_width(cadwork) -> None:
-    cadwork.gc.get_width.return_value = 1000.23
-    element = Element(123)
-    assert element.width == 1000.23
-    cadwork.gc.get_width.assert_called_once_with(123)
+def test_gets_children(cadwork) -> None:
+    parent = Element(123)
+
+    # Without value
+    cadwork.ec.get_container_content_elements.return_value = []
+    assert len(parent.children) == 0
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    assert list(parent.children) == []
+    assert Element(789) not in parent.children
+    cadwork.ec.get_container_content_elements.reset_mock()
+
+    # With value
+    cadwork.cadwork.element_type.is_wall.return_value = True
+    cadwork.ec.get_container_content_elements.return_value = [456, 789]
+    assert len(parent.children) == 2
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    assert {x.id for x in parent.children} == {456, 789}
+    assert Wall(789) in parent.children
+    assert Wall(100) not in parent.children
 
 
-def test_sets_width(cadwork) -> None:
-    element = Element(123)
-    element.width = 543.21
-    cadwork.gc.set_width_real.assert_called_once_with([123], 543.21)
+def test_adds_children(cadwork) -> None:
+    cadwork.ec.get_container_content_elements.return_value = [456]
+    parent = Element(123)
+
+    # Existing child
+    parent.children.add(Element(456))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_not_called()
+    cadwork.ec.get_container_content_elements.reset_mock()
+
+    # Non-existing child
+    parent.children.add(Element(789))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_called_once_with(123, [456, 789])
 
 
-def test_gets_height(cadwork) -> None:
-    cadwork.gc.get_height.return_value = 1000.23
-    element = Element(123)
-    assert element.height == 1000.23
-    cadwork.gc.get_height.assert_called_once_with(123)
+def test_removes_children(cadwork) -> None:
+    cadwork.ec.get_container_content_elements.return_value = [456]
+    parent = Element(123)
 
+    # Existing child
+    parent.children.discard(Element(456))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_called_once_with(123, [])
+    cadwork.ec.get_container_content_elements.reset_mock()
+    cadwork.ec.set_container_contents.reset_mock()
 
-def test_sets_height(cadwork) -> None:
-    element = Element(123)
-    element.height = 543.21
-    cadwork.gc.set_height_real.assert_called_once_with([123], 543.21)
-
-
-def test_gets_length(cadwork) -> None:
-    cadwork.gc.get_length.return_value = 1000.23
-    element = Element(123)
-    assert element.length == 1000.23
-    cadwork.gc.get_length.assert_called_once_with(123)
-
-
-def test_sets_length(cadwork) -> None:
-    element = Element(123)
-    element.length = 543.21
-    cadwork.gc.set_length_real.assert_called_once_with([123], 543.21)
-
-
-def test_gets_centerline(cadwork) -> None:
-    cadwork.gc.get_p1.return_value = cadwork.cadwork.point_3d(10.1, 20.2, 30.3)
-    cadwork.gc.get_p2.return_value = cadwork.cadwork.point_3d(100.1, 200.2, 300.3)
-    element = Element(123)
-    assert element.centerline == Line(Point(10.1, 20.2, 30.3), Point(100.1, 200.2, 300.3))
-    cadwork.gc.get_p1.assert_called_once_with(123)
-    cadwork.gc.get_p2.assert_called_once_with(123)
-
-
-def test_translates_element(cadwork) -> None:
-    element = Element(123)
-    element.translate(Vector(100.0, 200.0, 300.0))
-    cadwork.ec.move_element.assert_called_once_with([123], cadwork.cadwork.point_3d(100.0, 200.0, 300.0))
-
-
-def test_duplicates_element(cadwork) -> None:
-    cadwork.ec.copy_elements.return_value = [124]
-    element = Element(123)
-    new_element = element.duplicate(Vector(100.0, 200.0, 300.0))
-    assert new_element is not element
-    assert new_element.id == 124
-    cadwork.ec.copy_elements.assert_called_once_with([123], cadwork.cadwork.point_3d(100.0, 200.0, 300.0))
+    # Non-existing child
+    parent.children.discard(Element(789))
+    cadwork.ec.get_container_content_elements.assert_called_once_with(123)
+    cadwork.ec.set_container_contents.assert_not_called()
 
 
 def test_deletes_element(cadwork) -> None:
@@ -362,7 +349,30 @@ def test_deletes_element(cadwork) -> None:
     cadwork.ec.delete_elements.assert_called_once_with([123])
 
 
+def test_equals() -> None:
+    a = Element(123)
+    b = FakeElementForRepr(123)
+    c = Element(456)
+    assert a == a
+    assert a == b
+    assert a != c
+    assert b != c
+    assert a is not b
+
+
+def test_hash() -> None:
+    a = Element(123)
+    b = FakeElementForRepr(123)
+    c = Element(456)
+    assert hash(a) == hash(b)
+    assert hash(a) != hash(c)
+    assert hash(b) != hash(c)
+    assert len({a, b, c}) == 2
+
+
 def test_repr(cadwork) -> None:
-    element = Element(123)
     cadwork.ac.get_name.return_value = "Something"
+    element = Element(123)
     assert repr(element) == "Element(id=123, name='Something')"
+    element = FakeElementForRepr(321)
+    assert repr(element) == "FakeElementForRepr(id=321, name='Something')"

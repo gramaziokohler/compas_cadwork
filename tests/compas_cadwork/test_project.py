@@ -205,6 +205,7 @@ def test_gets_element_by_cadwork_id(cadwork) -> None:
     cadwork.ec.check_element_id.assert_called_once_with(1000)
 
     # With value
+    cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.ec.check_element_id.return_value = True
     element = project.element(cadwork_id=12345)
     cadwork.ec.check_element_id.assert_called_with(12345)
@@ -223,6 +224,7 @@ def test_gets_element_by_guid(cadwork) -> None:
         _ = project.element(guid=UUID("deadbeef-0000-0000-0000-000000000000"))
 
     # With value
+    cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.ec.get_element_from_cadwork_guid.return_value = 12345
     cadwork.ec.get_element_cadwork_guid.return_value = "{2B21165D-9454-46A0-A992-6B4AA043D58D}"
     element = project.element(guid=UUID("2b21165d-9454-46a0-a992-6b4aa043d58d"))
@@ -241,6 +243,7 @@ def test_gets_element_by_ifc_guid(cadwork) -> None:
         _ = project.element(ifc_guid=IfcUUID("deadbeef-0000-0000-0000-000000000000"))
 
     # With value
+    cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.bc.get_element_id_from_base64_ifc_guid.return_value = 54321
     element = project.element(ifc_guid=IfcUUID("921ab9eb-3b21-46c8-baa4-dfffc33b59be"))
     cadwork.bc.get_element_id_from_base64_ifc_guid.assert_called_with("2I6hdhEo56oBgat$$3Erc_")
@@ -258,6 +261,7 @@ def test_gets_elements(cadwork) -> None:
     assert len(list(project.elements())) == 0
 
     # With elements
+    cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.ec.get_all_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
     assert [x.id for x in project.elements()] == [505, 404, 303, 202, 101]
 
@@ -270,6 +274,7 @@ def test_gets_selected_elements(cadwork) -> None:
     assert len(list(project.selected_elements())) == 0
 
     # With elements
+    cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.ec.get_active_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
     assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
 

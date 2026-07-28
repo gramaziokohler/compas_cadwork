@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Generator
+from collections.abc import Iterable
 from datetime import date
 from datetime import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING
-from typing import Generator
-from typing import Iterable
 from typing import overload
 from uuid import UUID
 
@@ -13,7 +13,8 @@ import bim_controller as bc
 import element_controller as ec
 import utility_controller as uc
 
-from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.factory import AnyElement
+from compas_cadwork.elements.factory import get_element_instance
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
@@ -202,7 +203,7 @@ class Project:
         return _ProjectData()
 
     @overload
-    def element(self, *, cadwork_id: ElementId) -> Element:
+    def element(self, *, cadwork_id: ElementId) -> AnyElement:
         """Get element from Cadwork ID.
 
         Parameters
@@ -212,7 +213,7 @@ class Project:
 
         Returns
         -------
-        Element
+        AnyElement
             Cadwork element.
 
         Raises
@@ -222,7 +223,7 @@ class Project:
         """
 
     @overload
-    def element(self, *, guid: UUID) -> Element:
+    def element(self, *, guid: UUID) -> AnyElement:
         """Get element from Cadwork GUID.
 
         Parameters
@@ -232,7 +233,7 @@ class Project:
 
         Returns
         -------
-        Element
+        AnyElement
             Cadwork element.
 
         Raises
@@ -242,7 +243,7 @@ class Project:
         """
 
     @overload
-    def element(self, *, ifc_guid: IfcUUID) -> Element:
+    def element(self, *, ifc_guid: IfcUUID) -> AnyElement:
         """Get element from IFC GUID.
 
         Parameters
@@ -252,7 +253,7 @@ class Project:
 
         Returns
         -------
-        Element
+        AnyElement
             Cadwork element.
 
         Raises
@@ -267,7 +268,7 @@ class Project:
         cadwork_id: ElementId | None = None,
         guid: UUID | None = None,
         ifc_guid: IfcUUID | None = None,
-    ) -> Element:
+    ) -> AnyElement:
         # GUID to Cadwork ID
         if guid is not None:
             raw_guid = "{" + str(guid).upper() + "}"
@@ -284,31 +285,29 @@ class Project:
 
         # Cadwork ID to element
         assert cadwork_id is not None
-        if not ec.check_element_id(cadwork_id):
-            raise ValueError(f"Could not find a Cadwork element with ID #{cadwork_id}")
-        return Element(cadwork_id)
+        return get_element_instance(cadwork_id)
 
-    def elements(self) -> Generator[Element, None, None]:
+    def elements(self) -> Generator[AnyElement, None, None]:
         """Get all elements in the project.
 
         Returns
         -------
-        Generator[Element, None, None]
+        Generator[AnyElement, None, None]
             Generator of elements.
         """
         for cadwork_id in ec.get_all_identifiable_element_ids():
-            yield Element(cadwork_id)
+            yield get_element_instance(cadwork_id)
 
-    def selected_elements(self) -> Generator[Element, None, None]:
+    def selected_elements(self) -> Generator[AnyElement, None, None]:
         """Get currently selected (active) elements.
 
         Returns
         -------
-        Generator[Element, None, None]
+        Generator[AnyElement, None, None]
             Generator of elements.
         """
         for cadwork_id in ec.get_active_identifiable_element_ids():
-            yield Element(cadwork_id)
+            yield get_element_instance(cadwork_id)
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"

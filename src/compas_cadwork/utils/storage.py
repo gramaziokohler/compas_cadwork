@@ -1,7 +1,7 @@
 from abc import abstractmethod
+from collections.abc import Iterable
+from collections.abc import Iterator
 from collections.abc import MutableMapping
-from typing import Iterable
-from typing import Iterator
 from typing import TypeVar
 
 
