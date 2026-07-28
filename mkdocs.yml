@@ -144,6 +144,11 @@ nav:
   - User Guide:
       - Overview: user-guide/index.md
       - Elements Hierarchy: user-guide/elements-hierarchy.md
+  - Developer Guide:
+      - Overview: developer-guide/index.md
+      - Contributing: developer-guide/contributing.md
+      - Creating Releases: developer-guide/creating-releases.md
+      - AGENTS.md: developer-guide/agents.md
   - Examples:
       - Half Dome: examples/half-dome.md
       - Beams Showcase: examples/beams-showcase.md
