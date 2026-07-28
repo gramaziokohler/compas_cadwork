@@ -19,16 +19,16 @@ if TYPE_CHECKING:
     from compas_cadwork.elements.factory import AnyElement
 
 
-_CURRENT_INSTANCE: ContextVar[BatchUpdate | None] = ContextVar("_CURRENT_INSTANCE", default=None)
+_CURRENT_INSTANCE: ContextVar[Transaction | None] = ContextVar("_CURRENT_INSTANCE", default=None)
 
 
-def is_inside_context() -> bool:
-    """Is inside batch update context.
+def is_inside_transaction() -> bool:
+    """Is inside transaction context.
 
     Returns
     -------
     bool
-        Whether calling scope is inside a batch update context.
+        Whether calling scope is inside a transaction context.
     """
     instance = _CURRENT_INSTANCE.get()
     return True if instance else False
@@ -60,14 +60,14 @@ def notify_element_modification(cadwork_id: ElementId) -> None:
         instance._modified_ids.add(cadwork_id)
 
 
-class BatchUpdate:
+class Transaction:
     """Helper for grouping several Cadwork operations in the same batch.
 
     This context manager is intended to be used when working with hundreds or thousands of elements,
     improving performance by deferring rendering until the end of the batch.
     """
 
-    _token: Token[BatchUpdate | None] | None
+    _token: Token[Transaction | None] | None
     _created_ids: Final[set[ElementId]]
     _modified_ids: Final[set[ElementId]]
 
