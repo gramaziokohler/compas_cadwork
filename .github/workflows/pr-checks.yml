@@ -1,4 +1,4 @@
-name: verify-pr-checklist
+name: Verify PR checklist
 
 on:
   pull_request:
@@ -7,8 +7,7 @@ on:
       - main
 
 jobs:
-  checklist:
-    name: Verify PR checklist
+  changelog:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
@@ -21,3 +20,12 @@ jobs:
           checkNotification: Simple
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  do-not-merge:
+    if: "contains(github.event.pull_request.labels.*.name, 'O: Requires rebasing')"
+    runs-on: ubuntu-slim
+    steps:
+      - name: Check for label
+        run: |
+          echo "Pull request contains a label that prevents the merge."
+          echo "This workflow will now fail."
+          exit 1
