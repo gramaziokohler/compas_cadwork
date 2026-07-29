@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from compas_invocations2.build import prepare_changelog
-from compas_invocations2.docs import docs
+from compas_invocations2.mkdocs import docs
 from compas_invocations2.tests import test
 from compas_invocations2.tests import testdocs
 from invoke.collection import Collection
