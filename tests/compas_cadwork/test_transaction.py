@@ -2,6 +2,7 @@ import pytest
 
 from compas_cadwork.elements.wall import Wall
 from compas_cadwork.transaction import Transaction
+from compas_cadwork.transaction import enqueue_element_deletion
 from compas_cadwork.transaction import is_inside_transaction
 from compas_cadwork.transaction import notify_element_creation
 from compas_cadwork.transaction import notify_element_modification
@@ -26,11 +27,39 @@ def test_sets_up_and_tears_down_context(cadwork) -> None:
 
     # With elements
     with Transaction():
+        enqueue_element_deletion(1000)
         notify_element_creation(123)
         notify_element_modification(456)
         notify_element_modification(789)
+        enqueue_element_deletion(2000)
     cadwork.ec.add_created_elements_to_undo.assert_called_once_with([123])
     cadwork.ec.add_modified_elements_to_undo.assert_called_once_with([456, 789])
+    cadwork.ec.delete_elements_with_undo.assert_called_once_with([1000, 2000])
+    cadwork.ec.make_undo.assert_not_called()
+
+
+def test_rolls_back_on_error(cadwork) -> None:
+    # With created, modified and deleted elements
+    try:
+        with Transaction():
+            notify_element_creation(123)
+            notify_element_modification(456)
+            enqueue_element_deletion(789)
+            raise RuntimeError("Oh, no!")
+    except RuntimeError:
+        pass
+    assert cadwork.ec.make_undo.call_count == 3
+    cadwork.ec.make_undo.reset_mock()
+
+    # With created elements only
+    try:
+        with Transaction():
+            notify_element_creation(1000)
+            notify_element_creation(2000)
+            raise RuntimeError("Oh, no!")
+    except RuntimeError:
+        pass
+    assert cadwork.ec.make_undo.call_count == 1
 
 
 def test_allows_nested_contexts() -> None:
@@ -62,6 +91,7 @@ def test_receives_element_creation_events() -> None:
         notify_element_creation(456)
     assert tx._created_ids == {123, 456}
     assert tx._modified_ids == set()
+    assert tx._deleted_ids == set()
 
 
 def test_receives_element_modification_events() -> None:
@@ -71,6 +101,22 @@ def test_receives_element_modification_events() -> None:
         notify_element_modification(2000)
     assert tx._created_ids == set()
     assert tx._modified_ids == {1000, 2000}
+    assert tx._deleted_ids == set()
+
+
+def test_handles_element_deletions() -> None:
+    tx = Transaction()
+    with tx:
+        enqueue_element_deletion(100)
+        enqueue_element_deletion(200)
+    assert tx._created_ids == set()
+    assert tx._modified_ids == set()
+    assert tx._deleted_ids == {100, 200}
+
+
+def test_raises_when_enqueuing_element_deletion_outside_context() -> None:
+    with pytest.raises(RuntimeError, match=r"Cannot enqueue an element deletion outside of a transaction context"):
+        enqueue_element_deletion(123)
 
 
 def test_gets_created_elements(cadwork) -> None:

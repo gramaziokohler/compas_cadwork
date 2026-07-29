@@ -17,6 +17,7 @@ import cadwork
 import element_controller as ec
 
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.transaction import enqueue_element_deletion
 from compas_cadwork.transaction import is_inside_transaction
 from compas_cadwork.transaction import notify_element_modification
 from compas_cadwork.utils.storage import KeyValueStorage
@@ -296,7 +297,7 @@ class Element(Generic[T]):
         NOTE: Once called, this element instance becomes unusable.
         """
         if is_inside_transaction():
-            ec.delete_elements_with_undo([self.id])
+            enqueue_element_deletion(self.id)
         else:
             ec.delete_elements([self.id])
 

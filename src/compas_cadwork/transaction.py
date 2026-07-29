@@ -60,21 +60,42 @@ def notify_element_modification(cadwork_id: ElementId) -> None:
         instance._modified_ids.add(cadwork_id)
 
 
+def enqueue_element_deletion(cadwork_id: ElementId) -> None:
+    """Enqueue element deletion.
+
+    Parameters
+    ----------
+    cadwork_id : ElementId
+        Cadwork element ID.
+    """
+    instance = _CURRENT_INSTANCE.get()
+    if instance is None:
+        raise RuntimeError("Cannot enqueue an element deletion outside of a transaction context")
+    instance._deleted_ids.add(cadwork_id)
+
+
 class Transaction:
     """Helper for grouping several Cadwork operations in the same batch.
 
     This context manager is intended to be used when working with hundreds or thousands of elements,
     improving performance by deferring rendering until the end of the batch.
+
+    It will also try to undo changes (rollback) in case of an error.
+
+    NOTE: Cadwork regenerates the `ElementId` of elements on undo/redo.
+    Therefore, some element instances may become unusable on rollback.
     """
 
     _token: Token[Transaction | None] | None
     _created_ids: Final[set[ElementId]]
     _modified_ids: Final[set[ElementId]]
+    _deleted_ids: Final[set[ElementId]]
 
     def __init__(self) -> None:
         self._token = None
         self._created_ids = set()
         self._modified_ids = set()
+        self._deleted_ids = set()
 
     @property
     def created_elements(self) -> Iterator[AnyElement]:
@@ -107,6 +128,7 @@ class Transaction:
         # Reset instance
         self._created_ids.clear()
         self._modified_ids.clear()
+        self._deleted_ids.clear()
 
         # Disable display refresh
         uc.disable_auto_display_refresh()
@@ -119,17 +141,29 @@ class Transaction:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> Literal[False]:
+        undo_count = 0
+
         # Handle undo
         if self._created_ids:
             ec.add_created_elements_to_undo(list(self._created_ids))
+            undo_count += 1
         if self._modified_ids:
             ec.add_modified_elements_to_undo(list(self._modified_ids))
+            undo_count += 1
+        if self._deleted_ids:
+            ec.delete_elements_with_undo(list(self._deleted_ids))
+            undo_count += 1
 
         # Re-enable display refresh
         uc.enable_auto_display_refresh()
         all_elements = self._created_ids | self._modified_ids
         if all_elements:
             ec.recreate_elements(list(all_elements))
+
+        # Rollback in case of error
+        if exc_type is not None:
+            for _ in range(undo_count):
+                ec.make_undo()
 
         # Restore current instance to its previous value
         assert self._token is not None
