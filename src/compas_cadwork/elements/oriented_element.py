@@ -1,9 +1,8 @@
-from typing import Self
-
 import element_controller as ec
 import geometry_controller as gc
 from compas.geometry import Frame
 from compas.geometry import Vector
+from typing_extensions import Self
 
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.conversions.primitives import vector_to_cadwork

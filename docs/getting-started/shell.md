@@ -21,6 +21,7 @@ C:\Program Files\cadwork.dir\EXE_<Cadwork Version>\Pclib.x64\python<Python Versi
 
 Find your specific version of Cadwork in the list below and copy the path:
 
+- **Cadwork 2024:** `C:\Program Files\cadwork.dir\EXE_30\Pclib.x64\python310\site-packages`
 - **Cadwork 2025:** `C:\Program Files\cadwork.dir\EXE_2025\Pclib.x64\python312\site-packages`
 - **Cadwork 2026:** `C:\Program Files\cadwork.dir\EXE_2026\Pclib.x64\python314\site-packages`
 

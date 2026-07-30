@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from typing import Literal
-from typing import Self
 
 import attribute_controller as ac
 from compas.geometry import Frame
 from compas.geometry import Polygon
+from typing_extensions import Self
 
 from .element_type import ElementType
 from .panel import Panel

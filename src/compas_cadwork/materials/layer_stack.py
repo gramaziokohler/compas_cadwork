@@ -6,12 +6,12 @@ from collections.abc import Iterable
 from collections.abc import MutableSequence
 from typing import TYPE_CHECKING
 from typing import Final
-from typing import Self
 from typing import TypeAlias
 from typing import final
 from typing import overload
 
 import multi_layer_cover_controller as mlc
+from typing_extensions import Self
 
 from compas_cadwork.materials.layer_type import LayerType
 from compas_cadwork.materials.material import Material
