@@ -1,8 +1,8 @@
 from datetime import date
-from typing import assert_type
 from uuid import UUID
 
 import pytest
+from typing_extensions import assert_type
 
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.materials.layer_stack import AnyLayerStack

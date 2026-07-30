@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from typing import Literal
-from typing import Self
 
 import attribute_controller as ac
 from compas.geometry import Frame
 from compas.geometry import Polygon
+from typing_extensions import Self
 
 from compas_cadwork.elements.mixins.layered_mixin import LayeredMixin
 from compas_cadwork.materials.layer_stack import RoofLayerStack

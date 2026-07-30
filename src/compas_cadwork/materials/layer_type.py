@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Self
 
 import cadwork
+from typing_extensions import Self
 
 
 class LayerType(Enum):

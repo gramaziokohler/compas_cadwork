@@ -1,6 +1,5 @@
-from typing import assert_type
-
 import pytest
+from typing_extensions import assert_type
 
 from compas_cadwork.elements.beam import Beam
 from compas_cadwork.elements.element import Element
