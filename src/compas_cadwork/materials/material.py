@@ -122,6 +122,9 @@ class Material:
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Material) and self.id == other.id
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
     def __repr__(self) -> str:
         try:
             return f"Material(id={self.id!r}, name={self.name!r})"

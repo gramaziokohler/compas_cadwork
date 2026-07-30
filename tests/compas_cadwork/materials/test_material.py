@@ -114,6 +114,16 @@ def test_equals() -> None:
     assert a is not b
 
 
+def test_hash() -> None:
+    a = Material(123)
+    b = Material(123)
+    c = Material(456)
+    assert hash(a) == hash(b)
+    assert hash(a) != hash(c)
+    assert hash(b) != hash(c)
+    assert len({a, b, c}) == 2
+
+
 def test_repr(cadwork) -> None:
     material = Material(123)
 

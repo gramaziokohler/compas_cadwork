@@ -280,6 +280,16 @@ def test_equals() -> None:
     assert a is not b
 
 
+def test_hash() -> None:
+    a = FloorLayerStack(123)
+    b = WallLayerStack(123)
+    c = FloorLayerStack(456)
+    assert hash(a) == hash(b)
+    assert hash(a) != hash(c)
+    assert hash(b) != hash(c)
+    assert len({a, b, c}) == 2
+
+
 def test_repr(cadwork) -> None:
     cadwork.mlc.get_multi_layer_set_name.return_value = "Some name"
     floor_layers = FloorLayerStack(123)
