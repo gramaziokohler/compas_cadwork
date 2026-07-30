@@ -1,4 +1,8 @@
 requires-python = ">=3.12"
+resolution-markers = [
+  "python_full_version >= '3.14'",
+  "python_full_version < '3.14'"
+]
 revision = 3
 version = 1
 
@@ -355,7 +359,8 @@ source = {editable = "."}
 dev = [
   {name = "bump-my-version"},
   {name = "compas-invocations2", extra = ["mkdocs"]},
-  {name = "cwapi3d"},
+  {name = "cwapi3d", version = "32.443.10", source = {registry = "https://pypi.org/simple"}, marker = "python_full_version < '3.14'"},
+  {name = "cwapi3d", version = "33.324.0", source = {registry = "https://pypi.org/simple"}, marker = "python_full_version >= '3.14'"},
   {name = "invoke"},
   {name = "mkdocs-callouts"},
   {name = "pre-commit"},
@@ -375,7 +380,8 @@ requires-dist = [
 dev = [
   {name = "bump-my-version", specifier = ">=1.3.0"},
   {name = "compas-invocations2", extras = ["mkdocs"], specifier = ">=1.1.2"},
-  {name = "cwapi3d", specifier = "==32.443.10"},
+  {name = "cwapi3d", marker = "python_full_version < '3.14'", specifier = "==32.443.10"},
+  {name = "cwapi3d", marker = "python_full_version >= '3.14'", specifier = "==33.324.0"},
   {name = "invoke", specifier = ">=3.0.3"},
   {name = "mkdocs-callouts", specifier = ">=1.16.1"},
   {name = "pre-commit", specifier = ">=4.6.0"},
@@ -522,11 +528,26 @@ version = "0.9.5"
 
 [[package]]
 name = "cwapi3d"
+resolution-markers = [
+  "python_full_version < '3.14'"
+]
 sdist = {url = "https://files.pythonhosted.org/packages/a9/75/bc2fcdd5d6d53dbcdc3dde5706b6f93e5afc17f1c3a5eda432343298e052/cwapi3d-32.443.10.tar.gz", hash = "sha256:8ab1ae640be39b3abbacfef29ba15f016717ab6cdba52aff1f4cbfe3c13c4267", size = 71970, upload-time = "2026-05-01T13:13:39.841Z"}
 source = {registry = "https://pypi.org/simple"}
 version = "32.443.10"
 wheels = [
   {url = "https://files.pythonhosted.org/packages/7c/47/79eed57cd713d397cd02d30aefed4ff0471df258d32d537d904772eec572/cwapi3d-32.443.10-py3-none-any.whl", hash = "sha256:b7cb5380fd93971856c28079381dce87d877960247c1b1d1b72266fc1e998790", size = 93247, upload-time = "2026-05-01T13:13:38.469Z"}
+]
+
+[[package]]
+name = "cwapi3d"
+resolution-markers = [
+  "python_full_version >= '3.14'"
+]
+sdist = {url = "https://files.pythonhosted.org/packages/d3/87/07ae485efbd36e7881c86520262c2577ef952279ba797a41628b6926841e/cwapi3d-33.324.0.tar.gz", hash = "sha256:88ef155c7f6551c111fc82c84e29844f69a9f520a9b3cfc39a61315d3866f411", size = 75668, upload-time = "2026-07-29T07:03:19.632Z"}
+source = {registry = "https://pypi.org/simple"}
+version = "33.324.0"
+wheels = [
+  {url = "https://files.pythonhosted.org/packages/fe/d8/910737e3f1a2a6a39251e07a6e83d5fbf9068aead57039fb6e7eb9250efd/cwapi3d-33.324.0-py3-none-any.whl", hash = "sha256:bf1787ff85eacf982b71f7b5ea3514d6821db2a0bfb8dc3b1c387556e0667975", size = 98654, upload-time = "2026-07-29T07:03:18.226Z"}
 ]
 
 [[package]]
