@@ -14,7 +14,6 @@ dev = [
   "pre-commit>=4.6.0",
   "pytest>=9.0.3",
   "pytest-cov>=7.1.0",
-  "sphinx-compas2-theme>=0.1.10",
   "typing-extensions>=4.15.0"
 ]
 
