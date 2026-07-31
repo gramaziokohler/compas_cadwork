@@ -6,6 +6,7 @@ import pytest
 
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.materials.layer_stack import FloorLayerStack
 from compas_cadwork.materials.layer_stack import RoofLayerStack
 from compas_cadwork.materials.layer_stack import WallLayerStack
 from compas_cadwork.project import Project
@@ -374,6 +375,23 @@ def test_gets_layer_stack_by_cadwork_id(cadwork) -> None:
     layer_stack = project.layer_stack(cadwork_id=500, stack_type=RoofLayerStack)
     assert_type(layer_stack, RoofLayerStack)
     assert layer_stack == RoofLayerStack(500)
+
+
+def test_gets_layer_stacks(cadwork) -> None:
+    cadwork.mlc.get_multi_layer_framed_floors.return_value = [100, 200]
+    cadwork.mlc.get_multi_layer_solid_floors.return_value = []
+    cadwork.mlc.get_multi_layer_framed_roofs.return_value = [300]
+    cadwork.mlc.get_multi_layer_solid_roofs.return_value = []
+    cadwork.mlc.get_multi_layer_walls.return_value = [400]
+    cadwork.mlc.get_multi_layer_log_walls.return_value = []
+    cadwork.mlc.get_multi_layer_solid_walls.return_value = []
+    project = Project()
+    assert list(project.layer_stacks()) == [
+        FloorLayerStack(100),
+        FloorLayerStack(200),
+        RoofLayerStack(300),
+        WallLayerStack(400),
+    ]
 
 
 def test_contains_attributes(cadwork) -> None:
