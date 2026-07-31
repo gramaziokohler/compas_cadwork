@@ -328,6 +328,8 @@ class CadworkMocks:
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.vertex_list = MockVertexList
 
+        self.uc.get_3d_version.return_value = 33  # Cadwork 2026
+
 
 @pytest.fixture
 def cadwork() -> Generator[CadworkMocks, None, None]:
