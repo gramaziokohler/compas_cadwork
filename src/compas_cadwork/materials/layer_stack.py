@@ -15,6 +15,8 @@ from typing_extensions import Self
 
 from compas_cadwork.materials.layer_type import LayerType
 from compas_cadwork.materials.material import Material
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
+from compas_cadwork.utils.compatibility import requires_cadwork
 
 from .layer import Layer
 
@@ -256,24 +258,30 @@ class LayerStack(MutableSequence[Layer]):
 
 class FloorLayerStack(LayerStack):
     @classmethod
+    @requires_cadwork(2025)
     def create(cls, name: str) -> Self:
         cadwork_id = mlc.create_multi_layer_framed_floor(name)
         return cls(cadwork_id)
 
     @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
+        if CADWORK_VERSION < 2025:
+            return  # Floor multi-layer sets were not supported until Cadwork 2025
         for cadwork_id in [*mlc.get_multi_layer_framed_floors(), *mlc.get_multi_layer_solid_floors()]:
             yield cls(cadwork_id)
 
 
 class RoofLayerStack(LayerStack):
     @classmethod
+    @requires_cadwork(2025)
     def create(cls, name: str) -> Self:
         cadwork_id = mlc.create_multi_layer_framed_roof(name)
         return cls(cadwork_id)
 
     @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
+        if CADWORK_VERSION < 2025:
+            return  # Roof multi-layer sets were not supported until Cadwork 2025
         for cadwork_id in [*mlc.get_multi_layer_framed_roofs(), *mlc.get_multi_layer_solid_roofs()]:
             yield cls(cadwork_id)
 
@@ -286,12 +294,11 @@ class WallLayerStack(LayerStack):
 
     @classmethod
     def _get_all(cls) -> Generator[Self, None, None]:
-        for cadwork_id in [
-            *mlc.get_multi_layer_walls(),
-            *mlc.get_multi_layer_log_walls(),
-            *mlc.get_multi_layer_solid_walls(),
-        ]:
+        for cadwork_id in mlc.get_multi_layer_walls():
             yield cls(cadwork_id)
+        if CADWORK_VERSION >= 2025:  # Log and solid wall multi-layer sets were added in Cadwork 2025
+            for cadwork_id in [*mlc.get_multi_layer_log_walls(), *mlc.get_multi_layer_solid_walls()]:
+                yield cls(cadwork_id)
 
 
 AnyLayerStack: TypeAlias = FloorLayerStack | RoofLayerStack | WallLayerStack
