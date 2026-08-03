@@ -145,6 +145,7 @@ nav:
       - Standalone Plugin: getting-started/plugin.md
   - User Guide:
       - Overview: user-guide/index.md
+      - Compatibility: user-guide/compatibility.md
       - Elements Hierarchy: user-guide/elements-hierarchy.md
   - Developer Guide:
       - Overview: developer-guide/index.md
