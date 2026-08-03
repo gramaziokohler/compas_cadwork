@@ -30,7 +30,7 @@ CADWORK_VERSION: Final[_CadworkVersion] = _get_cadwork_version()
 """Version of the Cadwork 3d program in which the library is currently running."""
 
 
-_T = TypeVar("_T", bound=Callable[..., Any] | property)
+_T = TypeVar("_T", bound=Callable[..., Any])
 
 
 def requires_cadwork(min_version: _CadworkVersion) -> Callable[[_T], _T]:
@@ -54,18 +54,6 @@ def requires_cadwork(min_version: _CadworkVersion) -> Callable[[_T], _T]:
         def wrapper(*args: Any, **kwargs: Any) -> Never:
             raise RuntimeError(f"Requires Cadwork {min_version} or later")
 
-        # Handle properties
-        if isinstance(target, property):
-            return cast(
-                _T,
-                property(
-                    fget=wrapper if target.fget else None,
-                    fset=wrapper if target.fset else None,
-                    fdel=wrapper if target.fdel else None,
-                ),
-            )
-
-        # Handle functions/methods
         return cast(_T, wrapper)
 
     return decorator
