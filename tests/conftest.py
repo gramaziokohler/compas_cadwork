@@ -1,11 +1,19 @@
+from __future__ import annotations
+
 import sys
+from collections.abc import Callable
 from collections.abc import Generator
 from collections.abc import Iterator
 from enum import IntEnum
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import pytest
 from compas.geometry import Point
+
+
+if TYPE_CHECKING:
+    from compas_cadwork.utils.compatibility import CadworkVersion
 
 
 class MockMultiLayerType(IntEnum):
@@ -331,6 +339,10 @@ class CadworkMocks:
         self.uc.get_3d_version.return_value = 33  # Cadwork 2026
 
 
+# Create Cadwork mocks
+_mocks = CadworkMocks()
+
+
 @pytest.fixture
 def cadwork() -> Generator[CadworkMocks, None, None]:
     """Fixture to use and modify the Cadwork module mocks."""
@@ -339,5 +351,11 @@ def cadwork() -> Generator[CadworkMocks, None, None]:
     yield _mocks
 
 
-# Create Cadwork mocks
-_mocks = CadworkMocks()
+@pytest.fixture
+def set_cadwork_version(monkeypatch) -> Callable[[CadworkVersion], None]:
+    def wrapper(version: CadworkVersion) -> None:
+        for module in sys.modules.values():
+            if hasattr(module, "CADWORK_VERSION"):
+                monkeypatch.setattr(module, "CADWORK_VERSION", version)
+
+    return wrapper

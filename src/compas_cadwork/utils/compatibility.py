@@ -10,10 +10,10 @@ import utility_controller as uc
 from typing_extensions import Never
 
 
-_CadworkVersion: TypeAlias = Literal[2024] | Literal[2025] | Literal[2026]
+CadworkVersion: TypeAlias = Literal[2024] | Literal[2025] | Literal[2026]
 
 
-def _get_cadwork_version() -> _CadworkVersion:
+def _get_cadwork_version() -> CadworkVersion:
     raw_version = uc.get_3d_version()
     match raw_version:
         case 30:
@@ -26,19 +26,19 @@ def _get_cadwork_version() -> _CadworkVersion:
             raise RuntimeError(f"Unsupported Cadwork version {raw_version!r}")
 
 
-CADWORK_VERSION: Final[_CadworkVersion] = _get_cadwork_version()
+CADWORK_VERSION: Final[CadworkVersion] = _get_cadwork_version()
 """Version of the Cadwork 3d program in which the library is currently running."""
 
 
 _T = TypeVar("_T", bound=Callable[..., Any])
 
 
-def requires_cadwork(min_version: _CadworkVersion) -> Callable[[_T], _T]:
+def requires_cadwork(min_version: CadworkVersion) -> Callable[[_T], _T]:
     """Requires minimum Cadwork version.
 
     Parameters
     ----------
-    min_version : _CadworkVersion
+    min_version : CadworkVersion
         Minimum Cadwork 3d version.
 
     Returns
