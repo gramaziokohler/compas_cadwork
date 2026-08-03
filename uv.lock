@@ -404,6 +404,7 @@ dev = [
   {name = "cwapi3d", version = "30.693.0", source = {registry = "https://pypi.org/simple"}, marker = "python_full_version < '3.12'"},
   {name = "cwapi3d", version = "32.443.10", source = {registry = "https://pypi.org/simple"}, marker = "python_full_version >= '3.12' and python_full_version < '3.14'"},
   {name = "cwapi3d", version = "33.324.0", source = {registry = "https://pypi.org/simple"}, marker = "python_full_version >= '3.14'"},
+  {name = "griffe-warnings-deprecated"},
   {name = "invoke"},
   {name = "mkdocs-callouts"},
   {name = "pre-commit"},
@@ -425,6 +426,7 @@ dev = [
   {name = "cwapi3d", marker = "python_full_version < '3.12'", specifier = "==30.693.0"},
   {name = "cwapi3d", marker = "python_full_version >= '3.12' and python_full_version < '3.14'", specifier = "==32.443.10"},
   {name = "cwapi3d", marker = "python_full_version >= '3.14'", specifier = "==33.324.0"},
+  {name = "griffe-warnings-deprecated", specifier = ">=1.1.1"},
   {name = "invoke", specifier = ">=3.0.3"},
   {name = "mkdocs-callouts", specifier = ">=1.16.1"},
   {name = "pre-commit", specifier = ">=4.6.0"},
@@ -713,6 +715,18 @@ source = {registry = "https://pypi.org/simple"}
 version = "3.1.50"
 wheels = [
   {url = "https://files.pythonhosted.org/packages/20/7a/1c6e3562dfd8950adbb11ffbc65d21e7c89d01a6e4f137fa981056de25c5/gitpython-3.1.50-py3-none-any.whl", hash = "sha256:d352abe2908d07355014abdd21ddf798c2a961469239afec4962e9da884858f9", size = 212507, upload-time = "2026-05-06T04:01:23.799Z"}
+]
+
+[[package]]
+dependencies = [
+  {name = "griffelib"}
+]
+name = "griffe-warnings-deprecated"
+sdist = {url = "https://files.pythonhosted.org/packages/da/9e/fc86f1e9270f143a395a601de81aa42a871722c34d4b3c7763658dc2e04d/griffe_warnings_deprecated-1.1.1.tar.gz", hash = "sha256:9261369bf2acb8b5d24a0dc7895cce788208513d4349031d4ea315b979b2e99f", size = 26262, upload-time = "2026-02-21T09:38:55.858Z"}
+source = {registry = "https://pypi.org/simple"}
+version = "1.1.1"
+wheels = [
+  {url = "https://files.pythonhosted.org/packages/2f/3c/c2a9eee79bf2c8002d2fa370534bee93fdca39e8b1fc82e83d552d5d2c07/griffe_warnings_deprecated-1.1.1-py3-none-any.whl", hash = "sha256:4b7d765e82ca9139ed44ffe7bdebed0d3a46ce014ad5a35a2c22e9a16288737a", size = 6565, upload-time = "2026-02-20T15:35:23.577Z"}
 ]
 
 [[package]]
