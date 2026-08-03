@@ -5,4 +5,5 @@ After successfully installing the library in your project, read these pages to g
 
 ## Subsections
 
+- [Compatibility](compatibility.md)
 - [Elements Hierarchy](elements-hierarchy.md)
