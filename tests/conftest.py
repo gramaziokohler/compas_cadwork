@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Callable
-from collections.abc import Generator
 from collections.abc import Iterator
 from enum import IntEnum
 from typing import TYPE_CHECKING
@@ -344,7 +343,7 @@ _mocks = CadworkMocks()
 
 
 @pytest.fixture
-def cadwork() -> Generator[CadworkMocks, None, None]:
+def cadwork() -> Iterator[CadworkMocks]:
     """Fixture to use and modify the Cadwork module mocks."""
     global _mocks
     _mocks.reset()
