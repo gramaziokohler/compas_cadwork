@@ -78,6 +78,22 @@ def test_gets_all_instances(cadwork) -> None:
     ]
 
 
+def test_gets_all_instances_in_cadwork_2024(cadwork, set_cadwork_version) -> None:
+    set_cadwork_version(2024)
+    cadwork.mlc.get_multi_layer_walls.return_value = [700, 800]
+    assert list(FloorLayerStack._get_all()) == []
+    assert list(RoofLayerStack._get_all()) == []
+    assert list(WallLayerStack._get_all()) == [WallLayerStack(700), WallLayerStack(800)]
+    assert list(LayerStack._get_all()) == [WallLayerStack(700), WallLayerStack(800)]
+    cadwork.mlc.get_multi_layer_framed_floors.assert_not_called()
+    cadwork.mlc.get_multi_layer_solid_floors.assert_not_called()
+    cadwork.mlc.get_multi_layer_framed_roofs.assert_not_called()
+    cadwork.mlc.get_multi_layer_solid_roofs.assert_not_called()
+    assert cadwork.mlc.get_multi_layer_walls.call_count == 2
+    cadwork.mlc.get_multi_layer_log_walls.assert_not_called()
+    cadwork.mlc.get_multi_layer_solid_walls.assert_not_called()
+
+
 def test_gets_name(cadwork) -> None:
     layers = FloorLayerStack(123)
     cadwork.mlc.get_multi_layer_set_name.return_value = "Test Value"
