@@ -11,15 +11,26 @@ def make_gated_class():
         def property_supported_always(self) -> int:
             return 123
 
+        @property_supported_always.setter
+        def property_supported_always(self, value: int) -> None: ...
+
         @property
         @requires_cadwork(2025)
         def property_supported_since_2025(self) -> int:
             return 123
 
+        @property_supported_since_2025.setter
+        @requires_cadwork(2025)
+        def property_supported_since_2025(self, value: int) -> None: ...
+
         @property
         @requires_cadwork(2026)
         def property_supported_since_2026(self) -> int:
             return 123
+
+        @property_supported_since_2026.setter
+        @requires_cadwork(2026)
+        def property_supported_since_2026(self, value: int) -> None: ...
 
         def method_supported_always(self) -> str:
             return "abc"
@@ -83,6 +94,9 @@ def test_requires_cadwork_can_decorate_properties_with_functions(monkeypatch) ->
     assert instance.property_supported_always == 123
     assert instance.property_supported_since_2025 == 123
     assert instance.property_supported_since_2026 == 123
+    instance.property_supported_always = 321
+    instance.property_supported_since_2025 = 321
+    instance.property_supported_since_2026 = 321
 
     # Running on Cadwork 2025
     monkeypatch.setattr(compat, "CADWORK_VERSION", 2025)
@@ -91,6 +105,10 @@ def test_requires_cadwork_can_decorate_properties_with_functions(monkeypatch) ->
     assert instance.property_supported_since_2025 == 123
     with pytest.raises(RuntimeError, match=r"Requires Cadwork 2026 or later"):
         _ = instance.property_supported_since_2026
+    instance.property_supported_always = 321
+    instance.property_supported_since_2025 = 321
+    with pytest.raises(RuntimeError, match=r"Requires Cadwork 2026 or later"):
+        instance.property_supported_since_2026 = 321
 
     # Running on Cadwork 2024
     monkeypatch.setattr(compat, "CADWORK_VERSION", 2024)
@@ -100,3 +118,8 @@ def test_requires_cadwork_can_decorate_properties_with_functions(monkeypatch) ->
         _ = instance.property_supported_since_2025
     with pytest.raises(RuntimeError, match=r"Requires Cadwork 2026 or later"):
         _ = instance.property_supported_since_2026
+    instance.property_supported_always = 321
+    with pytest.raises(RuntimeError, match=r"Requires Cadwork 2025 or later"):
+        instance.property_supported_since_2025 = 321
+    with pytest.raises(RuntimeError, match=r"Requires Cadwork 2026 or later"):
+        instance.property_supported_since_2026 = 321
