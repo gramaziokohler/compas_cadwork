@@ -94,6 +94,9 @@ plugins:
             - https://compas.dev/compas/latest/objects.inv
           options:
             extensions:
+              - griffe_warnings_deprecated:
+                  kind: danger
+                  title: Deprecated
               - docs/compatibility_extension.py:CompatibilityExtension
             allow_inspection: true
             backlinks: tree
