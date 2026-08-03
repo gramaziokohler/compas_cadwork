@@ -93,6 +93,8 @@ plugins:
             - https://docs.python.org/3/objects.inv
             - https://compas.dev/compas/latest/objects.inv
           options:
+            extensions:
+              - docs/compatibility_extension.py:CompatibilityExtension
             allow_inspection: true
             backlinks: tree
             docstring_options:
