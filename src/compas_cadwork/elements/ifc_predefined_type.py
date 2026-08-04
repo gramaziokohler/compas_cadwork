@@ -36,8 +36,11 @@ class IfcPredefinedType(Enum):
     ROOF = auto()
     BEAM = auto()
     HOLLOWCORE = auto()
+    """@requires_cadwork(2026)"""
     JOIST = auto()
+    """@requires_cadwork(2026)"""
     LINTEL = auto()
+    """@requires_cadwork(2026)"""
     SPANDREL = auto()
     TBEAM = auto()
     COMPLEX = auto()
