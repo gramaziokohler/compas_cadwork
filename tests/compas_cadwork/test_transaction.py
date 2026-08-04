@@ -89,6 +89,7 @@ def test_receives_element_creation_events() -> None:
     with tx:
         notify_element_creation(123)
         notify_element_creation(456)
+        notify_element_modification(123)  # Should be ignored
     assert tx._created_ids == {123, 456}
     assert tx._modified_ids == set()
     assert tx._deleted_ids == set()

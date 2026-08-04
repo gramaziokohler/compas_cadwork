@@ -56,7 +56,7 @@ def notify_element_modification(cadwork_id: ElementId) -> None:
         Cadwork element ID.
     """
     instance = _CURRENT_INSTANCE.get()
-    if instance:
+    if instance and cadwork_id not in instance._created_ids:
         instance._modified_ids.add(cadwork_id)
 
 
