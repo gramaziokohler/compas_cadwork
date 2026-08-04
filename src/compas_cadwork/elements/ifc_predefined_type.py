@@ -5,6 +5,8 @@ from enum import auto
 
 import cadwork
 
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
+
 
 class IfcPredefinedType(Enum):
     """IFC predefined type."""
@@ -33,6 +35,9 @@ class IfcPredefinedType(Enum):
     LANDING = auto()
     ROOF = auto()
     BEAM = auto()
+    HOLLOWCORE = auto()
+    JOIST = auto()
+    LINTEL = auto()
     SPANDREL = auto()
     TBEAM = auto()
     COMPLEX = auto()
@@ -235,6 +240,15 @@ class IfcPredefinedType(Enum):
             return cls.ROOF
         if raw_type.is_beam():
             return cls.BEAM
+        if CADWORK_VERSION >= 2026:
+            # Getters for these types were added in Cadwork 2026
+            # See https://github.com/cwapi3d/cwapi3dpython/commit/6a0d0a8ba6def100ebed3cb0a4b18ed3880c5de3
+            if raw_type.is_hollowcore():
+                return cls.HOLLOWCORE
+            if raw_type.is_joist():
+                return cls.JOIST
+            if raw_type.is_lintel():
+                return cls.LINTEL
         if raw_type.is_spandrel():
             return cls.SPANDREL
         if raw_type.is_tbeam():
@@ -563,6 +577,12 @@ class IfcPredefinedType(Enum):
                 raw_type.set_roof()
             case IfcPredefinedType.BEAM:
                 raw_type.set_beam()
+            case IfcPredefinedType.HOLLOWCORE:
+                raw_type.set_hollowcore()
+            case IfcPredefinedType.JOIST:
+                raw_type.set_joist()
+            case IfcPredefinedType.LINTEL:
+                raw_type.set_lintel()
             case IfcPredefinedType.SPANDREL:
                 raw_type.set_spandrel()
             case IfcPredefinedType.TBEAM:
