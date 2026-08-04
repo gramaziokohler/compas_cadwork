@@ -21,14 +21,14 @@ classDiagram
         + str name
         + MutableMapping[UserAttributeId, str] attributes
         + MutableSet[Element] children
-        +None delete()
+        + delete() None
     }
 
     Element <|-- OrientedElement
     class OrientedElement {
         + Frame frame
-        + None translate(Vector vector)
-        + Self duplicate(Vector vector)
+        + translate(Vector vector) None
+        + duplicate(Vector vector) Self
     }
 
     OrientedElement <|-- DimensionalElement

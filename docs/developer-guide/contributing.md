@@ -1,7 +1,7 @@
 # Contributing
 
 Thank you for your interest in contributing to COMPAS cadwork!
-Here are some aspect that will help you get started with your first contribution to the project.
+Here are some aspects that will help you get started with your first contribution to the project.
 
 ## Setting Up Your Developer Environment
 
@@ -12,7 +12,7 @@ Here are some aspect that will help you get started with your first contribution
 3. Run this command to configure the project automatically on your machine:
 
     ```sh
-    uv inv setup
+    uv run inv setup
     ```
 
 4. Create a new branch.

@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Only users that can push to `main` can create releases.
 
-This library is distributed through the Python Package Index (PyPi).
+This library is distributed through the Python Package Index (PyPI).
 You can create a new release by following these steps:
 
 1. Checkout the `main` branch.
@@ -32,4 +32,4 @@ You can create a new release by following these steps:
 
 5. [Create a new release](https://github.com/gramaziokohler/compas_cadwork/releases/new) on GitHub targeting `main`.
 
-    It will automatically trigger a workflow and publish the release to PyPi.
+    It will automatically trigger a workflow and publish the release to PyPI.

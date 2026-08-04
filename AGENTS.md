@@ -18,7 +18,7 @@ All development commands are run from the repository root using `uv`.
 
 - **Setup environment**: `uv sync`
 - **Lint & type-check**: `uv run inv lint` *(Runs Ruff, strict mypy, pre-commit hooks)*
-- **Run unit tests**: `uv run inv pytest` *(Runs offline pytest suite with mocked Cadwork APIs)*
+- **Run unit tests**: `uv run pytest` *(Runs offline pytest suite with mocked Cadwork APIs)*
 - **Build documentation**: `uv run inv docs`
 - **Build package**: `uv build`
 
@@ -86,7 +86,7 @@ Before completing any task:
 
 1. Run `uv sync` to ensure your virtual environment is up to date.
 2. Run `uv run inv lint` and verify all linters and strict `mypy` checks pass.
-3. Run `uv run inv pytest` to ensure all tests pass.
+3. Run `uv run pytest` to ensure all tests pass.
 4. Confirm no `@deprecated` components were imported or used.
 5. Update `docs/` and `mkdocs.yml` for new modules or complex features.
 6. Ensure `CHANGELOG.md` has an entry under `## Unreleased`.
