@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added "do not merge" workflow check to CI/CD pipeline.
 - Added `ElementType` enumeration to be used with `Element.type` property.
 - Added initial `Beam`, `Panel`, and `Wall` classes.
+- Added support for materials and layers through the `Material` and `LayerStack` classes.
+- Added `Floor`, `Opening`, and `Roof` classes.
 
 ### Changed
 

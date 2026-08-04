@@ -1,9 +1,14 @@
 from datetime import date
+from typing import assert_type
 from uuid import UUID
 
 import pytest
 
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.materials.layer_stack import FloorLayerStack
+from compas_cadwork.materials.layer_stack import RoofLayerStack
+from compas_cadwork.materials.layer_stack import WallLayerStack
 from compas_cadwork.project import Project
 
 
@@ -277,6 +282,116 @@ def test_gets_selected_elements(cadwork) -> None:
     cadwork.cadwork.element_type.is_panel.return_value = True
     cadwork.ec.get_active_identifiable_element_ids.return_value = [505, 404, 303, 202, 101]
     assert [x.id for x in project.selected_elements()] == [505, 404, 303, 202, 101]
+
+
+def test_gets_material_by_cadwork_id(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_name.return_value = ""
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork material with ID #1000"):
+        _ = project.material(cadwork_id=1000)
+    cadwork.mc.get_name.assert_called_once_with(1000)
+
+    # With value
+    cadwork.mc.get_name.return_value = "Material Name"
+    material = project.material(cadwork_id=12345)
+    cadwork.mc.get_name.assert_called_with(12345)
+    assert material.id == 12345
+
+
+def test_gets_material_by_name(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_material_id.return_value = 0
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork material with name 'Test Value'"):
+        _ = project.material(name="Test Value")
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
+
+    # With value
+    cadwork.mc.get_material_id.return_value = 12345
+    cadwork.mc.get_name.return_value = "Material Name"
+    material = project.material(name="Material Name")
+    cadwork.mc.get_material_id.assert_called_with("Material Name")
+    cadwork.mc.get_name.assert_called_with(12345)
+    assert material.id == 12345
+
+
+def test_creates_material_by_name(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.mc.get_material_id.return_value = 0
+    cadwork.mc.create_material.return_value = 1000
+    material = project.material(name="Test Value", create=True)
+    assert material.id == 1000
+    cadwork.mc.get_material_id.assert_called_once_with("Test Value")
+    cadwork.mc.create_material.assert_called_once_with("Test Value")
+    cadwork.mc.get_material_id.reset_mock()
+    cadwork.mc.create_material.reset_mock()
+
+    # With value
+    cadwork.mc.get_material_id.return_value = 2000
+    cadwork.mc.create_material.return_value = 2000
+    material = project.material(name="Existing Name", create=True)
+    assert material.id == 2000
+    cadwork.mc.get_material_id.assert_called_once_with("Existing Name")
+    cadwork.mc.create_material.assert_not_called()
+
+
+def test_gets_materials(cadwork) -> None:
+    project = Project()
+
+    # Without materials
+    cadwork.mc.get_all_materials.return_value = []
+    assert len(list(project.materials())) == 0
+
+    # With materials
+    cadwork.mc.get_all_materials.return_value = [100, 200, 300, 301]
+    assert [x.id for x in project.materials()] == [100, 200, 300, 301]
+
+
+def test_gets_layer_stack_by_cadwork_id(cadwork) -> None:
+    cadwork.mlc.get_multi_layer_framed_floors.return_value = [100]
+    cadwork.mlc.get_multi_layer_solid_floors.return_value = [200, 300]
+    cadwork.mlc.get_multi_layer_framed_roofs.return_value = [400, 500]
+    cadwork.mlc.get_multi_layer_solid_roofs.return_value = [600]
+    cadwork.mlc.get_multi_layer_walls.return_value = [700]
+    cadwork.mlc.get_multi_layer_log_walls.return_value = [800]
+    cadwork.mlc.get_multi_layer_solid_walls.return_value = [900]
+    project = Project()
+
+    # Without value
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork layer stack with ID #101"):
+        _ = project.layer_stack(cadwork_id=101)
+
+    # Without type filter
+    layer_stack = project.layer_stack(cadwork_id=800)
+    assert_type(layer_stack, AnyLayerStack)
+    assert layer_stack == WallLayerStack(800)
+
+    # With type filter
+    layer_stack = project.layer_stack(cadwork_id=500, stack_type=RoofLayerStack)
+    assert_type(layer_stack, RoofLayerStack)
+    assert layer_stack == RoofLayerStack(500)
+
+
+def test_gets_layer_stacks(cadwork) -> None:
+    cadwork.mlc.get_multi_layer_framed_floors.return_value = [100, 200]
+    cadwork.mlc.get_multi_layer_solid_floors.return_value = []
+    cadwork.mlc.get_multi_layer_framed_roofs.return_value = [300]
+    cadwork.mlc.get_multi_layer_solid_roofs.return_value = []
+    cadwork.mlc.get_multi_layer_walls.return_value = [400]
+    cadwork.mlc.get_multi_layer_log_walls.return_value = []
+    cadwork.mlc.get_multi_layer_solid_walls.return_value = []
+    project = Project()
+    assert list(project.layer_stacks()) == [
+        FloorLayerStack(100),
+        FloorLayerStack(200),
+        RoofLayerStack(300),
+        WallLayerStack(400),
+    ]
 
 
 def test_contains_attributes(cadwork) -> None:

@@ -1,10 +1,20 @@
 import sys
 from collections.abc import Generator
 from collections.abc import Iterator
+from enum import IntEnum
 from unittest.mock import MagicMock
 
 import pytest
 from compas.geometry import Point
+
+
+class MockMultiLayerType(IntEnum):
+    undefined = 0
+    structure = 1
+    panel = 2
+    lathing = 3
+    air = 4
+    covering = 5
 
 
 class Mock3dPoint(Point):
@@ -54,7 +64,10 @@ class CadworkMocks:
         self.bc = MagicMock()
         self.ec = MagicMock()
         self.gc = MagicMock()
+        self.mc = MagicMock()
+        self.mlc = MagicMock()
         self.uc = MagicMock()
+        self.vc = MagicMock()
 
         # Apply custom patches
         self._apply_custom_patches()
@@ -65,7 +78,10 @@ class CadworkMocks:
         sys.modules["bim_controller"] = self.bc
         sys.modules["element_controller"] = self.ec
         sys.modules["geometry_controller"] = self.gc
+        sys.modules["material_controller"] = self.mc
+        sys.modules["multi_layer_cover_controller"] = self.mlc
         sys.modules["utility_controller"] = self.uc
+        sys.modules["visualization_controller"] = self.vc
 
     def reset(self) -> None:
         self.cadwork.reset_mock(return_value=True, side_effect=True)
@@ -73,7 +89,10 @@ class CadworkMocks:
         self.bc.reset_mock(return_value=True, side_effect=True)
         self.ec.reset_mock(return_value=True, side_effect=True)
         self.gc.reset_mock(return_value=True, side_effect=True)
+        self.mc.reset_mock(return_value=True, side_effect=True)
+        self.mlc.reset_mock(return_value=True, side_effect=True)
         self.uc.reset_mock(return_value=True, side_effect=True)
+        self.vc.reset_mock(return_value=True, side_effect=True)
         self._apply_custom_patches()
 
     def _apply_custom_patches(self) -> None:
@@ -113,6 +132,7 @@ class CadworkMocks:
         self.cadwork.element_type.is_wall.return_value = False
         self.cadwork.element_type.is_wire_axis.return_value = False
 
+        self.cadwork.multi_layer_type = MockMultiLayerType
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.vertex_list = MockVertexList
 
