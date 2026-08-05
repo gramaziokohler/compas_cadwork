@@ -31,6 +31,13 @@ classDiagram
         + duplicate(Vector vector) Self
     }
 
+    OrientedElement <|-- Line
+    class Line {
+        + Point start
+        + Point end
+        + float length
+    }
+
     OrientedElement <|-- DimensionalElement
     class DimensionalElement {
         + float length

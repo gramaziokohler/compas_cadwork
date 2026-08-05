@@ -12,6 +12,7 @@ import element_controller as ec
 from compas_cadwork.elements.beam import Beam
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.floor import Floor
+from compas_cadwork.elements.line import Line
 from compas_cadwork.elements.opening import Opening
 from compas_cadwork.elements.oriented_element import OrientedElement
 from compas_cadwork.elements.panel import Panel
@@ -47,7 +48,6 @@ _OrientedElementTypes: TypeAlias = Literal[
     ElementType.DRILLING_AXIS,
     ElementType.EAVE_AXIS,
     ElementType.GLOBAL_CUT,
-    ElementType.LINE,
     ElementType.RECTANGULAR_AXIS,
     ElementType.ROTATION_ELEMENT,
     ElementType.SURFACE,
@@ -55,7 +55,15 @@ _OrientedElementTypes: TypeAlias = Literal[
 ]
 
 AnyElement: TypeAlias = (
-    Element[_BasicElementTypes] | OrientedElement[_OrientedElementTypes] | Beam | Floor | Opening | Panel | Roof | Wall
+    Element[_BasicElementTypes]
+    | OrientedElement[_OrientedElementTypes]
+    | Beam
+    | Floor
+    | Line
+    | Opening
+    | Panel
+    | Roof
+    | Wall
 )
 
 _BASIC_ELEMENT_TYPES: Final = frozenset(get_args(_BasicElementTypes))
@@ -90,6 +98,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Beam(cadwork_id)
     if element_type == ElementType.FLOOR:
         return Floor(cadwork_id)
+    if element_type == ElementType.LINE:
+        return Line(cadwork_id)
     if element_type == ElementType.OPENING:
         return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
