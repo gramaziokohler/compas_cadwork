@@ -24,6 +24,12 @@ classDiagram
         + delete() None
     }
 
+    Element <|-- Node
+    class Node {
+        + Point position
+        + NodeSymbol symbol
+    }
+
     Element <|-- OrientedElement
     class OrientedElement {
         + Frame frame

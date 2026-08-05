@@ -7,6 +7,8 @@ from .floor import Floor
 from .ifc_element_type import IfcElementType
 from .ifc_predefined_type import IfcPredefinedType
 from .line import Line
+from .node import Node
+from .node_symbol import NodeSymbol
 from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
@@ -24,6 +26,8 @@ __all__ = [
     "IfcElementType",
     "IfcPredefinedType",
     "Line",
+    "Node",
+    "NodeSymbol",
     "Opening",
     "OrientedElement",
     "Panel",

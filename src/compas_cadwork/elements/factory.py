@@ -14,6 +14,7 @@ from .element import Element
 from .element_type import ElementType
 from .floor import Floor
 from .line import Line
+from .node import Node
 from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
@@ -28,13 +29,11 @@ if TYPE_CHECKING:
 _BasicElementTypes: TypeAlias = Literal[
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
-    ElementType.CONNECTOR_NODE,
     ElementType.CONTAINER,
     ElementType.EXPORT_SOLID,
     ElementType.EXPORT_SOLID_SCENE,
     ElementType.NESTING_PARENT,
     ElementType.NONE,
-    ElementType.NORMAL_NODE,
     ElementType.ROOM,
     ElementType.SECTION_TRACE,
     ElementType.TEXT_DOCUMENT,
@@ -59,6 +58,7 @@ AnyElement: TypeAlias = (
     | Beam
     | Floor
     | Line
+    | Node
     | Opening
     | Panel
     | Roof
@@ -99,6 +99,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Floor(cadwork_id)
     if element_type == ElementType.LINE:
         return Line(cadwork_id)
+    if element_type in (ElementType.CONNECTOR_NODE, ElementType.NORMAL_NODE):
+        return Node(cadwork_id)
     if element_type == ElementType.OPENING:
         return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
