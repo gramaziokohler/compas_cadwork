@@ -392,7 +392,8 @@ wheels = [
 [[package]]
 dependencies = [
   {name = "compas"},
-  {name = "compas-timber"}
+  {name = "compas-timber"},
+  {name = "typing-extensions"}
 ]
 name = "compas-cadwork"
 source = {editable = "."}
@@ -409,14 +410,14 @@ dev = [
   {name = "mkdocs-callouts"},
   {name = "pre-commit"},
   {name = "pytest"},
-  {name = "pytest-cov"},
-  {name = "typing-extensions"}
+  {name = "pytest-cov"}
 ]
 
 [package.metadata]
 requires-dist = [
   {name = "compas", specifier = ">=2"},
-  {name = "compas-timber"}
+  {name = "compas-timber"},
+  {name = "typing-extensions", specifier = ">=4.15.0"}
 ]
 
 [package.metadata.requires-dev]
@@ -431,8 +432,7 @@ dev = [
   {name = "mkdocs-callouts", specifier = ">=1.16.1"},
   {name = "pre-commit", specifier = ">=4.6.0"},
   {name = "pytest", specifier = ">=9.0.3"},
-  {name = "pytest-cov", specifier = ">=7.1.0"},
-  {name = "typing-extensions", specifier = ">=4.15.0"}
+  {name = "pytest-cov", specifier = ">=7.1.0"}
 ]
 
 [[package]]

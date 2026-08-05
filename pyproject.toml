@@ -14,7 +14,6 @@ dev = [
   "pre-commit>=4.6.0",
   "pytest>=9.0.3",
   "pytest-cov>=7.1.0",
-  "typing-extensions>=4.15.0",
   "griffe-warnings-deprecated>=1.1.1"
 ]
 
@@ -38,7 +37,8 @@ classifiers = [
 ]
 dependencies = [
   "compas>=2",
-  "compas_timber"
+  "compas_timber",
+  "typing-extensions>=4.15.0"
 ]
 description = "COMPAS package for integrating with cadwork."
 dynamic = ["version"]
