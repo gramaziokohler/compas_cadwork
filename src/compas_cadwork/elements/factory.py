@@ -13,6 +13,7 @@ from compas_cadwork.elements.beam import Beam
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.floor import Floor
 from compas_cadwork.elements.line import Line
+from compas_cadwork.elements.node import Node
 from compas_cadwork.elements.opening import Opening
 from compas_cadwork.elements.oriented_element import OrientedElement
 from compas_cadwork.elements.panel import Panel
@@ -29,13 +30,11 @@ if TYPE_CHECKING:
 _BasicElementTypes: TypeAlias = Literal[
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
-    ElementType.CONNECTOR_NODE,
     ElementType.CONTAINER,
     ElementType.EXPORT_SOLID,
     ElementType.EXPORT_SOLID_SCENE,
     ElementType.NESTING_PARENT,
     ElementType.NONE,
-    ElementType.NORMAL_NODE,
     ElementType.ROOM,
     ElementType.SECTION_TRACE,
     ElementType.TEXT_DOCUMENT,
@@ -60,6 +59,7 @@ AnyElement: TypeAlias = (
     | Beam
     | Floor
     | Line
+    | Node
     | Opening
     | Panel
     | Roof
@@ -100,6 +100,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Floor(cadwork_id)
     if element_type == ElementType.LINE:
         return Line(cadwork_id)
+    if element_type in (ElementType.CONNECTOR_NODE, ElementType.NORMAL_NODE):
+        return Node(cadwork_id)
     if element_type == ElementType.OPENING:
         return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
