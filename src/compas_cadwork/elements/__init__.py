@@ -6,6 +6,7 @@ from .factory import AnyElement
 from .floor import Floor
 from .ifc_element_type import IfcElementType
 from .ifc_predefined_type import IfcPredefinedType
+from .line import Line
 from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
@@ -22,6 +23,7 @@ __all__ = [
     "Floor",
     "IfcElementType",
     "IfcPredefinedType",
+    "Line",
     "Opening",
     "OrientedElement",
     "Panel",

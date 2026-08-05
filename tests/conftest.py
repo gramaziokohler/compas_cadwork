@@ -28,6 +28,11 @@ class Mock3dPoint(Point):
     def __repr__(self) -> str:
         return f"cadwork.point_3d({self.x!r}, {self.y!r}, {self.z!r})"
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Mock3dPoint):
+            return False
+        return self.x == other.x and self.y == other.y and self.z == other.z
+
 
 class MockVertexList:
     _vertices: list[Mock3dPoint]

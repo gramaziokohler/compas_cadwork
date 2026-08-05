@@ -13,6 +13,7 @@ from .beam import Beam
 from .element import Element
 from .element_type import ElementType
 from .floor import Floor
+from .line import Line
 from .opening import Opening
 from .oriented_element import OrientedElement
 from .panel import Panel
@@ -46,7 +47,6 @@ _OrientedElementTypes: TypeAlias = Literal[
     ElementType.DRILLING_AXIS,
     ElementType.EAVE_AXIS,
     ElementType.GLOBAL_CUT,
-    ElementType.LINE,
     ElementType.RECTANGULAR_AXIS,
     ElementType.ROTATION_ELEMENT,
     ElementType.SURFACE,
@@ -54,7 +54,15 @@ _OrientedElementTypes: TypeAlias = Literal[
 ]
 
 AnyElement: TypeAlias = (
-    Element[_BasicElementTypes] | OrientedElement[_OrientedElementTypes] | Beam | Floor | Opening | Panel | Roof | Wall
+    Element[_BasicElementTypes]
+    | OrientedElement[_OrientedElementTypes]
+    | Beam
+    | Floor
+    | Line
+    | Opening
+    | Panel
+    | Roof
+    | Wall
 )
 
 _BASIC_ELEMENT_TYPES: Final = frozenset(get_args(_BasicElementTypes))
@@ -89,6 +97,8 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Beam(cadwork_id)
     if element_type == ElementType.FLOOR:
         return Floor(cadwork_id)
+    if element_type == ElementType.LINE:
+        return Line(cadwork_id)
     if element_type == ElementType.OPENING:
         return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
