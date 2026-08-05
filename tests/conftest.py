@@ -24,6 +24,18 @@ class MockMultiLayerType(IntEnum):
     covering = 5
 
 
+class MockNodeSymbol(IntEnum):
+    SmallSquare = 1
+    Square = 2
+    Cross = 3
+    Circle = 4
+    FilledCircle = 5
+    ChessSquare = 6
+    HalfFilledSquare = 7
+    CrossSquare = 8
+    FilledSquare = 9
+
+
 class Mock3dPoint(Point):
     def __repr__(self) -> str:
         return f"cadwork.point_3d({self.x!r}, {self.y!r}, {self.z!r})"
@@ -340,6 +352,7 @@ class CadworkMocks:
         self.cadwork.ifc_predefined_type.return_value.is_ring.return_value = False
 
         self.cadwork.multi_layer_type = MockMultiLayerType
+        self.cadwork.node_symbol = MockNodeSymbol
         self.cadwork.point_3d = Mock3dPoint
         self.cadwork.vertex_list = MockVertexList
 
