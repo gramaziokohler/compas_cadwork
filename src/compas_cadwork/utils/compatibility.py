@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from functools import wraps
 from typing import Any
 from typing import Final
 from typing import Literal
@@ -51,6 +52,7 @@ def requires_cadwork(min_version: CadworkVersion) -> Callable[[_T], _T]:
         if CADWORK_VERSION >= min_version:
             return target
 
+        @wraps(target)
         def wrapper(*args: Any, **kwargs: Any) -> Never:
             raise RuntimeError(f"Requires Cadwork {min_version} or later")
 
