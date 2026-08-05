@@ -3,9 +3,31 @@ from __future__ import annotations
 from enum import Enum
 from enum import auto
 
+import bim_controller as bc
 import cadwork
+import element_controller as ec
 
 from compas_cadwork.utils.compatibility import CADWORK_VERSION
+
+
+def _get_cadwork_instance() -> cadwork.ifc_predefined_type:
+    """Get a new IFC predefined type Cadwork instance.
+
+    Under normal circumstances, we would just call `cadwork.ifc_predefined_type()` to get a new instance.
+    However, Cadwork 2024 and Cadwork 2025 have a bug in the constructor binding.
+    For those cases, we create a temporary element and get its IFC predefined type.
+
+    See https://github.com/gramaziokohler/compas_cadwork/issues/72 for more information.
+    """
+    # Polyfill for buggy versions
+    if CADWORK_VERSION < 2026:
+        element_id = ec.create_node(cadwork.point_3d(0.0, 0.0, 0.0))
+        instance = bc.get_ifc_predefined_type(element_id)
+        ec.delete_elements([element_id])
+        return instance
+
+    # Use class constructor
+    return cadwork.ifc_predefined_type()
 
 
 class IfcPredefinedType(Enum):
@@ -530,7 +552,7 @@ class IfcPredefinedType(Enum):
         cadwork.ifc_predefined_type
             Cadwork IFC predefined type.
         """
-        raw_type = cadwork.ifc_predefined_type()  # TODO(josemmo): does not work yet, there is bug in the Cadwork API
+        raw_type = _get_cadwork_instance()
         match self:
             case IfcPredefinedType.NONE:
                 raw_type.set_none()
