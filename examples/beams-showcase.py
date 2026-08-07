@@ -10,6 +10,7 @@ from compas.geometry import Polygon
 from compas.geometry import Rotation
 from compas.geometry import Vector
 
+from compas_cadwork import Transaction
 from compas_cadwork.elements import Beam
 
 
@@ -30,47 +31,48 @@ def create_hexagon_section(radius: float) -> Polygon:
     return Polygon(points)
 
 
-frame = Frame(Point(0, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1))
+with Transaction():
+    frame = Frame(Point(0, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1))
 
-for i in range(4):
-    # Circular beam
-    circular = Beam.circular(
-        frame=frame_with_point(frame, Point(0, 0, 1000)),
-        length=4000,
-        diameter=500,
-    )
-    circular.name = f"Circular #{i}"
-    print(circular, circular.frame)
+    for i in range(4):
+        # Circular beam
+        circular = Beam.circular(
+            frame=frame_with_point(frame, Point(0, 0, 1000)),
+            length=4000,
+            diameter=500,
+        )
+        circular.name = f"Circular #{i}"
+        print(circular, circular.frame)
 
-    # Rectangular beam
-    rectangular = Beam.rectangular(
-        frame=frame_with_point(frame, Point(0, 0, 3000)),
-        length=4000,
-        width=500,
-        height=350,
-    )
-    rectangular.name = f"Rectangular #{i}"
-    print(rectangular, rectangular.frame)
+        # Rectangular beam
+        rectangular = Beam.rectangular(
+            frame=frame_with_point(frame, Point(0, 0, 3000)),
+            length=4000,
+            width=500,
+            height=350,
+        )
+        rectangular.name = f"Rectangular #{i}"
+        print(rectangular, rectangular.frame)
 
-    # Triangular beam
-    triangle_section = Polygon([(0, 0), (300, 0), (150, 259.8)])
-    triangular = Beam.polygonal(
-        frame=frame_with_point(frame, Point(0, 0, 5000)),
-        length=4000,
-        section=triangle_section,
-    )
-    triangular.name = f"Triangular #{i}"
-    print(triangular, triangular.frame)
+        # Triangular beam
+        triangle_section = Polygon([(0, 0), (300, 0), (150, 259.8)])
+        triangular = Beam.polygonal(
+            frame=frame_with_point(frame, Point(0, 0, 5000)),
+            length=4000,
+            section=triangle_section,
+        )
+        triangular.name = f"Triangular #{i}"
+        print(triangular, triangular.frame)
 
-    # Hexagonal beam
-    hexagon_section = create_hexagon_section(300)
-    hexagonal = Beam.polygonal(
-        frame=frame_with_point(frame, Point(0, 0, 8000)),
-        length=4000,
-        section=hexagon_section,
-    )
-    hexagonal.name = f"Hexagonal #{i}"
-    print(hexagonal, hexagonal.frame)
+        # Hexagonal beam
+        hexagon_section = create_hexagon_section(300)
+        hexagonal = Beam.polygonal(
+            frame=frame_with_point(frame, Point(0, 0, 8000)),
+            length=4000,
+            section=hexagon_section,
+        )
+        hexagonal.name = f"Hexagonal #{i}"
+        print(hexagonal, hexagonal.frame)
 
-    # Rotate frame along the Y-axis
-    frame = frame.transformed(Rotation.from_axis_and_angle(frame.yaxis, radians(-90), frame.point))
+        # Rotate frame along the Y-axis
+        frame = frame.transformed(Rotation.from_axis_and_angle(frame.yaxis, radians(-90), frame.point))

@@ -10,6 +10,7 @@ from typing import TypeVar
 import multi_layer_cover_controller as mlc
 
 from compas_cadwork.materials.layer_stack import AnyLayerStack
+from compas_cadwork.transaction import notify_element_modification
 
 
 if TYPE_CHECKING:
@@ -56,3 +57,4 @@ class LayeredMixin(Generic[_T]):
         if value is None:
             raise NotImplementedError()  # TODO(josemmo): implement when Cadwork adds an API to handle this
         mlc.set_element_multi_layer_set(self.id, value.id)
+        notify_element_modification(self.id)

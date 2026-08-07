@@ -5,6 +5,7 @@ from datetime import datetime
 
 from .ifc_uuid import IfcUUID
 from .project import Project
+from .transaction import Transaction
 
 
 __title__ = "compas_cadwork"
@@ -30,6 +31,7 @@ __all__ = [
     "TEMP",
     "IfcUUID",
     "Project",
+    "Transaction",
     "__author__",
     "__author_email__",
     "__copyright__",

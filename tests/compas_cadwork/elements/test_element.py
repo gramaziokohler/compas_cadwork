@@ -7,6 +7,7 @@ from compas_cadwork.elements.ifc_element_type import IfcElementType
 from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
 from compas_cadwork.elements.wall import Wall
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.transaction import Transaction
 
 
 class FakeElementForRepr(Element):
@@ -376,8 +377,19 @@ def test_removes_children(cadwork) -> None:
 
 def test_deletes_element(cadwork) -> None:
     element = Element(123)
+
+    # Outside transaction context
     element.delete()
     cadwork.ec.delete_elements.assert_called_once_with([123])
+    cadwork.ec.delete_elements_with_undo.assert_not_called()
+    cadwork.ec.delete_elements.reset_mock()
+    cadwork.ec.delete_elements_with_undo.reset_mock()
+
+    # Inside transaction context
+    with Transaction():
+        element.delete()
+    cadwork.ec.delete_elements.assert_not_called()
+    cadwork.ec.delete_elements_with_undo.assert_called_once_with([123])
 
 
 def test_equals() -> None:

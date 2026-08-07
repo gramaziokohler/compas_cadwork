@@ -13,6 +13,7 @@ from typing_extensions import TypeVar
 
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.transaction import notify_element_creation
 
 from .dimensional_element import DimensionalElement
 from .element_type import ElementType
@@ -73,6 +74,7 @@ class Panel(DimensionalElement[_P]):
             vector_to_cadwork(frame.xaxis),
             vector_to_cadwork(frame.zaxis),
         )
+        notify_element_creation(element_id)
         return cls(element_id)
 
     @classmethod
@@ -114,4 +116,5 @@ class Panel(DimensionalElement[_P]):
             vector_to_cadwork(frame.xaxis),
             vector_to_cadwork(frame.zaxis),
         )
+        notify_element_creation(element_id)
         return cls(element_id)

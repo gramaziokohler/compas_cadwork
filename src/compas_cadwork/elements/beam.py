@@ -11,6 +11,7 @@ from compas.geometry import bounding_box_xy
 
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.transaction import notify_element_creation
 
 from .dimensional_element import DimensionalElement
 from .element_type import ElementType
@@ -53,6 +54,7 @@ class Beam(DimensionalElement[Literal[ElementType.CIRCULAR_BEAM, ElementType.POL
             vector_to_cadwork(frame.xaxis),
             vector_to_cadwork(frame.zaxis),
         )
+        notify_element_creation(element_id)
         return cls(element_id)
 
     @classmethod
@@ -104,6 +106,7 @@ class Beam(DimensionalElement[Literal[ElementType.CIRCULAR_BEAM, ElementType.POL
             vector_to_cadwork(frame.xaxis),
             vector_to_cadwork(frame.zaxis),
         )
+        notify_element_creation(element_id)
         return cls(element_id)
 
     @classmethod
@@ -145,4 +148,5 @@ class Beam(DimensionalElement[Literal[ElementType.CIRCULAR_BEAM, ElementType.POL
             vector_to_cadwork(frame.xaxis),
             vector_to_cadwork(frame.zaxis),
         )
+        notify_element_creation(element_id)
         return cls(element_id)
