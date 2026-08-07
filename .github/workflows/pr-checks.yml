@@ -16,8 +16,9 @@ jobs:
       - name: Check changelog
         uses: Zomzog/changelog-checker@v1.3.0
         with:
-          fileName: CHANGELOG.md
           checkNotification: Simple
+          fileName: CHANGELOG.md
+          noChangelogLabel: 'O: Skip changelog'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   do-not-merge:
