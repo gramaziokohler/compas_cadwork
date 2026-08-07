@@ -123,3 +123,6 @@ class ElementType(Enum):
         if raw_type.is_wire_axis():
             return cls.WIRE_AXIS
         raise ValueError("Unknown Cadwork element type")
+
+    def __repr__(self) -> str:
+        return f"<ElementType.{self.name}>"

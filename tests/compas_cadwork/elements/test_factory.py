@@ -16,36 +16,36 @@ def test_gets_the_correct_element_class(cadwork) -> None:
     cadwork.ec.check_element_id.return_value = True
 
     # For beams
-    cadwork.cadwork.element_type.is_rectangular_beam.return_value = True
+    cadwork.cadwork.element_type.return_value.is_rectangular_beam.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.POLYGONAL_BEAM
     assert_type(element, Beam)
     assert type(element) is Beam
-    cadwork.cadwork.element_type.is_rectangular_beam.return_value = False
+    cadwork.cadwork.element_type.return_value.is_rectangular_beam.return_value = False
 
     # For walls
-    cadwork.cadwork.element_type.is_wall.return_value = True
+    cadwork.cadwork.element_type.return_value.is_wall.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.WALL
     assert_type(element, Wall)
     assert type(element) is Wall
-    cadwork.cadwork.element_type.is_wall.return_value = False
+    cadwork.cadwork.element_type.return_value.is_wall.return_value = False
 
     # For generic basic elements
-    cadwork.cadwork.element_type.is_text_document.return_value = True
+    cadwork.cadwork.element_type.return_value.is_text_document.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.TEXT_DOCUMENT
     assert_type(element, Element[_BasicElementTypes])
     assert type(element) is Element
-    cadwork.cadwork.element_type.is_text_document.return_value = False
+    cadwork.cadwork.element_type.return_value.is_text_document.return_value = False
 
     # For generic oriented elements
-    cadwork.cadwork.element_type.is_wire_axis.return_value = True
+    cadwork.cadwork.element_type.return_value.is_wire_axis.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.WIRE_AXIS
     assert_type(element, OrientedElement[_OrientedElementTypes])
     assert type(element) is OrientedElement
-    cadwork.cadwork.element_type.is_wire_axis.return_value = False
+    cadwork.cadwork.element_type.return_value.is_wire_axis.return_value = False
 
 
 def test_raises_on_invalid_cadwork_id(cadwork) -> None:
