@@ -16,16 +16,21 @@ jobs:
       - name: Check changelog
         uses: Zomzog/changelog-checker@v1.3.0
         with:
-          fileName: CHANGELOG.md
           checkNotification: Simple
+          fileName: CHANGELOG.md
+          noChangelogLabel: 'O: Skip changelog'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   do-not-merge:
-    if: "contains(github.event.pull_request.labels.*.name, 'O: Requires rebasing')"
     runs-on: ubuntu-slim
     steps:
       - name: Check for label
         run: |
-          echo "Pull request contains a label that prevents the merge."
-          echo "This workflow will now fail."
-          exit 1
+          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'O: Requires rebasing') }}" == "true" ]]; then
+            echo "Pull request contains a label that prevents the merge."
+            echo "This workflow will now fail."
+            exit 1
+          fi
+          echo "No blocking label found."
+          echo "This workflow will now succeed."
