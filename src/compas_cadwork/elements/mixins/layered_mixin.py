@@ -40,7 +40,7 @@ class LayeredMixin(Generic[_T]):
 
         Returns
         -------
-        type[T]
+        type[_T]
             Layer stack type.
         """
 
