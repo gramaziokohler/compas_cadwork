@@ -38,7 +38,7 @@ python -m virtualenv .venv
 pip install compas-cadwork --upgrade
 ```
 
-## Step 2: Import COMPAS cadwork in Your Code
+## Step 2: Import COMPAS cadwork in your code
 
 Because Cadwork runs plugins from its own internal environment, you must explicitly point it to your plugin's local packages.
 Add this snippet at the very top of your plugin's entrypoint Python file:
