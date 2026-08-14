@@ -51,7 +51,7 @@ Repository = "https://github.com/gramaziokohler/compas_cadwork"
 
 [tool.bumpversion]
 commit = true
-current_version = "0.10.1"
+current_version = "1.0.0"
 message = "Bump version to {new_version}"
 tag = true
 
