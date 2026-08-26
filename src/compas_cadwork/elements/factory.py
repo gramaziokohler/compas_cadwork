@@ -65,8 +65,8 @@ AnyElement: TypeAlias = (
     | Wall
 )
 
-_BASIC_ELEMENT_TYPES: Final = frozenset(get_args(_BasicElementTypes))
-_ORIENTED_ELEMENT_TYPES: Final = frozenset(get_args(_OrientedElementTypes))
+_BASIC_ELEMENT_TYPES: Final[frozenset[_BasicElementTypes]] = frozenset(get_args(_BasicElementTypes))
+_ORIENTED_ELEMENT_TYPES: Final[frozenset[_OrientedElementTypes]] = frozenset(get_args(_OrientedElementTypes))
 
 
 def get_element_instance(cadwork_id: ElementId) -> AnyElement:
