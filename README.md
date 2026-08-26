@@ -18,7 +18,7 @@ Gain access to the COMPAS ecosystem which includes a wide range of tools and lib
 
 ## Getting Started
 
-First of all, check the [documentation website](https://gramaziokohler.github.io/compas_cadwork/getting-started/) for a step-by-step guide on how to install the library.
+First of all, check the [documentation website](https://gramaziokohler.github.io/compas_cadwork/latest/getting-started/) for a step-by-step guide on how to install the library.
 You can also find complete, practical examples on the same website to help you start using `compas_cadwork` right away.
 
 Visit the [COMPAS documentation](https://compas.dev/compas/) for more information on how to work with COMPAS, and the [Cadwork Python Documentation](https://docs.cadwork.com/projects/cwapi3dpython/en/latest/) for advanced information on the internal Cadwork APIs.
