@@ -7,10 +7,10 @@ from types import TracebackType
 from typing import TYPE_CHECKING
 from typing import Final
 from typing import Literal
-from typing import Self
 
 import element_controller as ec
 import utility_controller as uc
+from typing_extensions import Self
 
 
 if TYPE_CHECKING:

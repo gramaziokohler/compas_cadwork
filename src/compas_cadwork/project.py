@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Generator
 from collections.abc import Iterable
+from collections.abc import Iterator
 from datetime import date
 from datetime import datetime
 from functools import cached_property
@@ -297,24 +297,24 @@ class Project:
         assert cadwork_id is not None
         return get_element_instance(cadwork_id)
 
-    def elements(self) -> Generator[AnyElement, None, None]:
+    def elements(self) -> Iterator[AnyElement]:
         """Get all elements in the project.
 
         Returns
         -------
-        Generator[AnyElement, None, None]
-            Generator of elements.
+        Iterator[AnyElement]
+            Iterator of elements.
         """
         for cadwork_id in ec.get_all_identifiable_element_ids():
             yield get_element_instance(cadwork_id)
 
-    def selected_elements(self) -> Generator[AnyElement, None, None]:
+    def selected_elements(self) -> Iterator[AnyElement]:
         """Get currently selected (active) elements.
 
         Returns
         -------
-        Generator[AnyElement, None, None]
-            Generator of elements.
+        Iterator[AnyElement]
+            Iterator of elements.
         """
         for cadwork_id in ec.get_active_identifiable_element_ids():
             yield get_element_instance(cadwork_id)
@@ -382,29 +382,29 @@ class Project:
             raise ValueError(f"Could not find a Cadwork material with ID #{cadwork_id}")
         return Material(cadwork_id)
 
-    def materials(self) -> Generator[Material, None, None]:
+    def materials(self) -> Iterator[Material]:
         """Get all materials in the project.
 
         Returns
         -------
-        Generator[Material, None, None]
-            Generator of materials.
+        Iterator[Material]
+            Iterator of materials.
         """
         for material_id in mc.get_all_materials():
             yield Material(material_id)
 
     @overload
-    def layer_stacks(self, stack_type: None = None) -> Generator[AnyLayerStack, None, None]:
+    def layer_stacks(self, stack_type: None = None) -> Iterator[AnyLayerStack]:
         """Get all layer stacks in the project.
 
         Returns
         -------
-        Generator[AnyLayerStack, None, None]
-            Generator of layer stacks.
+        Iterator[AnyLayerStack]
+            Iterator of layer stacks.
         """
 
     @overload
-    def layer_stacks(self, stack_type: type[_L]) -> Generator[_L, None, None]:
+    def layer_stacks(self, stack_type: type[_L]) -> Iterator[_L]:
         """Get all layer stacks of a given type in the project.
 
         Parameters
@@ -414,11 +414,11 @@ class Project:
 
         Returns
         -------
-        Generator[_L, None, None]
-            Generator of layer stacks.
+        Iterator[_L]
+            Iterator of layer stacks.
         """
 
-    def layer_stacks(self, stack_type: type[AnyLayerStack] | None = None) -> Generator[AnyLayerStack, None, None]:
+    def layer_stacks(self, stack_type: type[AnyLayerStack] | None = None) -> Iterator[AnyLayerStack]:
         if stack_type is None:
             return LayerStack._get_all()
         return stack_type._get_all()

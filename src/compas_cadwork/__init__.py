@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 from datetime import datetime
 
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
+
 from .ifc_uuid import IfcUUID
 from .project import Project
 from .transaction import Transaction
@@ -25,6 +27,7 @@ TEMP = os.path.abspath(os.path.join(HOME, "temp"))
 
 
 __all__ = [
+    "CADWORK_VERSION",
     "DATA",
     "DOCS",
     "HOME",

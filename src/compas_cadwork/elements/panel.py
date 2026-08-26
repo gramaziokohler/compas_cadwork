@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Literal
-from typing import Self
 
 import cadwork
 import element_controller as ec
@@ -9,6 +8,7 @@ from compas.geometry import Frame
 from compas.geometry import Polygon
 from compas.geometry import Translation
 from compas.geometry import bounding_box_xy
+from typing_extensions import Self
 from typing_extensions import TypeVar
 
 from compas_cadwork.conversions.primitives import point_to_cadwork

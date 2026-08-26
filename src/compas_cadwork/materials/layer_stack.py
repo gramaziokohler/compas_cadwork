@@ -1,20 +1,22 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from collections.abc import Generator
 from collections.abc import Iterable
+from collections.abc import Iterator
 from collections.abc import MutableSequence
 from typing import TYPE_CHECKING
 from typing import Final
-from typing import Self
 from typing import TypeAlias
 from typing import final
 from typing import overload
 
 import multi_layer_cover_controller as mlc
+from typing_extensions import Self
 
 from compas_cadwork.materials.layer_type import LayerType
 from compas_cadwork.materials.material import Material
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
+from compas_cadwork.utils.compatibility import requires_cadwork
 
 from .layer import Layer
 
@@ -48,13 +50,13 @@ class LayerStack(MutableSequence[Layer]):
         """
 
     @classmethod
-    def _get_all(cls) -> Generator[AnyLayerStack, None, None]:
+    def _get_all(cls) -> Iterator[AnyLayerStack]:
         """Get all layer stacks of this type in the project.
 
         Returns
         -------
-        Generator[AnyLayerStack, None, None]
-            Generator of layer stacks.
+        Iterator[AnyLayerStack]
+            Iterator of layer stacks.
         """
         yield from FloorLayerStack._get_all()
         yield from RoofLayerStack._get_all()
@@ -106,7 +108,7 @@ class LayerStack(MutableSequence[Layer]):
     def __len__(self) -> int:
         return mlc.get_layer_count(self.id)
 
-    def __iter__(self) -> Generator[Layer, None, None]:
+    def __iter__(self) -> Iterator[Layer]:
         for index in range(len(self)):
             yield self._get_layer(index)
 
@@ -256,24 +258,30 @@ class LayerStack(MutableSequence[Layer]):
 
 class FloorLayerStack(LayerStack):
     @classmethod
+    @requires_cadwork(2025)
     def create(cls, name: str) -> Self:
         cadwork_id = mlc.create_multi_layer_framed_floor(name)
         return cls(cadwork_id)
 
     @classmethod
-    def _get_all(cls) -> Generator[Self, None, None]:
+    def _get_all(cls) -> Iterator[Self]:
+        if CADWORK_VERSION < 2025:
+            return  # Floor multi-layer sets were not supported until Cadwork 2025
         for cadwork_id in [*mlc.get_multi_layer_framed_floors(), *mlc.get_multi_layer_solid_floors()]:
             yield cls(cadwork_id)
 
 
 class RoofLayerStack(LayerStack):
     @classmethod
+    @requires_cadwork(2025)
     def create(cls, name: str) -> Self:
         cadwork_id = mlc.create_multi_layer_framed_roof(name)
         return cls(cadwork_id)
 
     @classmethod
-    def _get_all(cls) -> Generator[Self, None, None]:
+    def _get_all(cls) -> Iterator[Self]:
+        if CADWORK_VERSION < 2025:
+            return  # Roof multi-layer sets were not supported until Cadwork 2025
         for cadwork_id in [*mlc.get_multi_layer_framed_roofs(), *mlc.get_multi_layer_solid_roofs()]:
             yield cls(cadwork_id)
 
@@ -285,13 +293,12 @@ class WallLayerStack(LayerStack):
         return cls(cadwork_id)
 
     @classmethod
-    def _get_all(cls) -> Generator[Self, None, None]:
-        for cadwork_id in [
-            *mlc.get_multi_layer_walls(),
-            *mlc.get_multi_layer_log_walls(),
-            *mlc.get_multi_layer_solid_walls(),
-        ]:
+    def _get_all(cls) -> Iterator[Self]:
+        for cadwork_id in mlc.get_multi_layer_walls():
             yield cls(cadwork_id)
+        if CADWORK_VERSION >= 2025:  # Log and solid wall multi-layer sets were added in Cadwork 2025
+            for cadwork_id in [*mlc.get_multi_layer_log_walls(), *mlc.get_multi_layer_solid_walls()]:
+                yield cls(cadwork_id)
 
 
 AnyLayerStack: TypeAlias = FloorLayerStack | RoofLayerStack | WallLayerStack

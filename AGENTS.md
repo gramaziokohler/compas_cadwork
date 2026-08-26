@@ -8,7 +8,7 @@ It defines the standard patterns and guidelines required to maintain consistency
 `compas_cadwork` is a Python package that integrates the [COMPAS](https://compas.dev/) framework with [cadwork 3d](https://www.cadwork.com/).
 It wraps cadwork's Python API ([`cwapi3d`](https://docs.cadwork.com/projects/cwapi3dpython/)) to expose COMPAS-compatible geometry kernels, data structures, and algorithms for AEC/timber workflows.
 
-- **Target Python Version**: Python 3.12+
+- **Target Python Version**: Python 3.14+ for development, Python 3.10+ for end-users of the library
 - **Build System**: Hatchling
 - **Package Manager**: [Astral uv](https://docs.astral.sh/uv/)
 
@@ -42,7 +42,7 @@ All development commands are run from the repository root using `uv`.
 
     Example: Use `from collections.abc import Iterator`, never `from typing import Iterator`
 
-- Prefer `typing` over `typing_extensions` unless the feature is unavailable in the project's target Python version.
+- Prefer `typing` over `typing_extensions` unless the feature is unavailable in the project's Python version for end-users.
 
 ### Simplicity & Cleanliness
 

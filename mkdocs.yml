@@ -93,6 +93,11 @@ plugins:
             - https://docs.python.org/3/objects.inv
             - https://compas.dev/compas/latest/objects.inv
           options:
+            extensions:
+              - griffe_warnings_deprecated:
+                  kind: danger
+                  title: Deprecated
+              - docs/compatibility_extension.py:CompatibilityExtension
             allow_inspection: true
             backlinks: tree
             docstring_options:
@@ -143,6 +148,7 @@ nav:
       - Standalone Plugin: getting-started/plugin.md
   - User Guide:
       - Overview: user-guide/index.md
+      - Compatibility: user-guide/compatibility.md
       - Elements Hierarchy: user-guide/elements-hierarchy.md
   - Developer Guide:
       - Overview: developer-guide/index.md

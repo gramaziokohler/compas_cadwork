@@ -6,14 +6,15 @@ requires = ["hatchling"]
 dev = [
   "bump-my-version>=1.3.0",
   "compas_invocations2[mkdocs]>=1.1.2",
-  "cwapi3d==32.443.10",
+  "cwapi3d==33.324.0; python_version>='3.14'",
+  "cwapi3d==32.443.10; python_version>='3.12' and python_version<'3.14'",
+  "cwapi3d==30.693.0; python_version<'3.12'",
   "invoke>=3.0.3",
   "mkdocs-callouts>=1.16.1",
   "pre-commit>=4.6.0",
   "pytest>=9.0.3",
   "pytest-cov>=7.1.0",
-  "sphinx-compas2-theme>=0.1.10",
-  "typing-extensions>=4.15.0"
+  "griffe-warnings-deprecated>=1.1.1"
 ]
 
 [project]
@@ -28,20 +29,23 @@ classifiers = [
   "Operating System :: Microsoft :: Windows",
   "Topic :: Scientific/Engineering",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14"
 ]
 dependencies = [
   "compas>=2",
-  "compas_timber"
+  "compas_timber",
+  "typing-extensions>=4.15.0"
 ]
 description = "COMPAS package for integrating with cadwork."
 dynamic = ["version"]
 license = {file = "LICENSE"}
 name = "compas_cadwork"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 
 [project.urls]
 Changelog = "https://github.com/gramaziokohler/compas_cadwork/blob/main/CHANGELOG.md"
@@ -75,6 +79,7 @@ explicit_package_bases = true
 ignore_missing_imports = false
 namespace_packages = true
 no_implicit_optional = true
+python_version = "3.10"
 strict_equality = true
 warn_redundant_casts = true
 warn_unreachable = true
