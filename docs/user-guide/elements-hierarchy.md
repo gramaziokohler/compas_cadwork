@@ -24,11 +24,24 @@ classDiagram
         + delete() None
     }
 
+    Element <|-- Node
+    class Node {
+        + Point position
+        + NodeSymbol symbol
+    }
+
     Element <|-- OrientedElement
     class OrientedElement {
         + Frame frame
         + translate(Vector vector) None
         + duplicate(Vector vector) Self
+    }
+
+    OrientedElement <|-- Line
+    class Line {
+        + Point start
+        + Point end
+        + float length
     }
 
     OrientedElement <|-- DimensionalElement
