@@ -3,7 +3,31 @@ from __future__ import annotations
 from enum import Enum
 from enum import auto
 
+import bim_controller as bc
 import cadwork
+import element_controller as ec
+
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
+
+
+def _get_cadwork_instance() -> cadwork.ifc_predefined_type:
+    """Get a new IFC predefined type Cadwork instance.
+
+    Under normal circumstances, we would just call `cadwork.ifc_predefined_type()` to get a new instance.
+    However, Cadwork 2024 and Cadwork 2025 have a bug in the constructor binding.
+    For those cases, we create a temporary element and get its IFC predefined type.
+
+    See https://github.com/gramaziokohler/compas_cadwork/issues/72 for more information.
+    """
+    # Polyfill for buggy versions
+    if CADWORK_VERSION < 2026:
+        element_id = ec.create_node(cadwork.point_3d(0.0, 0.0, 0.0))
+        instance = bc.get_ifc_predefined_type(element_id)
+        ec.delete_elements([element_id])
+        return instance
+
+    # Use class constructor
+    return cadwork.ifc_predefined_type()
 
 
 class IfcPredefinedType(Enum):
@@ -33,6 +57,12 @@ class IfcPredefinedType(Enum):
     LANDING = auto()
     ROOF = auto()
     BEAM = auto()
+    HOLLOWCORE = auto()
+    """@requires_cadwork(2026)"""
+    JOIST = auto()
+    """@requires_cadwork(2026)"""
+    LINTEL = auto()
+    """@requires_cadwork(2026)"""
     SPANDREL = auto()
     TBEAM = auto()
     COMPLEX = auto()
@@ -235,6 +265,15 @@ class IfcPredefinedType(Enum):
             return cls.ROOF
         if raw_type.is_beam():
             return cls.BEAM
+        if CADWORK_VERSION >= 2026:
+            # Getters for these types were added in Cadwork 2026
+            # See https://github.com/cwapi3d/cwapi3dpython/commit/6a0d0a8ba6def100ebed3cb0a4b18ed3880c5de3
+            if raw_type.is_hollowcore():
+                return cls.HOLLOWCORE
+            if raw_type.is_joist():
+                return cls.JOIST
+            if raw_type.is_lintel():
+                return cls.LINTEL
         if raw_type.is_spandrel():
             return cls.SPANDREL
         if raw_type.is_tbeam():
@@ -513,7 +552,7 @@ class IfcPredefinedType(Enum):
         cadwork.ifc_predefined_type
             Cadwork IFC predefined type.
         """
-        raw_type = cadwork.ifc_predefined_type()  # TODO(josemmo): does not work yet, there is bug in the Cadwork API
+        raw_type = _get_cadwork_instance()
         match self:
             case IfcPredefinedType.NONE:
                 raw_type.set_none()
@@ -563,6 +602,12 @@ class IfcPredefinedType(Enum):
                 raw_type.set_roof()
             case IfcPredefinedType.BEAM:
                 raw_type.set_beam()
+            case IfcPredefinedType.HOLLOWCORE:
+                raw_type.set_hollowcore()
+            case IfcPredefinedType.JOIST:
+                raw_type.set_joist()
+            case IfcPredefinedType.LINTEL:
+                raw_type.set_lintel()
             case IfcPredefinedType.SPANDREL:
                 raw_type.set_spandrel()
             case IfcPredefinedType.TBEAM:

@@ -196,6 +196,9 @@ class CadworkMocks:
         self.cadwork.ifc_predefined_type.return_value.is_landing.return_value = False
         self.cadwork.ifc_predefined_type.return_value.is_roof.return_value = False
         self.cadwork.ifc_predefined_type.return_value.is_beam.return_value = False
+        self.cadwork.ifc_predefined_type.return_value.is_hollowcore.return_value = False
+        self.cadwork.ifc_predefined_type.return_value.is_joist.return_value = False
+        self.cadwork.ifc_predefined_type.return_value.is_lintel.return_value = False
         self.cadwork.ifc_predefined_type.return_value.is_spandrel.return_value = False
         self.cadwork.ifc_predefined_type.return_value.is_tbeam.return_value = False
         self.cadwork.ifc_predefined_type.return_value.is_complex.return_value = False
