@@ -14,7 +14,10 @@ You can find which features are available in which cadwork 3d versions in the [A
 
 For your convenience, below is a summary of features that are only available in some cadwork 3d versions:
 
-| Module                     | Method / Property          | Cadwork 2024 | Cadwork 2025 | Cadwork 2026 |
-| :------------------------- | :------------------------- | :----------: | :----------: | :----------: |
-| `compas_cadwork.materials` | `FloorLayerStack.create()` |      ❌      |      ✅      |      ✅      |
-| `compas_cadwork.materials` | `RoofLayerStack.create()`  |      ❌      |      ✅      |      ✅      |
+| Module                     | Method / Property              | Cadwork 2024 | Cadwork 2025 | Cadwork 2026 |
+| :------------------------- | :----------------------------- | :----------: | :----------: | :----------: |
+| `compas_cadwork.elements`  | `IfcPredefinedType.HOLLOWCORE` |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork.elements`  | `IfcPredefinedType.JOIST`      |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork.elements`  | `IfcPredefinedType.LINTEL`     |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork.materials` | `FloorLayerStack.create()`     |      ❌      |      ✅      |      ✅      |
+| `compas_cadwork.materials` | `RoofLayerStack.create()`      |      ❌      |      ✅      |      ✅      |

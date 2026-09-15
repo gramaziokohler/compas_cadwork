@@ -11,6 +11,20 @@ def test_gets_value_from_cadwork(cadwork, expected_type) -> None:
     assert IfcPredefinedType.from_cadwork(raw_type) == expected_type
 
 
+@pytest.mark.parametrize(
+    "expected_type",
+    [IfcPredefinedType.HOLLOWCORE, IfcPredefinedType.JOIST, IfcPredefinedType.LINTEL],
+)
+def test_raises_on_unsupported_type_in_cadwork_2025(cadwork, set_cadwork_version, expected_type) -> None:
+    set_cadwork_version(2025)
+    expected_method = f"is_{expected_type.name.lower()}"
+    getattr(cadwork.cadwork.ifc_predefined_type.return_value, expected_method).return_value = True
+    with pytest.raises(ValueError, match=r"Unknown Cadwork IFC predefined type"):
+        raw_type = cadwork.cadwork.ifc_predefined_type()
+        _ = IfcPredefinedType.from_cadwork(raw_type)
+    getattr(cadwork.cadwork.ifc_predefined_type.return_value, expected_method).assert_not_called()
+
+
 def test_raises_on_unknown_cadwork_type(cadwork) -> None:
     raw_type = cadwork.cadwork.ifc_predefined_type()
     with pytest.raises(ValueError, match=r"Unknown Cadwork IFC predefined type"):
@@ -30,6 +44,16 @@ def test_exports_value_to_cadwork(cadwork, expected_type) -> None:
         case _:
             expected_method = f"set_{expected_type.name.lower()}"
     getattr(raw_type, expected_method).assert_called_once()
+    cadwork.bc.get_ifc_predefined_type.assert_not_called()
+
+
+def test_exports_value_to_cadwork_in_cadwork_2025(cadwork, set_cadwork_version) -> None:
+    set_cadwork_version(2025)
+    cadwork.ec.create_node.return_value = 1000
+    _ = IfcPredefinedType.SUPPORT.to_cadwork()
+    cadwork.ec.create_node.assert_called_once()
+    cadwork.bc.get_ifc_predefined_type.assert_called_once_with(1000)
+    cadwork.ec.delete_elements.assert_called_once_with([1000])
 
 
 @pytest.mark.parametrize("expected_type", list(IfcPredefinedType))

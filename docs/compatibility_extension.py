@@ -1,4 +1,5 @@
 import ast
+import re
 from typing import Any
 
 from griffe import Attribute
@@ -41,6 +42,7 @@ class CompatibilityExtension(Extension):
             }
 
     def on_attribute(self, *, attr: Attribute, **kwargs: Any) -> None:
+        self._parse_decorators_from_docstring(attr)
         self._add_compatibility_table(attr)
 
     def on_class(self, *, cls: Class, **kwargs: Any) -> None:
@@ -49,6 +51,22 @@ class CompatibilityExtension(Extension):
 
     def on_function(self, *, func: Function, **kwargs: Any) -> None:
         self._add_compatibility_table(func)
+
+    def _parse_decorators_from_docstring(self, obj: Object) -> None:
+        if not obj.docstring:
+            return
+        decorator_match = re.search(r"@requires_cadwork\((\d{4})\)", obj.docstring.value)
+        if not decorator_match:
+            return
+
+        # Extract minimum Cadwork version
+        min_cadwork_version = int(decorator_match[1])
+        obj.extra[EXTENSION_NAMESPACE] = {
+            "min_cadwork_version": min_cadwork_version,
+        }
+
+        # Remove decorator from docstring
+        obj.docstring.value = obj.docstring.value.replace(decorator_match[0], "").strip()
 
     def _add_compatibility_table(self, obj: Object) -> None:
         min_cadwork_version = obj.extra.get(EXTENSION_NAMESPACE, {}).get("min_cadwork_version", CADWORK_VERSIONS[0])

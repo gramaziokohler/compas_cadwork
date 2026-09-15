@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added User Guide and Developer Guide to documentation.
 - Added backwards compatibility with Python 3.10 (Cadwork 2024).
+- Added `IfcPredefinedType.HOLLOWCORE`, `IfcPredefinedType.JOIST` and `IfcPredefinedType.LINTEL` enumeration values.
 
 ### Changed
 
