@@ -15,9 +15,8 @@ from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.datamodel import Dimension
 from compas_cadwork.datamodel import Element
 from compas_cadwork.datamodel import ElementGroup
-
-from .ifc_export import IFCExporter
-from .ifc_export import IFCExportSettings
+from compas_cadwork.utilities.ifc_export import IFCExporter
+from compas_cadwork.utilities.ifc_export import IFCExportSettings
 
 
 def zoom_active_elements():

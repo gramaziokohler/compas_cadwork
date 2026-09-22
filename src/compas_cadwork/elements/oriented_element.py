@@ -7,11 +7,10 @@ from typing_extensions import Self
 from compas_cadwork.conversions.primitives import point_to_compas
 from compas_cadwork.conversions.primitives import vector_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_compas
+from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.element import T
 from compas_cadwork.transaction import notify_element_creation
 from compas_cadwork.transaction import notify_element_modification
-
-from .element import Element
-from .element import T
 
 
 class OrientedElement(Element[T]):

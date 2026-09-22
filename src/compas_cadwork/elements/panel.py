@@ -13,13 +13,12 @@ from typing_extensions import TypeVar
 
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.elements.dimensional_element import DimensionalElement
+from compas_cadwork.elements.element_type import ElementType
 from compas_cadwork.transaction import notify_element_creation
 
-from .dimensional_element import DimensionalElement
-from .element_type import ElementType
 
-
-_P = TypeVar("_P", bound=ElementType, default=Literal[ElementType.PANEL])
+_P = TypeVar("_P", bound=ElementType, default=Literal[ElementType.PANEL])  # type: ignore[misc, valid-type]
 
 
 class Panel(DimensionalElement[_P]):

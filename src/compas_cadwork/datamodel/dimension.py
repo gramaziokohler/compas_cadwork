@@ -11,8 +11,7 @@ from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_compas
 from compas_cadwork.conversions import vector_to_compas
-
-from .element import Element
+from compas_cadwork.datamodel.element import Element
 
 
 TOL = Tolerance(unit="MM", absolute=1e-3, relative=1e-3)

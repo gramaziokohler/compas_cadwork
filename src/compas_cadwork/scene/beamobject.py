@@ -5,8 +5,7 @@ from typing_extensions import deprecated
 
 from compas_cadwork.conversions import point_to_cadwork
 from compas_cadwork.conversions import vector_to_cadwork
-
-from .scene import CadworkSceneObject
+from compas_cadwork.scene import CadworkSceneObject
 
 
 @deprecated("Subject to removal, avoid using")

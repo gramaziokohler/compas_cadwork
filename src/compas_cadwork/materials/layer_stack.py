@@ -13,12 +13,11 @@ from typing import overload
 import multi_layer_cover_controller as mlc
 from typing_extensions import Self
 
+from compas_cadwork.materials.layer import Layer
 from compas_cadwork.materials.layer_type import LayerType
 from compas_cadwork.materials.material import Material
 from compas_cadwork.utils.compatibility import CADWORK_VERSION
 from compas_cadwork.utils.compatibility import requires_cadwork
-
-from .layer import Layer
 
 
 if TYPE_CHECKING:

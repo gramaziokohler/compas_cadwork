@@ -1,9 +1,8 @@
 from typing_extensions import deprecated
 
 from compas_cadwork.datamodel import Element
-
-from . import get_all_element_ids
-from . import get_dimensions
+from compas_cadwork.utilities import get_all_element_ids
+from compas_cadwork.utilities import get_dimensions
 
 
 @deprecated("Subject to removal, avoid using")

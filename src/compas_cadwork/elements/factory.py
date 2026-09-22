@@ -9,22 +9,22 @@ from typing import get_args
 import attribute_controller as ac
 import element_controller as ec
 
-from .beam import Beam
-from .element import Element
-from .element_type import ElementType
-from .floor import Floor
-from .opening import Opening
-from .oriented_element import OrientedElement
-from .panel import Panel
-from .roof import Roof
-from .wall import Wall
+from compas_cadwork.elements.beam import Beam
+from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.element_type import ElementType
+from compas_cadwork.elements.floor import Floor
+from compas_cadwork.elements.opening import Opening
+from compas_cadwork.elements.oriented_element import OrientedElement
+from compas_cadwork.elements.panel import Panel
+from compas_cadwork.elements.roof import Roof
+from compas_cadwork.elements.wall import Wall
 
 
 if TYPE_CHECKING:
     from cadwork import ElementId
 
 
-_BasicElementTypes: TypeAlias = Literal[
+_BasicElementTypes: TypeAlias = Literal[  # type: ignore[valid-type]
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
     ElementType.CONNECTOR_NODE,
@@ -39,7 +39,7 @@ _BasicElementTypes: TypeAlias = Literal[
     ElementType.TEXT_DOCUMENT,
 ]
 
-_OrientedElementTypes: TypeAlias = Literal[
+_OrientedElementTypes: TypeAlias = Literal[  # type: ignore[valid-type]
     ElementType.CIRCULAR_AXIS,
     ElementType.CONNECTOR_AXIS,
     ElementType.DIMENSION,

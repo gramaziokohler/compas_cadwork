@@ -16,22 +16,21 @@ import bim_controller as bc
 import cadwork
 import element_controller as ec
 
+from compas_cadwork.elements.element_type import ElementType
+from compas_cadwork.elements.ifc_element_type import IfcElementType
+from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
 from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.transaction import enqueue_element_deletion
 from compas_cadwork.transaction import is_inside_transaction
 from compas_cadwork.transaction import notify_element_modification
 from compas_cadwork.utils.storage import KeyValueStorage
 
-from .element_type import ElementType
-from .ifc_element_type import IfcElementType
-from .ifc_predefined_type import IfcPredefinedType
-
 
 if TYPE_CHECKING:
     from attribute_controller import UserAttributeId
     from cadwork import ElementId
 
-    from .factory import AnyElement
+    from compas_cadwork.elements.factory import AnyElement
 else:
     UserAttributeId = int
     AnyElement = object
@@ -130,7 +129,7 @@ class _ElementChildren(MutableSet[AnyElement]):
         return False
 
     def __iter__(self) -> Iterator[AnyElement]:
-        from .factory import get_element_instance
+        from compas_cadwork.elements.factory import get_element_instance
 
         for element_id in self._children_ids():
             yield get_element_instance(element_id)
@@ -212,7 +211,7 @@ class Element(Generic[T]):
     def type(self) -> T:
         """Element type."""
         raw_type = ac.get_element_type(self.id)
-        return ElementType.from_cadwork(raw_type)  # type: ignore[return-value]
+        return ElementType.from_cadwork(raw_type)
 
     @property
     def ifc_element_type(self) -> IfcElementType:
