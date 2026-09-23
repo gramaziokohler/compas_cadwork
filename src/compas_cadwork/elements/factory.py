@@ -11,7 +11,6 @@ import element_controller as ec
 
 from compas_cadwork.elements.beam import Beam
 from compas_cadwork.elements.element import Element
-from compas_cadwork.elements.element_type import ElementType
 from compas_cadwork.elements.floor import Floor
 from compas_cadwork.elements.opening import Opening
 from compas_cadwork.elements.oriented_element import OrientedElement
@@ -19,12 +18,14 @@ from compas_cadwork.elements.panel import Panel
 from compas_cadwork.elements.roof import Roof
 from compas_cadwork.elements.wall import Wall
 
+from .element_type import ElementType  # noqa: TID252  # Needed for mypy to prevent circular imports
+
 
 if TYPE_CHECKING:
     from cadwork import ElementId
 
 
-_BasicElementTypes: TypeAlias = Literal[  # type: ignore[valid-type]
+_BasicElementTypes: TypeAlias = Literal[
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
     ElementType.CONNECTOR_NODE,
@@ -39,7 +40,7 @@ _BasicElementTypes: TypeAlias = Literal[  # type: ignore[valid-type]
     ElementType.TEXT_DOCUMENT,
 ]
 
-_OrientedElementTypes: TypeAlias = Literal[  # type: ignore[valid-type]
+_OrientedElementTypes: TypeAlias = Literal[
     ElementType.CIRCULAR_AXIS,
     ElementType.CONNECTOR_AXIS,
     ElementType.DIMENSION,

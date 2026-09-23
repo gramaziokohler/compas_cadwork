@@ -26,7 +26,7 @@ All development commands are run from the repository root using `uv`.
 
 ### Imports
 
-- Prefer absolute imports for all type of imports.
+- Prefer absolute imports for all types of imports.
 
     Example: `from compas_cadwork.a.b import Something`
 
