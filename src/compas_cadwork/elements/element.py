@@ -8,6 +8,7 @@ from typing import ClassVar
 from typing import Final
 from typing import Generic
 from typing import TypeVar
+from typing import cast
 from typing import final
 from uuid import UUID
 
@@ -211,7 +212,7 @@ class Element(Generic[T]):
     def type(self) -> T:
         """Element type."""
         raw_type = ac.get_element_type(self.id)
-        return ElementType.from_cadwork(raw_type)
+        return cast(T, ElementType.from_cadwork(raw_type))
 
     @property
     def ifc_element_type(self) -> IfcElementType:
