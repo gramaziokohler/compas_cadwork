@@ -7,11 +7,10 @@ from compas.geometry import Frame
 from compas.geometry import Polygon
 from typing_extensions import Self
 
+from compas_cadwork.elements.element_type import ElementType
 from compas_cadwork.elements.mixins.layered_mixin import LayeredMixin
+from compas_cadwork.elements.panel import Panel
 from compas_cadwork.materials.layer_stack import WallLayerStack
-
-from .element_type import ElementType
-from .panel import Panel
 
 
 class Wall(Panel[Literal[ElementType.WALL]], LayeredMixin[WallLayerStack]):

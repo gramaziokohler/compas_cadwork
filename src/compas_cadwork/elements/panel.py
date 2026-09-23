@@ -13,10 +13,10 @@ from typing_extensions import TypeVar
 
 from compas_cadwork.conversions.primitives import point_to_cadwork
 from compas_cadwork.conversions.primitives import vector_to_cadwork
+from compas_cadwork.elements.dimensional_element import DimensionalElement
 from compas_cadwork.transaction import notify_element_creation
 
-from .dimensional_element import DimensionalElement
-from .element_type import ElementType
+from .element_type import ElementType  # noqa: TID252  # Needed for mypy to prevent circular imports
 
 
 _P = TypeVar("_P", bound=ElementType, default=Literal[ElementType.PANEL])

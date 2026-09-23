@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from .layer_type import LayerType
-from .material import Material
+from compas_cadwork.materials.layer_type import LayerType
+from compas_cadwork.materials.material import Material
 
 
 @dataclass(frozen=True, kw_only=True)

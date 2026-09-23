@@ -19,10 +19,10 @@ dev = [
 
 [project]
 authors = [
-  {name = "Chen Kasirer", email = "kasirer@arch.ethz.ch"},
-  {name = "Matthias Helmreich", email = "helmreich@arch.ethz.ch"},
-  {name = "Gonzalo Casas", email = "casas@arch.ethz.ch"},
-  {name = "José Miguel Moreno", email = "morenolopez@arch.ethz.ch"}
+  { name = "Chen Kasirer", email = "kasirer@arch.ethz.ch" },
+  { name = "Matthias Helmreich", email = "helmreich@arch.ethz.ch" },
+  { name = "Gonzalo Casas", email = "casas@arch.ethz.ch" },
+  { name = "José Miguel Moreno", email = "morenolopez@arch.ethz.ch" }
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -42,7 +42,7 @@ dependencies = [
 ]
 description = "COMPAS package for integrating with cadwork."
 dynamic = ["version"]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 name = "compas_cadwork"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -123,6 +123,9 @@ docstring-code-line-length = "dynamic"
 
 [tool.ruff.lint]
 select = ["A", "B", "E", "ERA", "F", "FA100", "I", "ISC", "NPY", "Q", "RUF", "S110", "T10", "TID", "YTT"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.lint.isort]
 force-single-line = true

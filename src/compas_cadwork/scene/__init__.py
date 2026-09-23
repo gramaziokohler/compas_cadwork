@@ -2,11 +2,11 @@ from compas.plugins import plugin
 from compas.scene import register
 from compas_timber.elements import Beam
 
-from .beamobject import BeamSceneObject
-from .camera import Camera
-from .instructionobject import LinearDimensionSceneObject
-from .instructionobject import Text3dSceneObject
-from .scene import CadworkSceneObject
+from compas_cadwork.scene.beamobject import BeamSceneObject
+from compas_cadwork.scene.camera import Camera
+from compas_cadwork.scene.instructionobject import LinearDimensionSceneObject
+from compas_cadwork.scene.instructionobject import Text3dSceneObject
+from compas_cadwork.scene.scene import CadworkSceneObject
 
 
 __all__ = [

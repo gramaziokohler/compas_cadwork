@@ -26,13 +26,9 @@ All development commands are run from the repository root using `uv`.
 
 ### Imports
 
-- Prefer absolute imports for package references.
+- Prefer absolute imports for all types of imports.
 
     Example: `from compas_cadwork.a.b import Something`
-
-- Use relative imports *only* when importing another file within the **same** module.
-
-    Example: `from .something import Something`
 
 ### Typing & Modern Python Standards
 

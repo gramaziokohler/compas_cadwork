@@ -7,8 +7,8 @@ from compas.geometry import Frame
 from compas.geometry import Polygon
 from typing_extensions import Self
 
-from .element_type import ElementType
-from .panel import Panel
+from compas_cadwork.elements.element_type import ElementType
+from compas_cadwork.elements.panel import Panel
 
 
 class Opening(Panel[Literal[ElementType.OPENING]]):

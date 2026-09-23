@@ -1,16 +1,16 @@
-from .beam import Beam
-from .dimensional_element import DimensionalElement
-from .element import Element
-from .element_type import ElementType
-from .factory import AnyElement
-from .floor import Floor
-from .ifc_element_type import IfcElementType
-from .ifc_predefined_type import IfcPredefinedType
-from .opening import Opening
-from .oriented_element import OrientedElement
-from .panel import Panel
-from .roof import Roof
-from .wall import Wall
+from compas_cadwork.elements.beam import Beam
+from compas_cadwork.elements.dimensional_element import DimensionalElement
+from compas_cadwork.elements.element import Element
+from compas_cadwork.elements.element_type import ElementType
+from compas_cadwork.elements.factory import AnyElement
+from compas_cadwork.elements.floor import Floor
+from compas_cadwork.elements.ifc_element_type import IfcElementType
+from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
+from compas_cadwork.elements.opening import Opening
+from compas_cadwork.elements.oriented_element import OrientedElement
+from compas_cadwork.elements.panel import Panel
+from compas_cadwork.elements.roof import Roof
+from compas_cadwork.elements.wall import Wall
 
 
 __all__ = [
