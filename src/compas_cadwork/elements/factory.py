@@ -12,6 +12,8 @@ import element_controller as ec
 from compas_cadwork.elements.beam import Beam
 from compas_cadwork.elements.element import Element
 from compas_cadwork.elements.floor import Floor
+from compas_cadwork.elements.line import Line
+from compas_cadwork.elements.node import Node
 from compas_cadwork.elements.opening import Opening
 from compas_cadwork.elements.oriented_element import OrientedElement
 from compas_cadwork.elements.panel import Panel
@@ -28,13 +30,11 @@ if TYPE_CHECKING:
 _BasicElementTypes: TypeAlias = Literal[
     ElementType.ADDITIONAL,
     ElementType.AUXILIARY,
-    ElementType.CONNECTOR_NODE,
     ElementType.CONTAINER,
     ElementType.EXPORT_SOLID,
     ElementType.EXPORT_SOLID_SCENE,
     ElementType.NESTING_PARENT,
     ElementType.NONE,
-    ElementType.NORMAL_NODE,
     ElementType.ROOM,
     ElementType.SECTION_TRACE,
     ElementType.TEXT_DOCUMENT,
@@ -47,7 +47,6 @@ _OrientedElementTypes: TypeAlias = Literal[
     ElementType.DRILLING_AXIS,
     ElementType.EAVE_AXIS,
     ElementType.GLOBAL_CUT,
-    ElementType.LINE,
     ElementType.RECTANGULAR_AXIS,
     ElementType.ROTATION_ELEMENT,
     ElementType.SURFACE,
@@ -55,11 +54,20 @@ _OrientedElementTypes: TypeAlias = Literal[
 ]
 
 AnyElement: TypeAlias = (
-    Element[_BasicElementTypes] | OrientedElement[_OrientedElementTypes] | Beam | Floor | Opening | Panel | Roof | Wall
+    Element[_BasicElementTypes]
+    | OrientedElement[_OrientedElementTypes]
+    | Beam
+    | Floor
+    | Line
+    | Node
+    | Opening
+    | Panel
+    | Roof
+    | Wall
 )
 
-_BASIC_ELEMENT_TYPES: Final = frozenset(get_args(_BasicElementTypes))
-_ORIENTED_ELEMENT_TYPES: Final = frozenset(get_args(_OrientedElementTypes))
+_BASIC_ELEMENT_TYPES: Final[frozenset[_BasicElementTypes]] = frozenset(get_args(_BasicElementTypes))
+_ORIENTED_ELEMENT_TYPES: Final[frozenset[_OrientedElementTypes]] = frozenset(get_args(_OrientedElementTypes))
 
 
 def get_element_instance(cadwork_id: ElementId) -> AnyElement:
@@ -90,6 +98,10 @@ def get_element_instance(cadwork_id: ElementId) -> AnyElement:
         return Beam(cadwork_id)
     if element_type == ElementType.FLOOR:
         return Floor(cadwork_id)
+    if element_type == ElementType.LINE:
+        return Line(cadwork_id)
+    if element_type in (ElementType.CONNECTOR_NODE, ElementType.NORMAL_NODE):
+        return Node(cadwork_id)
     if element_type == ElementType.OPENING:
         return Opening(cadwork_id)
     if element_type == ElementType.PANEL:
