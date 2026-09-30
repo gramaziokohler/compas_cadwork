@@ -4,6 +4,7 @@ import sys
 from collections.abc import Callable
 from collections.abc import Iterator
 from enum import IntEnum
+from math import isclose
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
@@ -41,9 +42,9 @@ class Mock3dPoint(Point):
         return f"cadwork.point_3d({self.x!r}, {self.y!r}, {self.z!r})"
 
     def __eq__(self, other) -> bool:
-        if not isinstance(other, Mock3dPoint):
-            return False
-        return self.x == other.x and self.y == other.y and self.z == other.z
+        if not isinstance(other, Mock3dPoint):  # pragma: no cover
+            return NotImplemented  # pragma: no cover
+        return isclose(self.x, other.x) and isclose(self.y, other.y) and isclose(self.z, other.z)
 
 
 class MockVertexList:
