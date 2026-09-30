@@ -7,44 +7,55 @@ from compas_cadwork.elements.element_type import ElementType
 from compas_cadwork.elements.factory import _BasicElementTypes
 from compas_cadwork.elements.factory import _OrientedElementTypes
 from compas_cadwork.elements.factory import get_element_instance
+from compas_cadwork.elements.floor import Floor
+from compas_cadwork.elements.line import Line
+from compas_cadwork.elements.node import Node
+from compas_cadwork.elements.opening import Opening
 from compas_cadwork.elements.oriented_element import OrientedElement
+from compas_cadwork.elements.panel import Panel
+from compas_cadwork.elements.roof import Roof
 from compas_cadwork.elements.wall import Wall
 
 
-def test_gets_the_correct_element_class(cadwork) -> None:
+def test_gets_basic_element_class(cadwork) -> None:
     cadwork.ec.check_element_id.return_value = True
-
-    # For beams
-    cadwork.cadwork.element_type.return_value.is_rectangular_beam.return_value = True
-    element = get_element_instance(123)
-    assert element.type == ElementType.POLYGONAL_BEAM
-    assert_type(element, Beam)
-    assert type(element) is Beam
-    cadwork.cadwork.element_type.return_value.is_rectangular_beam.return_value = False
-
-    # For walls
-    cadwork.cadwork.element_type.return_value.is_wall.return_value = True
-    element = get_element_instance(123)
-    assert element.type == ElementType.WALL
-    assert_type(element, Wall)
-    assert type(element) is Wall
-    cadwork.cadwork.element_type.return_value.is_wall.return_value = False
-
-    # For generic basic elements
     cadwork.cadwork.element_type.return_value.is_text_document.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.TEXT_DOCUMENT
     assert_type(element, Element[_BasicElementTypes])
     assert type(element) is Element
-    cadwork.cadwork.element_type.return_value.is_text_document.return_value = False
 
-    # For generic oriented elements
+
+def test_gets_oriented_element_class(cadwork) -> None:
+    cadwork.ec.check_element_id.return_value = True
     cadwork.cadwork.element_type.return_value.is_wire_axis.return_value = True
     element = get_element_instance(123)
     assert element.type == ElementType.WIRE_AXIS
     assert_type(element, OrientedElement[_OrientedElementTypes])
     assert type(element) is OrientedElement
-    cadwork.cadwork.element_type.return_value.is_wire_axis.return_value = False
+
+
+@pytest.mark.parametrize(
+    "element_type, expected_class, mock_method",
+    [
+        (ElementType.CIRCULAR_BEAM, Beam, "is_circular_beam"),
+        (ElementType.POLYGONAL_BEAM, Beam, "is_rectangular_beam"),
+        (ElementType.FLOOR, Floor, "is_floor"),
+        (ElementType.LINE, Line, "is_line"),
+        (ElementType.CONNECTOR_NODE, Node, "is_connector_node"),
+        (ElementType.NORMAL_NODE, Node, "is_normal_node"),
+        (ElementType.OPENING, Opening, "is_opening"),
+        (ElementType.PANEL, Panel, "is_panel"),
+        (ElementType.ROOF, Roof, "is_roof"),
+        (ElementType.WALL, Wall, "is_wall"),
+    ],
+)
+def test_gets_specific_element_class(cadwork, element_type, expected_class, mock_method) -> None:
+    cadwork.ec.check_element_id.return_value = True
+    getattr(cadwork.cadwork.element_type.return_value, mock_method).return_value = True
+    element = get_element_instance(123)
+    assert element.type == element_type
+    assert type(element) is expected_class
 
 
 def test_raises_on_invalid_cadwork_id(cadwork) -> None:
