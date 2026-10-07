@@ -404,7 +404,7 @@ dev = [
   { name = "compas-invocations2", extra = ["mkdocs"] },
   { name = "cwapi3d", version = "30.693.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
   { name = "cwapi3d", version = "32.443.10", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' and python_full_version < '3.14'" },
-  { name = "cwapi3d", version = "33.324.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
+  { name = "cwapi3d", version = "33.378.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.14'" },
   { name = "griffe-warnings-deprecated" },
   { name = "invoke" },
   { name = "mkdocs-callouts" },
@@ -426,7 +426,7 @@ dev = [
   { name = "compas-invocations2", extras = ["mkdocs"], specifier = ">=1.1.2" },
   { name = "cwapi3d", marker = "python_full_version < '3.12'", specifier = "==30.693.0" },
   { name = "cwapi3d", marker = "python_full_version >= '3.12' and python_full_version < '3.14'", specifier = "==32.443.10" },
-  { name = "cwapi3d", marker = "python_full_version >= '3.14'", specifier = "==33.324.0" },
+  { name = "cwapi3d", marker = "python_full_version >= '3.14'", specifier = "==33.378.0" },
   { name = "griffe-warnings-deprecated", specifier = ">=1.1.1" },
   { name = "invoke", specifier = ">=3.0.3" },
   { name = "mkdocs-callouts", specifier = ">=1.16.1" },
@@ -635,11 +635,11 @@ name = "cwapi3d"
 resolution-markers = [
   "python_full_version >= '3.14'"
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d3/87/07ae485efbd36e7881c86520262c2577ef952279ba797a41628b6926841e/cwapi3d-33.324.0.tar.gz", hash = "sha256:88ef155c7f6551c111fc82c84e29844f69a9f520a9b3cfc39a61315d3866f411", size = 75668, upload-time = "2026-07-29T07:03:19.632Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/34/42d33ffeb5d9fd471b49c10af112e104852febebeea2ebac28397fe78cdd/cwapi3d-33.378.0.tar.gz", hash = "sha256:d38c974d10bdbda50309664daa591309164c1bfd34bb8ba1060e4270aa9fef83", size = 75163, upload-time = "2026-10-07T09:01:03.91Z" }
 source = { registry = "https://pypi.org/simple" }
-version = "33.324.0"
+version = "33.378.0"
 wheels = [
-  { url = "https://files.pythonhosted.org/packages/fe/d8/910737e3f1a2a6a39251e07a6e83d5fbf9068aead57039fb6e7eb9250efd/cwapi3d-33.324.0-py3-none-any.whl", hash = "sha256:bf1787ff85eacf982b71f7b5ea3514d6821db2a0bfb8dc3b1c387556e0667975", size = 98654, upload-time = "2026-07-29T07:03:18.226Z" }
+  { url = "https://files.pythonhosted.org/packages/70/3c/032d8c879f29c71d022b61057b28f3cba7434caf51c0502eade0e6e65aff/cwapi3d-33.378.0-py3-none-any.whl", hash = "sha256:327af093298b116d29cdadb064d2299ac07af3aad0d6cda64095f1d84768633c", size = 104550, upload-time = "2026-10-07T09:01:02.214Z" }
 ]
 
 [[package]]
