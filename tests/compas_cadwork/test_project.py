@@ -1,4 +1,5 @@
 from datetime import date
+from unittest import mock
 from uuid import UUID
 
 import pytest
@@ -10,6 +11,7 @@ from compas_cadwork.materials.layer_stack import FloorLayerStack
 from compas_cadwork.materials.layer_stack import RoofLayerStack
 from compas_cadwork.materials.layer_stack import WallLayerStack
 from compas_cadwork.project import Project
+from compas_cadwork.storey import Storey
 
 
 def test_gets_guid(cadwork) -> None:
@@ -392,6 +394,36 @@ def test_gets_layer_stacks(cadwork) -> None:
         RoofLayerStack(300),
         WallLayerStack(400),
     ]
+
+
+def test_gets_storeys(cadwork) -> None:
+    cadwork.bc.get_all_buildings.return_value = ["B1", "B2"]
+    cadwork.bc.get_all_storeys.side_effect = lambda x: ["D", "E", "E0", "E1"] if x == "B1" else ["C", "D", "E"]
+    project = Project()
+
+    # Without building
+    assert list(project.storeys()) == [
+        Storey(name="D", building="B1"),
+        Storey(name="E", building="B1"),
+        Storey(name="E0", building="B1"),
+        Storey(name="E1", building="B1"),
+        Storey(name="C", building="B2"),
+        Storey(name="D", building="B2"),
+        Storey(name="E", building="B2"),
+    ]
+    cadwork.bc.get_all_buildings.assert_called_once()
+    cadwork.bc.get_all_storeys.assert_has_calls([mock.call("B1"), mock.call("B2")])
+    cadwork.bc.get_all_buildings.reset_mock()
+    cadwork.bc.get_all_storeys.reset_mock()
+
+    # With building
+    assert list(project.storeys(building="B2")) == [
+        Storey(name="C", building="B2"),
+        Storey(name="D", building="B2"),
+        Storey(name="E", building="B2"),
+    ]
+    cadwork.bc.get_all_buildings.assert_not_called()
+    cadwork.bc.get_all_storeys.assert_called_once_with("B2")
 
 
 def test_contains_attributes(cadwork) -> None:

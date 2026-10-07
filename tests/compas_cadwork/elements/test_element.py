@@ -7,6 +7,7 @@ from compas_cadwork.elements.ifc_element_type import IfcElementType
 from compas_cadwork.elements.ifc_predefined_type import IfcPredefinedType
 from compas_cadwork.elements.wall import Wall
 from compas_cadwork.ifc_uuid import IfcUUID
+from compas_cadwork.storey import Storey
 from compas_cadwork.transaction import Transaction
 
 
@@ -183,6 +184,31 @@ def test_sets_comment(cadwork) -> None:
     # With value
     element.comment = "Test Value"
     cadwork.ac.set_comment.assert_called_with([123], "Test Value")
+
+
+def test_gets_storey(cadwork) -> None:
+    element = Element(123)
+    cadwork.bc.get_storey.return_value = "Storey Name"
+    cadwork.bc.get_building.return_value = "Building Name"
+    assert element.storey.name == "Storey Name"
+    assert element.storey.building == "Building Name"
+    cadwork.bc.get_storey.assert_called_with(123)
+    cadwork.bc.get_building.assert_called_with(123)
+
+
+def test_sets_storey(cadwork) -> None:
+    element = Element(123)
+    element.storey = Storey(name="EG", building="Hauptgebäude")
+    cadwork.bc.set_building_and_storey.assert_called_once_with([123], "Hauptgebäude", "EG")
+    cadwork.bc.update_bmt_structure_building_storey.assert_not_called()
+
+
+def test_sets_storey_in_cadwork_2025(cadwork, set_cadwork_version) -> None:
+    set_cadwork_version(2025)
+    element = Element(123)
+    element.storey = Storey(name="EG", building="Hauptgebäude")
+    cadwork.bc.set_building_and_storey.assert_called_once_with([123], "Hauptgebäude", "EG")
+    cadwork.bc.update_bmt_structure_building_storey.assert_called_once_with([123])
 
 
 def test_contains_attributes(cadwork) -> None:

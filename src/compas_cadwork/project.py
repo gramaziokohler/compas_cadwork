@@ -21,6 +21,7 @@ from compas_cadwork.ifc_uuid import IfcUUID
 from compas_cadwork.materials.layer_stack import AnyLayerStack
 from compas_cadwork.materials.layer_stack import LayerStack
 from compas_cadwork.materials.material import Material
+from compas_cadwork.storey import Storey
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
 
@@ -475,6 +476,24 @@ class Project:
             if layer_stack.id == cadwork_id:
                 return layer_stack
         raise ValueError(f"Could not find a Cadwork layer stack with ID #{cadwork_id}")
+
+    def storeys(self, *, building: str | None = None) -> Iterator[Storey]:
+        """Get all storeys (levels) in the project.
+
+        Parameters
+        ----------
+        building : str | None
+            Building name or `None` to get the storeys of all buildings.
+
+        Returns
+        -------
+        Iterator[Storey]
+            Iterator of storeys.
+        """
+        building_names = bc.get_all_buildings() if building is None else [building]
+        for building_name in building_names:
+            for storey_name in bc.get_all_storeys(building_name):
+                yield Storey(name=storey_name, building=building_name)
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"
