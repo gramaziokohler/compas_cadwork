@@ -16,6 +16,8 @@ For your convenience, below is a summary of features that are only available in 
 
 | Module                     | Method / Property              | Cadwork 2024 | Cadwork 2025 | Cadwork 2026 |
 | :------------------------- | :----------------------------- | :----------: | :----------: | :----------: |
+| `compas_cadwork`           | `Storey.elements`              |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork`           | `Storey.thickness`             |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`  | `IfcPredefinedType.HOLLOWCORE` |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`  | `IfcPredefinedType.JOIST`      |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`  | `IfcPredefinedType.LINTEL`     |      ❌      |      ❌      |      ✅      |
