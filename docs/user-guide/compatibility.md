@@ -22,4 +22,5 @@ For your convenience, below is a summary of features that are only available in 
 | `compas_cadwork.elements`  | `IfcPredefinedType.JOIST`      |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`  | `IfcPredefinedType.LINTEL`     |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.materials` | `FloorLayerStack.create()`     |      ❌      |      ✅      |      ✅      |
+| `compas_cadwork.materials` | `LayerStack.__delitem__()`     |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.materials` | `RoofLayerStack.create()`      |      ❌      |      ✅      |      ✅      |
