@@ -30,10 +30,20 @@ def test_sets_layers(cadwork) -> None:
     element = DummyElement(123)
 
     # Without value
-    # TODO(josemmo): update test when unsetting layer stacks is implemented
-    with pytest.raises(NotImplementedError):
-        element.layers = None
+    element.layers = None
+    cadwork.mlc.set_element_multi_layer_set.assert_not_called()
+    cadwork.mlc.unset_element_multi_layer_set.assert_called_once_with(123)
+    cadwork.mlc.set_element_multi_layer_set.reset_mock()
+    cadwork.mlc.unset_element_multi_layer_set.reset_mock()
 
     # With value
     element.layers = WallLayerStack(1000)
     cadwork.mlc.set_element_multi_layer_set.assert_called_once_with(123, 1000)
+    cadwork.mlc.unset_element_multi_layer_set.assert_not_called()
+
+
+def test_sets_layers_in_cadwork_2025(set_cadwork_version) -> None:
+    set_cadwork_version(2025)
+    element = DummyElement(123)
+    with pytest.raises(RuntimeError, match=r"Requires Cadwork 2026 or later"):
+        element.layers = None
