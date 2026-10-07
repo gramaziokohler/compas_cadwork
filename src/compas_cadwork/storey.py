@@ -20,7 +20,7 @@ class Storey:
     """Storey name."""
 
     building: Final[str]
-    """Name of the building to which this story belongs."""
+    """Name of the building to which this storey belongs."""
 
     def __init__(self, *, name: str, building: str) -> None:
         """Create new instance of a Cadwork storey.

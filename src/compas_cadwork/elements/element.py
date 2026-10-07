@@ -290,6 +290,7 @@ class Element(Generic[T]):
         bc.set_building_and_storey([self.id], value.building, value.name)
         if CADWORK_VERSION < 2026:
             bc.update_bmt_structure_building_storey([self.id])
+        notify_element_modification(self.id)
 
     @cached_property
     def attributes(self) -> _ElementAttributeValues:
