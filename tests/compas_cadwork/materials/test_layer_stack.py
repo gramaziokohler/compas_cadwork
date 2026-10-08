@@ -278,11 +278,26 @@ def test_inserts_layers(cadwork, expected_layers) -> None:
     cadwork.mlc.set_layer_thickness.reset_mock()
 
 
-# TODO(josemmo): update test when deletion is implemented
 def test_deletes_layers(cadwork) -> None:
     layers = FloorLayerStack(123)
-    with pytest.raises(NotImplementedError):
-        del layers[0]
+    cadwork.mlc.get_layer_count.return_value = 5
+
+    # Single index
+    del layers[2]
+    cadwork.mlc.remove_layer.assert_called_once_with(123, 2)
+    cadwork.mlc.remove_layer.reset_mock()
+    with pytest.raises(IndexError, match=r"100"):
+        del layers[100]
+
+    # Slice
+    del layers[1:4]
+    cadwork.mlc.remove_layer.assert_has_calls(
+        [
+            mock.call(123, 3),
+            mock.call(123, 2),
+            mock.call(123, 1),
+        ],
+    )
 
 
 def test_equals() -> None:

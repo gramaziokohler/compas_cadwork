@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added backwards compatibility with Python 3.10 (Cadwork 2024).
 - Added `IfcPredefinedType.HOLLOWCORE`, `IfcPredefinedType.JOIST` and `IfcPredefinedType.LINTEL` enumeration values.
 - Added support for storeys (levels).
+- Added support for deleting layers from layer stacks.
+- Added support for unsetting layer stacks from elements.
 
 ### Changed
 

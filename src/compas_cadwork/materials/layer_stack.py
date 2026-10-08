@@ -149,8 +149,13 @@ class LayerStack(MutableSequence[Layer]):
     @overload
     def __delitem__(self, index: slice) -> None: ...
 
+    @requires_cadwork(2026)
     def __delitem__(self, index: int | slice) -> None:
-        raise NotImplementedError()  # TODO(josemmo): implement when Cadwork adds an API to handle deletions
+        if isinstance(index, slice):
+            for i in sorted(self._normalize_slice(index), reverse=True):  # To prevent shifting remaining items
+                mlc.remove_layer(self.id, i)
+        else:
+            mlc.remove_layer(self.id, self._normalize_index(index))
 
     def _normalize_index(self, index: int) -> int:
         """Normalize index.

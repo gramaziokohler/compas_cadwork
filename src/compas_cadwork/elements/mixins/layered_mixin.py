@@ -11,6 +11,7 @@ import multi_layer_cover_controller as mlc
 
 from compas_cadwork.materials.layer_stack import AnyLayerStack
 from compas_cadwork.transaction import notify_element_modification
+from compas_cadwork.utils.compatibility import CADWORK_VERSION
 
 
 if TYPE_CHECKING:
@@ -55,6 +56,9 @@ class LayeredMixin(Generic[_T]):
     @layers.setter
     def layers(self: _ElementLike[_T], value: _T | None) -> None:
         if value is None:
-            raise NotImplementedError()  # TODO(josemmo): implement when Cadwork adds an API to handle this
-        mlc.set_element_multi_layer_set(self.id, value.id)
+            if CADWORK_VERSION < 2026:
+                raise RuntimeError("Requires Cadwork 2026 or later")
+            mlc.unset_element_multi_layer_set(self.id)
+        else:
+            mlc.set_element_multi_layer_set(self.id, value.id)
         notify_element_modification(self.id)
