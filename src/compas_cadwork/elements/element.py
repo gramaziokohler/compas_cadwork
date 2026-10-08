@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from collections.abc import Iterator
 from collections.abc import MutableSet
 from functools import cached_property
@@ -26,6 +27,8 @@ from compas_cadwork.transaction import enqueue_element_deletion
 from compas_cadwork.transaction import is_inside_transaction
 from compas_cadwork.transaction import notify_element_modification
 from compas_cadwork.utils.compatibility import CADWORK_VERSION
+from compas_cadwork.utils.compatibility import requires_cadwork
+from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
 
 
@@ -90,7 +93,7 @@ class _ElementAttributeKeys(KeyValueStorage[UserAttributeId, str]):
         ac.set_user_attribute_name(key, "")  # There's no delete user attribute name function
 
 
-class _ElementData(KeyValueStorage[str, str]):
+class _ElementData(IterableKeyValueStorage[str, str]):
     """Dictionary-like accessor for element additional data.
 
     NOTE: Element additional data is hidden from the user and only accessible via the Cadwork API.
@@ -105,6 +108,10 @@ class _ElementData(KeyValueStorage[str, str]):
     @staticmethod
     def _empty(key: str, value: str) -> bool:
         return value == ""
+
+    @requires_cadwork(2026)
+    def _keys(self) -> Iterable[str]:
+        return ac.get_additional_data_keys(self._id)
 
     def _get(self, key: str) -> str:
         return ac.get_additional_data(self._id, key)
