@@ -333,12 +333,20 @@ def test_deletes_data(cadwork) -> None:
     cadwork.ac.delete_additional_data.assert_called_with([123], "existingKey")
 
 
-def test_raises_on_iterate_data() -> None:
+def test_iterates_data(cadwork) -> None:
+    data = {
+        "1st": "First",
+        "2nd": "Second",
+        "3rd": "",
+        "4th": "Fourth",
+    }
+    cadwork.ac.get_additional_data_keys.return_value = list(data.keys())
+    cadwork.ac.get_additional_data.side_effect = lambda _, x: data[x]
     element = Element(123)
-    with pytest.raises(TypeError):
-        _ = list(element.data.keys())
-    with pytest.raises(TypeError):
-        _ = len(element.data)
+    assert len(element.data) == 3
+    assert list(element.data.keys()) == ["1st", "2nd", "4th"]
+    assert list(element.data.values()) == ["First", "Second", "Fourth"]
+    cadwork.ac.get_additional_data_keys.assert_called_with(123)
 
 
 def test_raises_on_adding_self_to_children() -> None:

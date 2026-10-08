@@ -18,6 +18,8 @@ For your convenience, below is a summary of features that are only available in 
 | :------------------------------- | :----------------------------- | :----------: | :----------: | :----------: |
 | `compas_cadwork`                 | `Storey.elements`              |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork`                 | `Storey.thickness`             |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork.elements`        | `Element.data.__iter__()`      |      ❌      |      ❌      |      ✅      |
+| `compas_cadwork.elements`        | `Element.data.__len__()`       |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`        | `IfcPredefinedType.HOLLOWCORE` |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`        | `IfcPredefinedType.JOIST`      |      ❌      |      ❌      |      ✅      |
 | `compas_cadwork.elements`        | `IfcPredefinedType.LINTEL`     |      ❌      |      ❌      |      ✅      |
