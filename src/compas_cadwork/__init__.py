@@ -13,7 +13,7 @@ from compas_cadwork.utils.compatibility import CADWORK_VERSION
 __title__ = "compas_cadwork"
 __description__ = "COMPAS package for integrating with cadwork"
 __url__ = "https://github.com/gramaziokohler/compas_cadwork"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Gramazio Kohler Research"
 __author_email__ = "gramaziokohler@arch.ethz.ch"
 __license__ = "MIT license"
