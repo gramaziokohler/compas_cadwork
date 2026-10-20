@@ -26,7 +26,6 @@ from compas_cadwork.storey import Storey
 from compas_cadwork.transaction import enqueue_element_deletion
 from compas_cadwork.transaction import is_inside_transaction
 from compas_cadwork.transaction import notify_element_modification
-from compas_cadwork.utils.compatibility import CADWORK_VERSION
 from compas_cadwork.utils.compatibility import requires_cadwork
 from compas_cadwork.utils.storage import IterableKeyValueStorage
 from compas_cadwork.utils.storage import KeyValueStorage
@@ -295,8 +294,7 @@ class Element(Generic[T]):
     @storey.setter
     def storey(self, value: Storey) -> None:
         bc.set_building_and_storey([self.id], value.building, value.name)
-        if CADWORK_VERSION < 2026:
-            bc.update_bmt_structure_building_storey([self.id])
+        bc.update_bmt_structure_building_storey([self.id])
         notify_element_modification(self.id)
 
     @cached_property
