@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated `Element.storey` setter to always notify updates to Cadwork.
+
 ### Removed
 
 ## [1.0.1] 2026-10-08

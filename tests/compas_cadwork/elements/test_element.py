@@ -200,14 +200,6 @@ def test_sets_storey(cadwork) -> None:
     element = Element(123)
     element.storey = Storey(name="EG", building="Hauptgebäude")
     cadwork.bc.set_building_and_storey.assert_called_once_with([123], "Hauptgebäude", "EG")
-    cadwork.bc.update_bmt_structure_building_storey.assert_not_called()
-
-
-def test_sets_storey_in_cadwork_2025(cadwork, set_cadwork_version) -> None:
-    set_cadwork_version(2025)
-    element = Element(123)
-    element.storey = Storey(name="EG", building="Hauptgebäude")
-    cadwork.bc.set_building_and_storey.assert_called_once_with([123], "Hauptgebäude", "EG")
     cadwork.bc.update_bmt_structure_building_storey.assert_called_once_with([123])
 
 
