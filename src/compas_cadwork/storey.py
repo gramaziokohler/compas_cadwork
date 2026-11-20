@@ -22,8 +22,56 @@ class Storey:
     building: Final[str]
     """Name of the building to which this storey belongs."""
 
-    def __init__(self, *, name: str, building: str) -> None:
-        """Create new instance of a Cadwork storey.
+    @classmethod
+    def create(cls, name: str, building: str, height: float = 0.0, raise_on_duplicate: bool = True) -> Storey:
+        """Create new storey.
+
+        Parameters
+        ----------
+        name : str
+            New storey name.
+        building : str
+            New storey building name.
+        height : float
+            New storey height (elevation) in millimeters.
+        raise_on_duplicate : bool
+            Whether to raise an error if the storey already exists. Otherwise, returns the existing storey.
+
+        Returns
+        -------
+        Storey
+            New storey instance.
+
+        Raises
+        ------
+        ValueError
+            If storey/building name is empty or already exists.
+        """
+        # Validate parameters
+        if name == "":
+            raise ValueError("Storey name cannot be empty")
+        if building == "":
+            raise ValueError("Building name cannot be empty")
+
+        # Check whether storey already exists
+        if raise_on_duplicate:
+            building_storey_names = set(bc.get_all_storeys(building))
+            if name in building_storey_names:
+                raise ValueError(f"Storey with name {name!r} in building {building!r} already exists")
+
+        # Register storey in Cadwork's BIM Manager
+        bc.set_building_and_storey([], building, name)
+        bc.update_bmt_structure_building_storey([])
+
+        # Create new instance
+        storey = Storey(name, building)
+        storey.height = height
+        return storey
+
+    def __init__(self, name: str, building: str) -> None:
+        """Create new instance wrapping a Cadwork storey.
+
+        NOTE: Avoid calling directly, use ``Project.storey()`` instead to get an error in case of invalid storey.
 
         Parameters
         ----------

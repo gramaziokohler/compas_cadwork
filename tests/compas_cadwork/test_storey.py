@@ -3,6 +3,36 @@ import pytest
 from compas_cadwork.storey import Storey
 
 
+def test_creates_storey(cadwork) -> None:
+    # Empty name
+    with pytest.raises(ValueError, match=r"Storey name cannot be empty"):
+        Storey.create("", "Building Name")
+    cadwork.bc.set_building_and_storey.assert_not_called()
+
+    # Empty building
+    with pytest.raises(ValueError, match=r"Building name cannot be empty"):
+        Storey.create("Storey Name", "")
+    cadwork.bc.set_building_and_storey.assert_not_called()
+
+    # Duplicate storey
+    cadwork.bc.get_all_storeys.return_value = ["Storey Name"]
+    with pytest.raises(ValueError, match=r"Storey with name 'Storey Name' in building 'Building Name' already exists"):
+        Storey.create("Storey Name", "Building Name")
+    cadwork.bc.get_all_storeys.assert_called_once_with("Building Name")
+    cadwork.bc.set_building_and_storey.assert_not_called()
+    cadwork.bc.get_all_storeys.reset_mock()
+
+    # Non-existing storey
+    cadwork.bc.get_all_storeys.return_value = ["Existing Storey"]
+    storey = Storey.create("Another Storey", "Another Building", 1234.56)
+    assert storey.name == "Another Storey"
+    assert storey.building == "Another Building"
+    cadwork.bc.get_all_storeys.assert_called_once_with("Another Building")
+    cadwork.bc.set_building_and_storey.assert_called_once_with([], "Another Building", "Another Storey")
+    cadwork.bc.update_bmt_structure_building_storey.assert_called_once_with([])
+    cadwork.bc.set_storey_height.assert_called_once_with("Another Building", "Another Storey", 1234.56)
+
+
 def test_gets_height(cadwork) -> None:
     storey = Storey(name="Storey name", building="Building name")
     cadwork.bc.get_storey_height.return_value = 1234.56

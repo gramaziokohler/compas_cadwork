@@ -346,7 +346,7 @@ class Project:
 
         Parameters
         ----------
-        name: str
+        name : str
             Material name.
         create : bool
             Whether to create a new material if it doesn't already exist in the project.
@@ -477,6 +477,38 @@ class Project:
                 return layer_stack
         raise ValueError(f"Could not find a Cadwork layer stack with ID #{cadwork_id}")
 
+    def storey(self, *, name: str, building: str, create: bool = False) -> Storey:
+        """Get or create storey.
+
+        Parameters
+        ----------
+        name : str
+            Storey name.
+        building : str
+            Building name.
+        create : bool
+            Whether to create a new storey a height of 0 mm if it doesn't already exist in the project.
+
+        Returns
+        -------
+        Storey
+            Cadwork storey.
+
+        Raises
+        ------
+        ValueError
+            If the storey does not exist.
+        """
+        # Handle automatic creation
+        if create:
+            return Storey.create(name, building, raise_on_duplicate=False)
+
+        # Return already existing storey
+        building_storey_names = set(bc.get_all_storeys(building))
+        if name not in building_storey_names:
+            raise ValueError(f"Could not find a Cadwork storey with name {name!r} in building {building!r}")
+        return Storey(name, building)
+
     def storeys(self, *, building: str | None = None) -> Iterator[Storey]:
         """Get all storeys (levels) in the project.
 
@@ -488,12 +520,12 @@ class Project:
         Returns
         -------
         Iterator[Storey]
-            Iterator of storeys.
+            Iterator of Cadwork storeys.
         """
         building_names = bc.get_all_buildings() if building is None else [building]
         for building_name in building_names:
             for storey_name in bc.get_all_storeys(building_name):
-                yield Storey(name=storey_name, building=building_name)
+                yield Storey(storey_name, building_name)
 
     def __repr__(self) -> str:
         return f"Project(guid={self.guid!r}, name={self.name!r})"

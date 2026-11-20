@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `Storey.create` and `Project.storey` methods (#92).
+
 ### Changed
 
 - Updated `Element.storey` setter to always notify updates to Cadwork.
