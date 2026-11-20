@@ -346,7 +346,7 @@ class Project:
 
         Parameters
         ----------
-        name: str
+        name : str
             Material name.
         create : bool
             Whether to create a new material if it doesn't already exist in the project.
