@@ -396,6 +396,33 @@ def test_gets_layer_stacks(cadwork) -> None:
     ]
 
 
+def test_gets_storey(cadwork) -> None:
+    project = Project()
+
+    # Without value
+    cadwork.bc.get_all_storeys.return_value = []
+    with pytest.raises(ValueError, match=r"Could not find a Cadwork storey with name 'S' in building 'B'"):
+        _ = project.storey(name="S", building="B")
+    cadwork.bc.get_all_storeys.assert_called_once_with("B")
+
+    # With value
+    cadwork.bc.get_all_storeys.return_value = ["EG", "Storey Name"]
+    storey = project.storey(name="Storey Name", building="Building Name")
+    cadwork.bc.get_all_storeys.assert_called_with("Building Name")
+    assert storey.name == "Storey Name"
+    assert storey.building == "Building Name"
+
+
+def test_creates_storey(cadwork) -> None:
+    project = Project()
+    cadwork.bc.get_all_storeys.return_value = ["OG", "EG", "Existing Storey"]
+    storey = project.storey(name="Existing Storey", building="Existing Building", create=True)
+    assert storey.name == "Existing Storey"
+    assert storey.building == "Existing Building"
+    cadwork.bc.get_all_storeys.assert_not_called()
+    cadwork.bc.set_building_and_storey.assert_called_once_with([], "Existing Building", "Existing Storey")
+
+
 def test_gets_storeys(cadwork) -> None:
     cadwork.bc.get_all_buildings.return_value = ["B1", "B2"]
     cadwork.bc.get_all_storeys.side_effect = lambda x: ["D", "E", "E0", "E1"] if x == "B1" else ["C", "D", "E"]
